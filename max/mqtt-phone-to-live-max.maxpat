@@ -44,7 +44,7 @@
                         640,
                         126.0
                     ],
-                    "text": "SETUP\n1. Section 1: click a connect. It subscribes to remote/in/# once connected.\n2. Phone: francesco-di-maggio.github.io/mqtt-max/phone/ -> prefix remote -> Connect (Echo off)\n3. Section 3: pick the output port, e.g. \"from Max 1\" or an IAC bus.\n4. Live: Settings -> Link, Tempo & MIDI -> MIDI Ports: that port as Input, Track + Remote on.\n   CCs: MIDI Map mode (Cmd+M), click a control, move the phone.\n   Pad: MIDI track, input = that port, Monitor In.\nMidge not needed. If Midge is also running, quit it or use mqtt-midge-phone-to-live.maxpat instead."
+                    "text": "SETUP\n1. Section 1: click a connect. It subscribes to remote/in/# once connected.\n2. Phone: francesco-di-maggio.github.io/mqtt-max/phone/ -> prefix remote -> Connect (Echo off)\n3. Section 3: pick the output port, e.g. \"from Max 1\" or an IAC bus.\n4. Live: Settings -> Link, Tempo & MIDI -> MIDI Ports: that port as Input, Track + Remote on.\n   CCs: MIDI Map mode (Cmd+M), click a control, move the phone.\n   Pad: MIDI track, input = that port, Monitor In.\nMidge not needed. If Midge is also running, quit it or use mqtt-phone-to-live-midge.maxpat instead."
                 }
             },
             {
