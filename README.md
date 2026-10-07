@@ -16,8 +16,8 @@ Two versions of each phone patch:
 
 | Patch | With Midge | Max only |
 |---|---|---|
-| Phone input + latency tests | `phone-midi-latency.maxpat` | `phone-midi-latency-max-only.maxpat` |
-| Phone → smoothing → Ableton Live | `phone-to-live.maxpat` | `phone-to-live-max-only.maxpat` |
+| Phone input + latency tests | `mqtt-midge-phone-midi-latency.maxpat` | `mqtt-max-phone-midi-latency.maxpat` |
+| Phone → smoothing → Ableton Live | `mqtt-midge-phone-to-live.maxpat` | `mqtt-max-phone-to-live.maxpat` |
 
 - **With Midge**: Midge turns MQTT into the MIDI port `midge`; Max reads it with `ctlin`/`notein`.
 - **Max only**: `node.script` subscribes to `remote/in/#` and decodes the MIDI itself. Quit Midge while using these.
