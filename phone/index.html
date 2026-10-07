@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Phone MIDI</title>
+<style>
+  :root { --bg: #111; --fg: #eee; --dim: #888; --accent: #e8a; --line: #333; }
+  * { box-sizing: border-box; }
+  body { margin: 0; padding: 16px; background: var(--bg); color: var(--fg);
+         font: 16px system-ui, sans-serif; -webkit-user-select: none; user-select: none; }
+  h1 { font-size: 20px; margin: 0 0 12px; }
+  label { display: block; color: var(--dim); font-size: 13px; margin-top: 8px; }
+  input { width: 100%; padding: 10px; font: inherit; background: #222; color: var(--fg);
+          border: 1px solid var(--line); border-radius: 6px; }
+  .row { display: flex; gap: 8px; }
+  .row > div { flex: 1; }
+  button { width: 100%; margin-top: 12px; padding: 14px; font: inherit; font-weight: 600;
+           background: var(--accent); color: #111; border: 0; border-radius: 8px; }
+  #status { margin-top: 12px; color: var(--dim); }
+  .meter { margin-top: 10px; }
+  .meter span { display: flex; justify-content: space-between; font-size: 14px; }
+  .bar { height: 10px; background: #222; border-radius: 5px; overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--accent); }
+  #pad { margin-top: 16px; height: 120px; border: 2px solid var(--accent); border-radius: 12px;
+         display: flex; align-items: center; justify-content: center; color: var(--accent); }
+  #pad.on { background: var(--accent); color: #111; }
+</style>
+</head>
+<body>
+<h1>Phone → MQTT → MIDI</h1>
+
+<label>Broker URL</label>
+<input id="url" value="wss://public.cloud.shiftr.io">
+<div class="row">
+  <div><label>Username</label><input id="username" value="public"></div>
+  <div><label>Password</label><input id="password" type="password" value="public"></div>
+</div>
+<div class="row">
+  <div><label>Prefix</label><input id="prefix" value="remote"></div>
+  <div><label>MIDI channel</label><input id="channel" type="number" min="1" max="16" value="1"></div>
+</div>
+<button id="connect">Connect</button>
+<div id="status">disconnected</div>
+
+<div class="meter"><span>CC 1 · tilt front/back <b id="v1">–</b></span><div class="bar"><i id="b1"></i></div></div>
+<div class="meter"><span>CC 2 · tilt left/right <b id="v2">–</b></span><div class="bar"><i id="b2"></i></div></div>
+<div class="meter"><span>CC 3 · compass <b id="v3">–</b></span><div class="bar"><i id="b3"></i></div></div>
+<div id="pad">hold: note 60</div>
+
+<script type="module">
+import { MqttMidi } from "https://esm.sh/@grantler-instruments/mqtt-midi@0.1.0?deps=mqtt@5.16.0";
+
+const SEND_INTERVAL_MS = 33;
+const FIELDS = ["url", "username", "password", "prefix", "channel"];
+const $ = (id) => document.getElementById(id);
+
+let midi = null;
+const current = { 1: null, 2: null, 3: null };
+const sent = { 1: null, 2: null, 3: null };
+
+function loadSettings() {
+  for (const f of FIELDS) {
+    try {
+      const v = localStorage.getItem("phone-midi-" + f);
+      if (v !== null) $(f).value = v;
+    } catch {}
+  }
+}
+
+function saveSettings() {
+  for (const f of FIELDS) {
+    try { localStorage.setItem("phone-midi-" + f, $(f).value); } catch {}
+  }
+}
+
+function setStatus(text) {
+  $("status").textContent = text;
+}
+
+function toCC(value, min, max) {
+  const t = (Math.min(Math.max(value, min), max) - min) / (max - min);
+  return Math.round(t * 127);
+}
+
+function channel() {
+  return Math.min(Math.max(parseInt($("channel").value, 10) || 1, 1), 16);
+}
+
+function show(cc, value) {
+  $("v" + cc).textContent = value;
+  $("b" + cc).style.width = (value / 127 * 100) + "%";
+}
+
+function onOrientation(e) {
+  if (e.beta === null) return;
+  current[1] = toCC(e.beta, -90, 90);
+  current[2] = toCC(e.gamma, -90, 90);
+  current[3] = toCC(e.alpha ?? 0, 0, 360);
+}
+
+function sendChanged() {
+  for (const cc of [1, 2, 3]) {
+    const v = current[cc];
+    if (v === null || v === sent[cc]) continue;
+    sent[cc] = v;
+    show(cc, v);
+    if (midi) midi.sendControlChange(channel(), cc, v);
+  }
+}
+
+async function requestMotion() {
+  const DOE = window.DeviceOrientationEvent;
+  if (!DOE) return setStatus("no orientation sensor in this browser");
+  if (typeof DOE.requestPermission === "function") {
+    const result = await DOE.requestPermission();
+    if (result !== "granted") return setStatus("motion permission denied");
+  }
+  window.addEventListener("deviceorientation", onOrientation);
+}
+
+async function keepAwake() {
+  try { await navigator.wakeLock?.request("screen"); } catch {}
+}
+
+async function connect() {
+  saveSettings();
+  // iOS only grants motion permission when asked directly inside the tap handler, before any other await.
+  await requestMotion();
+  if (midi) await midi.disconnect();
+  setStatus("connecting…");
+  midi = new MqttMidi({
+    url: $("url").value.trim(),
+    prefix: $("prefix").value.trim(),
+    mqttOptions: {
+      username: $("username").value || undefined,
+      password: $("password").value || undefined,
+    },
+  });
+  midi.on("connect", () => setStatus("connected · sending on " + $("prefix").value.trim() + "/in/…"));
+  midi.on("disconnect", () => setStatus("disconnected"));
+  midi.on("error", (err) => setStatus("error: " + err.message));
+  try {
+    await midi.connect();
+    keepAwake();
+  } catch (err) {
+    setStatus("error: " + err.message);
+  }
+}
+
+function padDown(e) {
+  e.preventDefault();
+  $("pad").classList.add("on");
+  if (midi) midi.sendNoteOn(channel(), 60, 100);
+}
+
+function padUp(e) {
+  e.preventDefault();
+  if (!$("pad").classList.contains("on")) return;
+  $("pad").classList.remove("on");
+  if (midi) midi.sendNoteOff(channel(), 60);
+}
+
+loadSettings();
+$("connect").addEventListener("click", connect);
+$("pad").addEventListener("pointerdown", padDown);
+$("pad").addEventListener("pointerup", padUp);
+$("pad").addEventListener("pointercancel", padUp);
+$("pad").addEventListener("pointerleave", padUp);
+setInterval(sendChanged, SEND_INTERVAL_MS);
+</script>
+</body>
+</html>
