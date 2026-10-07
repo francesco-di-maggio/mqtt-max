@@ -9,9 +9,19 @@ phone --MQTT--> broker --MQTT--> Midge --MIDI--> Max
 ## Contents
 
 - `phone/` — web controller, served at [francesco-di-maggio.github.io/mqtt-max/phone/](https://francesco-di-maggio.github.io/mqtt-max/phone/). Pitch / roll / yaw → CC 1–3, slider → CC 4, pad → note 60, all on `{prefix}/in/…`. "Echo notes" sends notes arriving on `{prefix}/out/…` back on `{prefix}/in/…`, for latency tests.
-- `max/mqtt-client.js` — Max `node.script` MQTT client (`connect`, `subscribe`, `publish`, `publishbytes`, `format text|bytes`).
+- `max/mqtt-client.js` — Max `node.script` MQTT client (`connect`, `subscribe`, `publish`, `publishbytes`, `format text|bytes`). mqtt-midi topics also come out decoded, e.g. `midi in cc 1 7 64`.
 - `max/mqtt-client.maxpat` — test patch for the client, Midge and MIDI notes/CC.
-- `max/phone-midi-latency.maxpat` — phone input plus round-trip latency tests (baseline and full loop through the phone).
+
+Two versions of each phone patch:
+
+| Patch | With Midge | Max only |
+|---|---|---|
+| Phone input + latency tests | `phone-midi-latency.maxpat` | `phone-midi-latency-max-only.maxpat` |
+| Phone → smoothing → Ableton Live | `phone-to-live.maxpat` | `phone-to-live-max-only.maxpat` |
+
+- **With Midge**: Midge turns MQTT into the MIDI port `midge`; Max reads it with `ctlin`/`notein`.
+- **Max only**: `node.script` subscribes to `remote/in/#` and decodes the MIDI itself. Quit Midge while using these.
+- The Live patches smooth CC 1–4 with `line` and send them as CC 20–23 (pad note passed through) to a MIDI output such as "from Max 1".
 
 ## Setup
 

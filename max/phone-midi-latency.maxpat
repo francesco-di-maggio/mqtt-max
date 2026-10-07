@@ -13,13 +13,13 @@
         "boxes": [
             {
                 "box": {
-                    "id": "obj-4",
-                    "maxclass": "toggle",
+                    "id": "obj-3",
+                    "maxclass": "button",
                     "numinlets": 1,
                     "numoutlets": 1,
-                    "outlettype": [ "int" ],
+                    "outlettype": [ "bang" ],
                     "parameter_enable": 0,
-                    "patching_rect": [ 938.0, 495.0, 24.0, 24.0 ]
+                    "patching_rect": [ 1042.0, 421.0, 24.0, 24.0 ]
                 }
             },
             {
@@ -51,7 +51,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 40.0, 455.0, 87.0 ],
+                    "patching_rect": [ 20.0, 40.0, 457.0, 87.0 ],
                     "text": "SETUP\n1. Midge: host public.cloud.shiftr.io, port 1883, user/pass public, prefix remote\n   -> Connect. MIDI: Create virtual port (\"midge\") -> Listen\n2. Phone: francesco-di-maggio.github.io/mqtt-max/phone/ -> same prefix -> Connect\n3. Section 2 shows the phone. Sections 3-4 measure latency.\nSame prefix everywhere. Public shiftr is visible to anyone: test data only."
                 }
             },
@@ -131,6 +131,8 @@
                     "saved_object_attributes": {
                         "autostart": 1,
                         "defer": 0,
+                        "node_bin_path": "",
+                        "npm_bin_path": "",
                         "watch": 1
                     },
                     "text": "node.script mqtt-client.js @autostart 1 @watch 1",
@@ -1687,15 +1689,7 @@
             },
             {
                 "patchline": {
-                    "destination": [ "obj-4", 0 ],
-                    "order": 0,
-                    "source": [ "nin", 1 ]
-                }
-            },
-            {
-                "patchline": {
                     "destination": [ "strip", 1 ],
-                    "order": 1,
                     "source": [ "nin", 1 ]
                 }
             },
@@ -1803,7 +1797,15 @@
             },
             {
                 "patchline": {
+                    "destination": [ "obj-3", 0 ],
+                    "order": 0,
+                    "source": [ "sel", 2 ]
+                }
+            },
+            {
+                "patchline": {
                     "destination": [ "pad", 0 ],
+                    "order": 1,
                     "source": [ "sel", 2 ]
                 }
             },

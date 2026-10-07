@@ -14,6 +14,21 @@ function decode(payload) {
   return payload.toString("utf8").split(" ").map(toAtom);
 }
 
+// mqtt-midi topics: {prefix}/{in|out}/{type}/{channel}[/{note|controller}], payload = raw bytes.
+const MIDI_TOPIC = /^.+\/(in|out)\/(noteon|noteoff|cc|program|pitchbend)\/(\d+)(?:\/(\d+))?$/;
+
+function parseMidi(topic, payload) {
+  const m = MIDI_TOPIC.exec(topic);
+  if (!m || payload.length === 0) return null;
+  const [, direction, type, channel, number] = m;
+  if (type === "pitchbend") {
+    return [direction, type, Number(channel), payload[0] | ((payload[1] ?? 0) << 7)];
+  }
+  if (type === "program") return [direction, type, Number(channel), payload[0]];
+  if (number === undefined) return null;
+  return [direction, type, Number(channel), Number(number), payload[0]];
+}
+
 function disconnect() {
   if (!client) return;
   client.end();
@@ -30,6 +45,8 @@ maxApi.addHandlers({
     client.on("error", (err) => maxApi.outlet("error", err.message));
     client.on("message", (topic, payload) => {
       maxApi.outlet("message", topic, ...decode(payload));
+      const midi = parseMidi(topic, payload);
+      if (midi) maxApi.outlet("midi", ...midi);
     });
   },
   disconnect,
