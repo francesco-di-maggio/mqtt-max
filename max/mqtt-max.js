@@ -16,6 +16,11 @@ let qos = 0;
 let retain = false;
 let prefix = option("prefix") ?? "remote";
 let port = null;
+// Presence: with a name, {prefix}/status/{name} is "online" while connected and "offline" after (retained, QoS 1).
+let clientName = option("name") ?? null;
+
+const statusTopic = () => `${prefix}/status/${clientName}`;
+const STATUS_OPTIONS = { qos: 1, retain: true };
 
 function toAtom(s) {
   const n = Number(s);
@@ -126,6 +131,7 @@ function subscribeIn() {
 
 function disconnect() {
   if (!client) return;
+  if (clientName && client.connected) client.publish(statusTopic(), "offline", STATUS_OPTIONS);
   client.end();
   client = null;
 }
@@ -133,8 +139,16 @@ function disconnect() {
 maxApi.addHandlers({
   connect: (url = "mqtt://localhost:1883", username, password) => {
     disconnect();
-    client = mqtt.connect(url, { username, password });
+    const options = { username, password };
+    if (clientName) {
+      // The broker publishes the will when the connection drops without a disconnect;
+      // keepalive 10 s detects a silent drop in about 15 s.
+      options.will = { topic: statusTopic(), payload: "offline", ...STATUS_OPTIONS };
+      options.keepalive = 10;
+    }
+    client = mqtt.connect(url, options);
     client.on("connect", () => {
+      if (clientName) client.publish(statusTopic(), "online", STATUS_OPTIONS);
       subscribeIn();
       maxApi.outlet("status", "connected", url);
     });
@@ -173,6 +187,10 @@ maxApi.addHandlers({
     const dict = rest[0] === "dictionary" ? await maxApi.getDict(rest[1]) : rest[0];
     if (dict === null || typeof dict !== "object") return maxApi.outlet("error", "publishjson needs a dict");
     client.publish(String(topic), JSON.stringify(dict), { qos, retain });
+  },
+  // Takes effect on the next connect.
+  name: (id) => {
+    clientName = String(id);
   },
   qos: (level) => {
     qos = [0, 1, 2].includes(level) ? level : 0;

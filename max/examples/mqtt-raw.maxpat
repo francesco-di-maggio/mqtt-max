@@ -9,7 +9,7 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 140.0, 140.0, 600.0, 550.0 ],
+        "rect": [ 140.0, 140.0, 620.0, 580.0 ],
         "boxes": [
             {
                 "box": {
@@ -138,17 +138,15 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 20.0, 255.0, 267.0, 22.0 ],
+                    "patching_rect": [ 20.0, 285.0, 262.0, 22.0 ],
                     "saved_object_attributes": {
                         "autostart": 1,
                         "defer": 0,
-                        "node_bin_path": "",
-                        "npm_bin_path": "",
                         "watch": 1
                     },
-                    "text": "node.script mqtt-client.js @autostart 1 @watch 1",
+                    "text": "node.script mqtt-max.js @autostart 1 @watch 1",
                     "textfile": {
-                        "filename": "mqtt-client.js",
+                        "filename": "mqtt-max.js",
                         "flags": 0,
                         "embed": 0,
                         "autowatch": 1
@@ -162,7 +160,7 @@
                     "numinlets": 4,
                     "numoutlets": 4,
                     "outlettype": [ "", "", "", "" ],
-                    "patching_rect": [ 20.0, 290.0, 152.0, 22.0 ],
+                    "patching_rect": [ 20.0, 320.0, 152.0, 22.0 ],
                     "text": "route message status error"
                 }
             },
@@ -172,7 +170,7 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 325.0, 111.0, 22.0 ],
+                    "patching_rect": [ 20.0, 355.0, 111.0, 22.0 ],
                     "text": "print mqtt-message"
                 }
             },
@@ -182,7 +180,7 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 140.0, 325.0, 95.0, 22.0 ],
+                    "patching_rect": [ 140.0, 355.0, 95.0, 22.0 ],
                     "text": "print mqtt-status"
                 }
             },
@@ -192,7 +190,7 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 250.0, 325.0, 88.0, 22.0 ],
+                    "patching_rect": [ 250.0, 355.0, 88.0, 22.0 ],
                     "text": "print mqtt-error"
                 }
             },
@@ -202,7 +200,7 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 320.0, 290.0, 95.0, 22.0 ],
+                    "patching_rect": [ 320.0, 320.0, 95.0, 22.0 ],
                     "text": "print node-script"
                 }
             },
@@ -212,7 +210,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 355.0, 200.0, 20.0 ],
+                    "patching_rect": [ 20.0, 385.0, 200.0, 20.0 ],
                     "text": "mqtt-message: <topic> <payload...>"
                 }
             },
@@ -234,7 +232,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 395.0, 297.0, 20.0 ],
+                    "patching_rect": [ 20.0, 425.0, 297.0, 20.0 ],
                     "text": "JSON  (click subscribe test/# and format json first)"
                 }
             },
@@ -246,7 +244,7 @@
                     "numoutlets": 2,
                     "outlettype": [ "", "bang" ],
                     "parameter_enable": 0,
-                    "patching_rect": [ 20.0, 420.0, 50.0, 22.0 ]
+                    "patching_rect": [ 20.0, 450.0, 50.0, 22.0 ]
                 }
             },
             {
@@ -256,7 +254,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "dictionary" ],
-                    "patching_rect": [ 20.0, 450.0, 89.0, 22.0 ],
+                    "patching_rect": [ 20.0, 480.0, 89.0, 22.0 ],
                     "text": "dict.pack temp:"
                 }
             },
@@ -267,7 +265,7 @@
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 480.0, 164.0, 22.0 ],
+                    "patching_rect": [ 20.0, 510.0, 164.0, 22.0 ],
                     "text": "prepend publishjson test/json"
                 }
             },
@@ -277,7 +275,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 75.0, 420.0, 94.0, 20.0 ],
+                    "patching_rect": [ 75.0, 450.0, 94.0, 20.0 ],
                     "text": "send {\"temp\": n}"
                 }
             },
@@ -288,7 +286,7 @@
                     "numinlets": 2,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 250.0, 420.0, 84.0, 22.0 ],
+                    "patching_rect": [ 250.0, 450.0, 84.0, 22.0 ],
                     "text": "route test/json"
                 }
             },
@@ -299,7 +297,7 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 250.0, 450.0, 103.0, 22.0 ],
+                    "patching_rect": [ 250.0, 480.0, 103.0, 22.0 ],
                     "saved_object_attributes": {
                         "legacy": 1
                     },
@@ -314,7 +312,7 @@
                     "numoutlets": 2,
                     "outlettype": [ "", "bang" ],
                     "parameter_enable": 0,
-                    "patching_rect": [ 250.0, 480.0, 50.0, 22.0 ]
+                    "patching_rect": [ 250.0, 510.0, 50.0, 22.0 ]
                 }
             },
             {
@@ -323,7 +321,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 305.0, 480.0, 84.0, 20.0 ],
+                    "patching_rect": [ 305.0, 510.0, 84.0, 20.0 ],
                     "text": "received temp"
                 }
             },
@@ -334,7 +332,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 215.0, 45.0, 22.0 ],
+                    "patching_rect": [ 20.0, 215.0, 38.0, 22.0 ],
                     "text": "qos 0"
                 }
             },
@@ -345,7 +343,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 70.0, 215.0, 45.0, 22.0 ],
+                    "patching_rect": [ 70.0, 215.0, 38.0, 22.0 ],
                     "text": "qos 1"
                 }
             },
@@ -356,7 +354,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 125.0, 215.0, 55.0, 22.0 ],
+                    "patching_rect": [ 125.0, 215.0, 49.0, 22.0 ],
                     "text": "retain 0"
                 }
             },
@@ -367,22 +365,83 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 185.0, 215.0, 55.0, 22.0 ],
+                    "patching_rect": [ 185.0, 215.0, 49.0, 22.0 ],
                     "text": "retain 1"
                 }
             },
             {
                 "box": {
                     "id": "cqr",
+                    "linecount": 2,
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 250.0, 208.0, 330.0, 33.0 ],
+                    "patching_rect": [ 250.0, 208.0, 354.0, 33.0 ],
                     "text": "for publish and subscribe from now on. retain 1: the broker keeps\nthe last message per topic for new subscribers."
+                }
+            },
+            {
+                "box": {
+                    "id": "clr",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 20.0, 245.0, 98.0, 22.0 ],
+                    "text": "publish test/hello"
+                }
+            },
+            {
+                "box": {
+                    "id": "cclr",
+                    "maxclass": "comment",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 140.0, 245.0, 98.0, 20.0 ],
+                    "text": "+ retain 1: clears"
+                }
+            },
+            {
+                "box": {
+                    "id": "nm",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 240.0, 245.0, 61.0, 22.0 ],
+                    "text": "name raw"
+                }
+            },
+            {
+                "box": {
+                    "id": "sst",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 315.0, 245.0, 146.0, 22.0 ],
+                    "text": "subscribe remote/status/#"
+                }
+            },
+            {
+                "box": {
+                    "id": "cnm",
+                    "linecount": 2,
+                    "maxclass": "comment",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 480.0, 238.0, 125.0, 33.0 ],
+                    "text": "name before connect:\nremote/status/raw"
                 }
             }
         ],
         "lines": [
+            {
+                "patchline": {
+                    "destination": [ "node", 0 ],
+                    "source": [ "clr", 0 ]
+                }
+            },
             {
                 "patchline": {
                     "destination": [ "node", 0 ],
@@ -451,6 +510,12 @@
             },
             {
                 "patchline": {
+                    "destination": [ "node", 0 ],
+                    "source": [ "nm", 0 ]
+                }
+            },
+            {
+                "patchline": {
                     "destination": [ "pns", 0 ],
                     "source": [ "node", 1 ]
                 }
@@ -471,6 +536,30 @@
                 "patchline": {
                     "destination": [ "node", 0 ],
                     "source": [ "pubb", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "node", 0 ],
+                    "source": [ "q0", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "node", 0 ],
+                    "source": [ "q1", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "node", 0 ],
+                    "source": [ "r0", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "node", 0 ],
+                    "source": [ "r1", 0 ]
                 }
             },
             {
@@ -502,31 +591,13 @@
             {
                 "patchline": {
                     "destination": [ "node", 0 ],
+                    "source": [ "sst", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "node", 0 ],
                     "source": [ "sub", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "q0", 0 ],
-                    "destination": [ "node", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "q1", 0 ],
-                    "destination": [ "node", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "r0", 0 ],
-                    "destination": [ "node", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "r1", 0 ],
-                    "destination": [ "node", 0 ]
                 }
             }
         ],

@@ -9,7 +9,7 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 100.0, 100.0, 560.0, 370.0 ],
+        "rect": [ 129.0, 285.0, 638.0, 370.0 ],
         "boxes": [
             {
                 "box": {
@@ -18,8 +18,8 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 15.0, 341.0, 20.0 ],
-                    "text": "MQTT <-> MIDI BRIDGE  (Max-only replacement for Midge)"
+                    "patching_rect": [ 20.0, 15.0, 143.0, 20.0 ],
+                    "text": "MQTT <-> MIDI BRIDGE"
                 }
             },
             {
@@ -30,7 +30,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 20.0, 40.0, 356.0, 60.0 ],
-                    "text": "Keep this patch open: it creates the MIDI port mqtt-max.\nremote/in/...  ->  mqtt-max  ->  ctlin / notein mqtt-max in any patch\nctlout / noteout mqtt-max  ->  remote/out/...\nQuit Midge while this runs, or every message arrives twice."
+                    "text": "Keep this patch open: it creates the MIDI port mqtt-max.\nremote/in/...  ->  mqtt-max  ->  ctlin / notein mqtt-max in any patch\nctlout / noteout mqtt-max  ->  remote/out/...\nRun one bridge per prefix, or every message arrives twice."
                 }
             },
             {
@@ -83,18 +83,18 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 20.0, 190.0, 473.0, 22.0 ],
+                    "patching_rect": [ 20.0, 190.0, 535.0, 22.0 ],
                     "saved_object_attributes": {
-                        "args": [ "--prefix", "remote", "--port", "mqtt-max" ],
+                        "args": [ "--prefix", "remote", "--port", "mqtt-max", "--name", "max" ],
                         "autostart": 1,
                         "defer": 0,
                         "node_bin_path": "",
                         "npm_bin_path": "",
                         "watch": 1
                     },
-                    "text": "node.script mqtt-client.js @autostart 1 @watch 1 @args --prefix remote --port mqtt-max",
+                    "text": "node.script mqtt-max.js @autostart 1 @watch 1 @args --prefix remote --port mqtt-max --name max",
                     "textfile": {
-                        "filename": "mqtt-client.js",
+                        "filename": "mqtt-max.js",
                         "flags": 0,
                         "embed": 0,
                         "autowatch": 1
@@ -135,13 +135,13 @@
             },
             {
                 "box": {
+                    "dontreplace": 1,
                     "id": "state",
                     "maxclass": "message",
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 100.0, 260.0, 39.0, 22.0 ],
-                    "text": "ready"
+                    "patching_rect": [ 100.0, 260.0, 205.0, 22.0 ]
                 }
             },
             {
@@ -181,8 +181,8 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 168.0, 416.0, 20.0 ],
-                    "text": "--prefix: topic prefix (default remote)   --port: MIDI port name (none = no port)"
+                    "patching_rect": [ 20.0, 168.0, 605.0, 20.0 ],
+                    "text": "--prefix: topic prefix (default remote)   --port: MIDI port (none = no port)   --name: presence on remote/status/max"
                 }
             }
         ],

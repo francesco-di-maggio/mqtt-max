@@ -9,7 +9,7 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 134.0, 91.0, 877.0, 833.0 ],
+        "rect": [ 134.0, 91.0, 877.0, 807.0 ],
         "boxes": [
             {
                 "box": {
@@ -18,19 +18,19 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 15.0, 400.0, 20.0 ],
+                    "patching_rect": [ 20.0, 15.0, 248.0, 20.0 ],
                     "text": "PHONE -> SMOOTHING -> ABLETON LIVE"
                 }
             },
             {
                 "box": {
                     "id": "setup",
-                    "linecount": 9,
+                    "linecount": 8,
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 40.0, 540.0, 124.0 ],
-                    "text": "SETUP\n1. Bridge: open mqtt-bridge.maxpat and click connect. With Midge instead (prefix remote, virtual\n   port \"midge\", Listen), click port midge in section 1.\n2. Phone: francesco-di-maggio.github.io/mqtt-max/phone/ -> prefix remote -> Connect (Echo off)\n3. Section 3: pick the output port, e.g. \"from Max 1\" or an IAC bus. Never pick \"mqtt-max\" or\n   \"midge\": that sends everything back over MQTT.\n4. Live: Settings -> Link, Tempo & MIDI -> MIDI Ports: that port as Input, Track + Remote on.\n   CCs: MIDI Map mode (Cmd+M), click a control, move the phone.\n   Pad: MIDI track, input = that port, Monitor In."
+                    "patching_rect": [ 20.0, 40.0, 552.0, 114.0 ],
+                    "text": "SETUP\n1. Bridge: open mqtt-bridge.maxpat and click connect.\n2. Phone: francesco-di-maggio.github.io/mqtt-max/phone/ -> prefix remote -> Connect (Echo notes off)\n3. Section 3: pick the output port, e.g. \"from Max 1\" or an IAC bus. Never pick \"mqtt-max\":\n   that sends everything back over MQTT.\n4. Live: Settings -> Link, Tempo & MIDI -> MIDI Ports: that port as Input, Track + Remote on.\n   CCs: MIDI Map mode (Cmd+M), click a control, move the phone.\n   Pad: MIDI track, input = that port, Monitor In."
                 }
             },
             {
@@ -40,7 +40,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 216.0, 300.0, 20.0 ],
+                    "patching_rect": [ 20.0, 216.0, 215.0, 20.0 ],
                     "text": "1 · PHONE IN  (MIDI from the bridge)"
                 }
             },
@@ -51,7 +51,7 @@
                     "numinlets": 1,
                     "numoutlets": 3,
                     "outlettype": [ "int", "int", "int" ],
-                    "patching_rect": [ 20.0, 241.0, 75.0, 22.0 ],
+                    "patching_rect": [ 20.0, 241.0, 83.0, 22.0 ],
                     "text": "ctlin mqtt-max"
                 }
             },
@@ -62,7 +62,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 271.0, 60.0, 22.0 ],
+                    "patching_rect": [ 20.0, 271.0, 54.0, 22.0 ],
                     "text": "pack 0 0"
                 }
             },
@@ -73,7 +73,7 @@
                     "numinlets": 2,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 20.0, 301.0, 45.0, 22.0 ],
+                    "patching_rect": [ 20.0, 301.0, 37.0, 22.0 ],
                     "text": "zl.rev"
                 }
             },
@@ -84,7 +84,7 @@
                     "numinlets": 5,
                     "numoutlets": 5,
                     "outlettype": [ "", "", "", "", "" ],
-                    "patching_rect": [ 20.0, 331.0, 250.0, 22.0 ],
+                    "patching_rect": [ 20.0, 331.0, 76.0, 22.0 ],
                     "text": "route 1 2 3 4"
                 }
             },
@@ -94,7 +94,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 105.0, 271.0, 280.0, 20.0 ],
+                    "patching_rect": [ 105.0, 271.0, 263.0, 20.0 ],
                     "text": "value + CC number -> \"CC value\" -> split by CC"
                 }
             },
@@ -105,7 +105,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 376.0, 400.0, 20.0 ],
+                    "patching_rect": [ 20.0, 376.0, 237.0, 20.0 ],
                     "text": "2 · SMOOTHING  ->  CC OUT (channel 1)"
                 }
             },
@@ -126,7 +126,7 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 391.0, 301.0, 80.0, 22.0 ],
+                    "patching_rect": [ 391.0, 301.0, 77.0, 22.0 ],
                     "text": "s smooth-ms"
                 }
             },
@@ -148,7 +148,7 @@
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "bang" ],
-                    "patching_rect": [ 391.0, 215.0, 60.0, 22.0 ],
+                    "patching_rect": [ 391.0, 215.0, 58.0, 22.0 ],
                     "text": "loadbang"
                 }
             },
@@ -159,7 +159,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 391.0, 243.66666666666666, 30.0, 22.0 ],
+                    "patching_rect": [ 391.0, 243.66666666666666, 29.5, 22.0 ],
                     "text": "50"
                 }
             },
@@ -169,7 +169,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 451.0, 125.0, 20.0 ],
+                    "patching_rect": [ 20.0, 451.0, 110.0, 20.0 ],
                     "text": "CC1 pitch -> CC20"
                 }
             },
@@ -190,7 +190,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 68.0, 477.0, 35.0, 20.0 ],
+                    "patching_rect": [ 68.0, 477.0, 28.0, 20.0 ],
                     "text": "raw"
                 }
             },
@@ -223,7 +223,7 @@
                     "numinlets": 3,
                     "numoutlets": 2,
                     "outlettype": [ "", "bang" ],
-                    "patching_rect": [ 20.0, 566.0, 60.0, 22.0 ],
+                    "patching_rect": [ 20.0, 566.0, 54.0, 22.0 ],
                     "text": "line 0 10"
                 }
             },
@@ -255,7 +255,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 98.0, 702.0, 35.0, 20.0 ],
+                    "patching_rect": [ 98.0, 702.0, 25.0, 20.0 ],
                     "text": "out"
                 }
             },
@@ -266,7 +266,7 @@
                     "numinlets": 0,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 60.0, 731.0, 70.0, 22.0 ],
+                    "patching_rect": [ 60.0, 731.0, 59.0, 22.0 ],
                     "text": "r live-port"
                 }
             },
@@ -276,7 +276,7 @@
                     "maxclass": "newobj",
                     "numinlets": 3,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 761.0, 75.0, 22.0 ],
+                    "patching_rect": [ 20.0, 761.0, 64.0, 22.0 ],
                     "text": "ctlout 20 1"
                 }
             },
@@ -286,7 +286,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 150.0, 451.0, 125.0, 20.0 ],
+                    "patching_rect": [ 150.0, 451.0, 100.0, 20.0 ],
                     "text": "CC2 roll -> CC21"
                 }
             },
@@ -307,7 +307,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 198.0, 477.0, 35.0, 20.0 ],
+                    "patching_rect": [ 198.0, 477.0, 28.0, 20.0 ],
                     "text": "raw"
                 }
             },
@@ -340,7 +340,7 @@
                     "numinlets": 3,
                     "numoutlets": 2,
                     "outlettype": [ "", "bang" ],
-                    "patching_rect": [ 150.0, 566.0, 60.0, 22.0 ],
+                    "patching_rect": [ 150.0, 566.0, 54.0, 22.0 ],
                     "text": "line 0 10"
                 }
             },
@@ -372,7 +372,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 228.0, 702.0, 35.0, 20.0 ],
+                    "patching_rect": [ 228.0, 702.0, 25.0, 20.0 ],
                     "text": "out"
                 }
             },
@@ -383,7 +383,7 @@
                     "numinlets": 0,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 190.0, 731.0, 70.0, 22.0 ],
+                    "patching_rect": [ 190.0, 731.0, 59.0, 22.0 ],
                     "text": "r live-port"
                 }
             },
@@ -393,7 +393,7 @@
                     "maxclass": "newobj",
                     "numinlets": 3,
                     "numoutlets": 0,
-                    "patching_rect": [ 150.0, 761.0, 75.0, 22.0 ],
+                    "patching_rect": [ 150.0, 761.0, 64.0, 22.0 ],
                     "text": "ctlout 21 1"
                 }
             },
@@ -403,7 +403,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 280.0, 451.0, 125.0, 20.0 ],
+                    "patching_rect": [ 280.0, 451.0, 106.0, 20.0 ],
                     "text": "CC3 yaw -> CC22"
                 }
             },
@@ -424,7 +424,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 328.0, 477.0, 35.0, 20.0 ],
+                    "patching_rect": [ 328.0, 477.0, 28.0, 20.0 ],
                     "text": "raw"
                 }
             },
@@ -457,7 +457,7 @@
                     "numinlets": 3,
                     "numoutlets": 2,
                     "outlettype": [ "", "bang" ],
-                    "patching_rect": [ 280.0, 566.0, 60.0, 22.0 ],
+                    "patching_rect": [ 280.0, 566.0, 54.0, 22.0 ],
                     "text": "line 0 10"
                 }
             },
@@ -489,7 +489,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 358.0, 702.0, 35.0, 20.0 ],
+                    "patching_rect": [ 358.0, 702.0, 25.0, 20.0 ],
                     "text": "out"
                 }
             },
@@ -500,7 +500,7 @@
                     "numinlets": 0,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 320.0, 731.0, 70.0, 22.0 ],
+                    "patching_rect": [ 320.0, 731.0, 59.0, 22.0 ],
                     "text": "r live-port"
                 }
             },
@@ -510,7 +510,7 @@
                     "maxclass": "newobj",
                     "numinlets": 3,
                     "numoutlets": 0,
-                    "patching_rect": [ 280.0, 761.0, 75.0, 22.0 ],
+                    "patching_rect": [ 280.0, 761.0, 64.0, 22.0 ],
                     "text": "ctlout 22 1"
                 }
             },
@@ -520,7 +520,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 410.0, 451.0, 125.0, 20.0 ],
+                    "patching_rect": [ 410.0, 451.0, 113.0, 20.0 ],
                     "text": "CC4 slider -> CC23"
                 }
             },
@@ -541,7 +541,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 458.0, 477.0, 35.0, 20.0 ],
+                    "patching_rect": [ 458.0, 477.0, 28.0, 20.0 ],
                     "text": "raw"
                 }
             },
@@ -574,7 +574,7 @@
                     "numinlets": 3,
                     "numoutlets": 2,
                     "outlettype": [ "", "bang" ],
-                    "patching_rect": [ 410.0, 566.0, 60.0, 22.0 ],
+                    "patching_rect": [ 410.0, 566.0, 54.0, 22.0 ],
                     "text": "line 0 10"
                 }
             },
@@ -606,7 +606,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 488.0, 702.0, 35.0, 20.0 ],
+                    "patching_rect": [ 488.0, 702.0, 25.0, 20.0 ],
                     "text": "out"
                 }
             },
@@ -617,7 +617,7 @@
                     "numinlets": 0,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 450.0, 731.0, 70.0, 22.0 ],
+                    "patching_rect": [ 450.0, 731.0, 59.0, 22.0 ],
                     "text": "r live-port"
                 }
             },
@@ -627,7 +627,7 @@
                     "maxclass": "newobj",
                     "numinlets": 3,
                     "numoutlets": 0,
-                    "patching_rect": [ 410.0, 761.0, 75.0, 22.0 ],
+                    "patching_rect": [ 410.0, 761.0, 64.0, 22.0 ],
                     "text": "ctlout 23 1"
                 }
             },
@@ -660,7 +660,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 560.0, 216.0, 200.0, 20.0 ],
+                    "patching_rect": [ 560.0, 216.0, 160.0, 20.0 ],
                     "text": "PAD NOTE (no smoothing)"
                 }
             },
@@ -671,7 +671,7 @@
                     "numinlets": 1,
                     "numoutlets": 3,
                     "outlettype": [ "int", "int", "int" ],
-                    "patching_rect": [ 560.0, 241.0, 80.0, 22.0 ],
+                    "patching_rect": [ 560.0, 241.0, 95.0, 22.0 ],
                     "text": "notein mqtt-max"
                 }
             },
@@ -703,7 +703,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 660.0, 277.0, 70.0, 20.0 ],
+                    "patching_rect": [ 660.0, 277.0, 56.0, 20.0 ],
                     "text": "pitch  vel"
                 }
             },
@@ -714,7 +714,7 @@
                     "numinlets": 0,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 660.0, 311.0, 70.0, 22.0 ],
+                    "patching_rect": [ 660.0, 311.0, 59.0, 22.0 ],
                     "text": "r live-port"
                 }
             },
@@ -724,7 +724,7 @@
                     "maxclass": "newobj",
                     "numinlets": 3,
                     "numoutlets": 0,
-                    "patching_rect": [ 560.0, 341.0, 65.0, 22.0 ],
+                    "patching_rect": [ 560.0, 341.0, 59.0, 22.0 ],
                     "text": "noteout 1"
                 }
             },
@@ -735,7 +735,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 560.0, 391.0, 220.0, 20.0 ],
+                    "patching_rect": [ 560.0, 391.0, 165.0, 20.0 ],
                     "text": "3 · OUTPUT PORT  (to Live)"
                 }
             },
@@ -746,7 +746,7 @@
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "bang" ],
-                    "patching_rect": [ 560.0, 416.0, 60.0, 22.0 ],
+                    "patching_rect": [ 560.0, 416.0, 58.0, 22.0 ],
                     "text": "loadbang"
                 }
             },
@@ -757,7 +757,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 630.0, 416.0, 50.0, 22.0 ],
+                    "patching_rect": [ 630.0, 416.0, 46.0, 22.0 ],
                     "text": "refresh"
                 }
             },
@@ -768,14 +768,14 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 560.0, 446.0, 60.0, 22.0 ],
+                    "patching_rect": [ 560.0, 446.0, 50.0, 22.0 ],
                     "text": "midiinfo"
                 }
             },
             {
                 "box": {
                     "id": "menu",
-                    "items": [ "AU DLS Synth 1", ",", "IAC Driver Bus 1", ",", "from Max 1", ",", "from Max 2" ],
+                    "items": [ "AU DLS Synth 1", ",", "IAC Driver Bus 1", ",", "UMC1820", ",", "from Max 1", ",", "from Max 2" ],
                     "maxclass": "umenu",
                     "numinlets": 1,
                     "numoutlets": 3,
@@ -790,7 +790,7 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 560.0, 506.0, 70.0, 22.0 ],
+                    "patching_rect": [ 560.0, 506.0, 61.0, 22.0 ],
                     "text": "s live-port"
                 }
             },
@@ -803,28 +803,6 @@
                     "numoutlets": 0,
                     "patching_rect": [ 730.0, 474.0, 147.0, 33.0 ],
                     "text": "lists MIDI outputs;\nrefresh after adding a port"
-                }
-            },
-            {
-                "box": {
-                    "id": "pmax",
-                    "maxclass": "message",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "outlettype": [ "" ],
-                    "patching_rect": [ 110.0, 241.0, 95.0, 22.0 ],
-                    "text": "port mqtt-max"
-                }
-            },
-            {
-                "box": {
-                    "id": "pmidge",
-                    "maxclass": "message",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "outlettype": [ "" ],
-                    "patching_rect": [ 215.0, 241.0, 80.0, 22.0 ],
-                    "text": "port midge"
                 }
             }
         ],
@@ -1115,30 +1093,6 @@
                 "patchline": {
                     "destination": [ "out3", 0 ],
                     "source": [ "s3", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "pmax", 0 ],
-                    "destination": [ "ctl", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "pmidge", 0 ],
-                    "destination": [ "ctl", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "pmax", 0 ],
-                    "destination": [ "nin", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "pmidge", 0 ],
-                    "destination": [ "nin", 0 ]
                 }
             }
         ],

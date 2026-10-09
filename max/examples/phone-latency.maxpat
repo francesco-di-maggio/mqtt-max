@@ -40,19 +40,19 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 15.0, 400.0, 20.0 ],
+                    "patching_rect": [ 20.0, 15.0, 222.0, 20.0 ],
                     "text": "PHONE -> MQTT -> MIDI  +  LATENCY"
                 }
             },
             {
                 "box": {
                     "id": "setup",
-                    "linecount": 6,
+                    "linecount": 5,
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 40.0, 540.0, 85.0 ],
-                    "text": "SETUP\n1. Bridge: open mqtt-bridge.maxpat and click connect. With Midge instead (prefix remote, virtual\n   port \"midge\", Listen), click port midge in section 2.\n2. Phone: francesco-di-maggio.github.io/mqtt-max/phone/ -> same prefix -> Connect\n3. Section 2 shows the phone. Sections 3-4 measure latency.\nSame prefix everywhere. Public shiftr is visible to anyone: test data only."
+                    "patching_rect": [ 20.0, 40.0, 456.0, 74.0 ],
+                    "text": "SETUP\n1. Bridge: open mqtt-bridge.maxpat and click connect.\n2. Phone: francesco-di-maggio.github.io/mqtt-max/phone/ -> same prefix -> Connect\n3. Section 2 shows the phone. Sections 3-4 measure latency.\nSame prefix everywhere. Public shiftr is visible to anyone: test data only."
                 }
             },
             {
@@ -62,7 +62,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 150.0, 360.0, 20.0 ],
+                    "patching_rect": [ 20.0, 150.0, 289.0, 20.0 ],
                     "text": "1 · BROKER  (node.script, needed for test A only)"
                 }
             },
@@ -73,7 +73,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 175.0, 290.0, 22.0 ],
+                    "patching_rect": [ 20.0, 175.0, 261.0, 22.0 ],
                     "text": "connect mqtt://public.cloud.shiftr.io public public"
                 }
             },
@@ -84,7 +84,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 205.0, 175.0, 22.0 ],
+                    "patching_rect": [ 20.0, 205.0, 165.0, 22.0 ],
                     "text": "connect mqtt://localhost:1883"
                 }
             },
@@ -95,7 +95,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 205.0, 205.0, 70.0, 22.0 ],
+                    "patching_rect": [ 205.0, 205.0, 66.0, 22.0 ],
                     "text": "disconnect"
                 }
             },
@@ -105,7 +105,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 230.0, 440.0, 20.0 ],
+                    "patching_rect": [ 20.0, 230.0, 390.0, 20.0 ],
                     "text": "first click connect; the local one needs ragazzi + the bridge on 127.0.0.1"
                 }
             },
@@ -116,7 +116,7 @@
                     "numinlets": 0,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 300.0, 255.0, 75.0, 22.0 ],
+                    "patching_rect": [ 300.0, 255.0, 69.0, 22.0 ],
                     "text": "r mqtt-send"
                 }
             },
@@ -127,17 +127,15 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 20.0, 290.0, 290.0, 22.0 ],
+                    "patching_rect": [ 20.0, 290.0, 262.0, 22.0 ],
                     "saved_object_attributes": {
                         "autostart": 1,
                         "defer": 0,
-                        "node_bin_path": "",
-                        "npm_bin_path": "",
                         "watch": 1
                     },
-                    "text": "node.script mqtt-client.js @autostart 1 @watch 1",
+                    "text": "node.script mqtt-max.js @autostart 1 @watch 1",
                     "textfile": {
-                        "filename": "mqtt-client.js",
+                        "filename": "mqtt-max.js",
                         "flags": 0,
                         "embed": 0,
                         "autowatch": 1
@@ -151,7 +149,7 @@
                     "numinlets": 3,
                     "numoutlets": 3,
                     "outlettype": [ "", "", "" ],
-                    "patching_rect": [ 20.0, 325.0, 110.0, 22.0 ],
+                    "patching_rect": [ 20.0, 325.0, 100.0, 22.0 ],
                     "text": "route status error"
                 }
             },
@@ -161,7 +159,7 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 360.0, 100.0, 22.0 ],
+                    "patching_rect": [ 20.0, 360.0, 95.0, 22.0 ],
                     "text": "print mqtt-status"
                 }
             },
@@ -171,7 +169,7 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 130.0, 360.0, 95.0, 22.0 ],
+                    "patching_rect": [ 130.0, 360.0, 88.0, 22.0 ],
                     "text": "print mqtt-error"
                 }
             },
@@ -181,7 +179,7 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 320.0, 325.0, 100.0, 22.0 ],
+                    "patching_rect": [ 320.0, 325.0, 95.0, 22.0 ],
                     "text": "print node-script"
                 }
             },
@@ -192,7 +190,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 620.0, 150.0, 400.0, 20.0 ],
+                    "patching_rect": [ 620.0, 150.0, 327.0, 20.0 ],
                     "text": "2 · PHONE INPUT  (MIDI from the bridge, no MQTT here)"
                 }
             },
@@ -203,7 +201,7 @@
                     "numinlets": 1,
                     "numoutlets": 3,
                     "outlettype": [ "int", "int", "int" ],
-                    "patching_rect": [ 620.0, 175.0, 75.0, 22.0 ],
+                    "patching_rect": [ 620.0, 175.0, 83.0, 22.0 ],
                     "text": "ctlin mqtt-max"
                 }
             },
@@ -214,7 +212,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 620.0, 210.0, 60.0, 22.0 ],
+                    "patching_rect": [ 620.0, 210.0, 54.0, 22.0 ],
                     "text": "pack 0 0"
                 }
             },
@@ -225,7 +223,7 @@
                     "numinlets": 2,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 620.0, 245.0, 45.0, 22.0 ],
+                    "patching_rect": [ 620.0, 245.0, 37.0, 22.0 ],
                     "text": "zl.rev"
                 }
             },
@@ -236,7 +234,7 @@
                     "numinlets": 5,
                     "numoutlets": 5,
                     "outlettype": [ "", "", "", "", "" ],
-                    "patching_rect": [ 620.0, 280.0, 110.0, 22.0 ],
+                    "patching_rect": [ 620.0, 280.0, 76.0, 22.0 ],
                     "text": "route 1 2 3 4"
                 }
             },
@@ -258,7 +256,7 @@
                     "numoutlets": 1,
                     "outlettype": [ "" ],
                     "parameter_enable": 0,
-                    "patching_rect": [ 620.0, 315.0, 22.0, 128.0 ]
+                    "patching_rect": [ 620.0, 315.0, 20.0, 140.0 ]
                 }
             },
             {
@@ -291,7 +289,7 @@
                     "numoutlets": 1,
                     "outlettype": [ "" ],
                     "parameter_enable": 0,
-                    "patching_rect": [ 660.0, 315.0, 22.0, 128.0 ]
+                    "patching_rect": [ 660.0, 315.0, 20.0, 140.0 ]
                 }
             },
             {
@@ -324,7 +322,7 @@
                     "numoutlets": 1,
                     "outlettype": [ "" ],
                     "parameter_enable": 0,
-                    "patching_rect": [ 700.0, 315.0, 22.0, 128.0 ]
+                    "patching_rect": [ 700.0, 315.0, 20.0, 140.0 ]
                 }
             },
             {
@@ -357,7 +355,7 @@
                     "numoutlets": 1,
                     "outlettype": [ "" ],
                     "parameter_enable": 0,
-                    "patching_rect": [ 740.0, 315.0, 22.0, 128.0 ]
+                    "patching_rect": [ 740.0, 315.0, 20.0, 140.0 ]
                 }
             },
             {
@@ -389,7 +387,7 @@
                     "numinlets": 1,
                     "numoutlets": 3,
                     "outlettype": [ "int", "int", "int" ],
-                    "patching_rect": [ 820.0, 315.0, 80.0, 22.0 ],
+                    "patching_rect": [ 820.0, 315.0, 95.0, 22.0 ],
                     "text": "notein mqtt-max"
                 }
             },
@@ -400,7 +398,7 @@
                     "numinlets": 2,
                     "numoutlets": 2,
                     "outlettype": [ "int", "int" ],
-                    "patching_rect": [ 820.0, 350.0, 65.0, 22.0 ],
+                    "patching_rect": [ 820.0, 350.0, 55.0, 22.0 ],
                     "text": "stripnote"
                 }
             },
@@ -411,7 +409,7 @@
                     "numinlets": 3,
                     "numoutlets": 3,
                     "outlettype": [ "bang", "bang", "" ],
-                    "patching_rect": [ 820.0, 385.0, 65.0, 22.0 ],
+                    "patching_rect": [ 820.0, 385.0, 57.0, 22.0 ],
                     "text": "sel 61 62"
                 }
             },
@@ -432,7 +430,7 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 820.0, 420.0, 75.0, 22.0 ],
+                    "patching_rect": [ 820.0, 420.0, 68.0, 22.0 ],
                     "text": "s lat-b-stop"
                 }
             },
@@ -442,7 +440,7 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 820.0, 450.0, 75.0, 22.0 ],
+                    "patching_rect": [ 820.0, 450.0, 68.0, 22.0 ],
                     "text": "s lat-a-stop"
                 }
             },
@@ -452,7 +450,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 945.0, 420.0, 90.0, 20.0 ],
+                    "patching_rect": [ 945.0, 420.0, 80.0, 20.0 ],
                     "text": "pad note (60)"
                 }
             },
@@ -463,7 +461,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 905.0, 330.0, 185.0, 59.0 ],
+                    "patching_rect": [ 905.0, 330.0, 185.0, 60.0 ],
                     "text": "notes 61/62 are latency pings,\neverything else is the phone pad.\nNever connect notein to noteout\non the same port: endless loop."
                 }
             },
@@ -474,7 +472,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 421.0, 480.0, 20.0 ],
+                    "patching_rect": [ 20.0, 421.0, 318.0, 20.0 ],
                     "text": "3 · LATENCY A  —  baseline: laptop -> broker -> laptop"
                 }
             },
@@ -485,7 +483,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 443.0, 384.0, 33.0 ],
+                    "patching_rect": [ 20.0, 443.0, 349.0, 33.0 ],
                     "text": "Max publishes note 62 over MQTT -> broker -> bridge -> notein.\nNeeds section 1 connected to the same broker as the bridge."
                 }
             },
@@ -506,7 +504,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 48.0, 488.0, 90.0, 20.0 ],
+                    "patching_rect": [ 48.0, 488.0, 89.0, 20.0 ],
                     "text": "auto (1000 ms)"
                 }
             },
@@ -538,7 +536,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 193.0, 488.0, 80.0, 20.0 ],
+                    "patching_rect": [ 193.0, 488.0, 66.0, 20.0 ],
                     "text": "single ping"
                 }
             },
@@ -549,7 +547,7 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "bang", "bang" ],
-                    "patching_rect": [ 20.0, 551.0, 45.0, 22.0 ],
+                    "patching_rect": [ 20.0, 551.0, 32.0, 22.0 ],
                     "text": "t b b"
                 }
             },
@@ -560,7 +558,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 189.0, 538.0, 225.0, 22.0 ],
+                    "patching_rect": [ 189.0, 538.0, 219.0, 22.0 ],
                     "text": "publishbytes remote/in/noteon/1/62 100"
                 }
             },
@@ -570,7 +568,7 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 60.0, 551.0, 75.0, 22.0 ],
+                    "patching_rect": [ 60.0, 551.0, 71.0, 22.0 ],
                     "text": "s mqtt-send"
                 }
             },
@@ -581,7 +579,7 @@
                     "numinlets": 0,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 140.0, 586.0, 90.0, 22.0 ],
+                    "patching_rect": [ 140.0, 586.0, 66.0, 22.0 ],
                     "text": "r lat-a-stop"
                 }
             },
@@ -592,7 +590,7 @@
                     "numinlets": 2,
                     "numoutlets": 2,
                     "outlettype": [ "float", "" ],
-                    "patching_rect": [ 20.0, 621.0, 140.0, 22.0 ],
+                    "patching_rect": [ 20.0, 621.0, 35.0, 22.0 ],
                     "text": "timer"
                 }
             },
@@ -614,7 +612,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 678.0, 60.0, 20.0 ],
+                    "patching_rect": [ 20.0, 678.0, 47.0, 20.0 ],
                     "text": "last ms"
                 }
             },
@@ -625,7 +623,7 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "float", "int" ],
-                    "patching_rect": [ 100.0, 656.0, 45.0, 22.0 ],
+                    "patching_rect": [ 100.0, 656.0, 39.0, 22.0 ],
                     "text": "mean"
                 }
             },
@@ -647,7 +645,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 100.0, 713.0, 60.0, 20.0 ],
+                    "patching_rect": [ 100.0, 713.0, 47.0, 20.0 ],
                     "text": "avg ms"
                 }
             },
@@ -668,7 +666,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 165.0, 713.0, 50.0, 20.0 ],
+                    "patching_rect": [ 165.0, 713.0, 38.0, 20.0 ],
                     "text": "count"
                 }
             },
@@ -679,7 +677,7 @@
                     "numinlets": 2,
                     "numoutlets": 3,
                     "outlettype": [ "int", "int", "int" ],
-                    "patching_rect": [ 220.0, 656.0, 50.0, 22.0 ],
+                    "patching_rect": [ 220.0, 656.0, 43.0, 22.0 ],
                     "text": "trough"
                 }
             },
@@ -701,7 +699,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 220.0, 713.0, 60.0, 20.0 ],
+                    "patching_rect": [ 220.0, 713.0, 47.0, 20.0 ],
                     "text": "min ms"
                 }
             },
@@ -712,7 +710,7 @@
                     "numinlets": 2,
                     "numoutlets": 3,
                     "outlettype": [ "int", "int", "int" ],
-                    "patching_rect": [ 290.0, 656.0, 45.0, 22.0 ],
+                    "patching_rect": [ 290.0, 656.0, 40.0, 22.0 ],
                     "text": "peak"
                 }
             },
@@ -734,7 +732,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 290.0, 713.0, 60.0, 20.0 ],
+                    "patching_rect": [ 290.0, 713.0, 50.0, 20.0 ],
                     "text": "max ms"
                 }
             },
@@ -755,7 +753,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 392.0, 623.0, 45.0, 20.0 ],
+                    "patching_rect": [ 392.0, 623.0, 35.0, 20.0 ],
                     "text": "reset"
                 }
             },
@@ -766,7 +764,7 @@
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "bang" ],
-                    "patching_rect": [ 365.0, 586.0, 60.0, 22.0 ],
+                    "patching_rect": [ 365.0, 586.0, 58.0, 22.0 ],
                     "text": "loadbang"
                 }
             },
@@ -777,7 +775,7 @@
                     "numinlets": 1,
                     "numoutlets": 3,
                     "outlettype": [ "bang", "bang", "bang" ],
-                    "patching_rect": [ 365.0, 726.0, 55.0, 22.0 ],
+                    "patching_rect": [ 365.0, 726.0, 42.0, 22.0 ],
                     "text": "t b b b"
                 }
             },
@@ -788,7 +786,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 365.0, 761.0, 40.0, 22.0 ],
+                    "patching_rect": [ 365.0, 761.0, 35.0, 22.0 ],
                     "text": "clear"
                 }
             },
@@ -799,7 +797,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 410.0, 761.0, 50.0, 22.0 ],
+                    "patching_rect": [ 410.0, 761.0, 49.0, 22.0 ],
                     "text": "100000"
                 }
             },
@@ -810,7 +808,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 465.0, 865.0, 25.0, 22.0 ],
+                    "patching_rect": [ 465.0, 865.0, 29.5, 22.0 ],
                     "text": "0"
                 }
             },
@@ -821,7 +819,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 620.0, 540.0, 480.0, 20.0 ],
+                    "patching_rect": [ 620.0, 540.0, 275.0, 20.0 ],
                     "text": "4 · LATENCY B  —  full loop through the phone"
                 }
             },
@@ -832,8 +830,8 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 620.0, 562.0, 473.0, 33.0 ],
-                    "text": "Phone: tick \"Echo notes\" in settings, then Connect.\nMax -> bridge -> remote/out -> broker -> phone -> remote/in -> broker -> bridge -> Max."
+                    "patching_rect": [ 620.0, 562.0, 474.0, 33.0 ],
+                    "text": "Phone: turn on \"Echo notes\" in Setup, then Connect.\nMax -> bridge -> remote/out -> broker -> phone -> remote/in -> broker -> bridge -> Max."
                 }
             },
             {
@@ -853,7 +851,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 648.0, 607.0, 90.0, 20.0 ],
+                    "patching_rect": [ 648.0, 607.0, 89.0, 20.0 ],
                     "text": "auto (1000 ms)"
                 }
             },
@@ -885,7 +883,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 767.0, 637.0, 80.0, 20.0 ],
+                    "patching_rect": [ 767.0, 637.0, 66.0, 20.0 ],
                     "text": "single ping"
                 }
             },
@@ -896,7 +894,7 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "bang", "bang" ],
-                    "patching_rect": [ 620.0, 670.0, 45.0, 22.0 ],
+                    "patching_rect": [ 620.0, 670.0, 32.0, 22.0 ],
                     "text": "t b b"
                 }
             },
@@ -907,7 +905,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 670.0, 640.0, 30.0, 22.0 ],
+                    "patching_rect": [ 670.0, 640.0, 29.5, 22.0 ],
                     "text": "61"
                 }
             },
@@ -928,7 +926,7 @@
                     "maxclass": "newobj",
                     "numinlets": 3,
                     "numoutlets": 0,
-                    "patching_rect": [ 670.0, 700.0, 105.0, 22.0 ],
+                    "patching_rect": [ 670.0, 700.0, 102.0, 22.0 ],
                     "text": "noteout mqtt-max"
                 }
             },
@@ -939,7 +937,7 @@
                     "numinlets": 0,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 740.0, 735.0, 90.0, 22.0 ],
+                    "patching_rect": [ 740.0, 735.0, 66.0, 22.0 ],
                     "text": "r lat-b-stop"
                 }
             },
@@ -950,7 +948,7 @@
                     "numinlets": 2,
                     "numoutlets": 2,
                     "outlettype": [ "float", "" ],
-                    "patching_rect": [ 620.0, 770.0, 140.0, 22.0 ],
+                    "patching_rect": [ 620.0, 770.0, 35.0, 22.0 ],
                     "text": "timer"
                 }
             },
@@ -972,7 +970,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 620.0, 827.0, 60.0, 20.0 ],
+                    "patching_rect": [ 620.0, 827.0, 47.0, 20.0 ],
                     "text": "last ms"
                 }
             },
@@ -983,7 +981,7 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "float", "int" ],
-                    "patching_rect": [ 700.0, 805.0, 45.0, 22.0 ],
+                    "patching_rect": [ 700.0, 805.0, 39.0, 22.0 ],
                     "text": "mean"
                 }
             },
@@ -1005,7 +1003,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 700.0, 862.0, 60.0, 20.0 ],
+                    "patching_rect": [ 700.0, 862.0, 47.0, 20.0 ],
                     "text": "avg ms"
                 }
             },
@@ -1026,7 +1024,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 765.0, 862.0, 50.0, 20.0 ],
+                    "patching_rect": [ 765.0, 862.0, 38.0, 20.0 ],
                     "text": "count"
                 }
             },
@@ -1037,7 +1035,7 @@
                     "numinlets": 2,
                     "numoutlets": 3,
                     "outlettype": [ "int", "int", "int" ],
-                    "patching_rect": [ 820.0, 805.0, 50.0, 22.0 ],
+                    "patching_rect": [ 820.0, 805.0, 43.0, 22.0 ],
                     "text": "trough"
                 }
             },
@@ -1059,7 +1057,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 820.0, 862.0, 60.0, 20.0 ],
+                    "patching_rect": [ 820.0, 862.0, 47.0, 20.0 ],
                     "text": "min ms"
                 }
             },
@@ -1070,7 +1068,7 @@
                     "numinlets": 2,
                     "numoutlets": 3,
                     "outlettype": [ "int", "int", "int" ],
-                    "patching_rect": [ 890.0, 805.0, 45.0, 22.0 ],
+                    "patching_rect": [ 890.0, 805.0, 40.0, 22.0 ],
                     "text": "peak"
                 }
             },
@@ -1092,7 +1090,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 890.0, 862.0, 60.0, 20.0 ],
+                    "patching_rect": [ 890.0, 862.0, 50.0, 20.0 ],
                     "text": "max ms"
                 }
             },
@@ -1113,7 +1111,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 992.0, 772.0, 45.0, 20.0 ],
+                    "patching_rect": [ 992.0, 772.0, 35.0, 20.0 ],
                     "text": "reset"
                 }
             },
@@ -1124,7 +1122,7 @@
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "bang" ],
-                    "patching_rect": [ 965.0, 735.0, 60.0, 22.0 ],
+                    "patching_rect": [ 965.0, 735.0, 58.0, 22.0 ],
                     "text": "loadbang"
                 }
             },
@@ -1135,7 +1133,7 @@
                     "numinlets": 1,
                     "numoutlets": 3,
                     "outlettype": [ "bang", "bang", "bang" ],
-                    "patching_rect": [ 965.0, 875.0, 55.0, 22.0 ],
+                    "patching_rect": [ 965.0, 875.0, 42.0, 22.0 ],
                     "text": "t b b b"
                 }
             },
@@ -1146,7 +1144,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 965.0, 910.0, 40.0, 22.0 ],
+                    "patching_rect": [ 965.0, 910.0, 35.0, 22.0 ],
                     "text": "clear"
                 }
             },
@@ -1157,7 +1155,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 1010.0, 910.0, 50.0, 22.0 ],
+                    "patching_rect": [ 1010.0, 910.0, 49.0, 22.0 ],
                     "text": "100000"
                 }
             },
@@ -1168,18 +1166,18 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 1065.0, 910.0, 25.0, 22.0 ],
+                    "patching_rect": [ 1065.0, 910.0, 29.5, 22.0 ],
                     "text": "0"
                 }
             },
             {
                 "box": {
                     "id": "c5",
-                    "linecount": 6,
+                    "linecount": 5,
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 881.0, 557.0, 87.0 ],
+                    "patching_rect": [ 20.0, 881.0, 619.0, 74.0 ],
                     "text": "READING THE NUMBERS\nphone <-> broker round trip  ~=  B avg - A avg\none-way phone -> laptop      ~=  (B avg - A avg) / 2   (assumes both directions are equal)\nmedian = typical value, not pulled up by spikes. jitter = max - min. For music, jitter matters as much as the average.\nClick reset before each run. Compare: cellular vs Wi-Fi vs local ragazzi."
                 }
             },
@@ -1190,7 +1188,7 @@
                     "numinlets": 2,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 20.0, 741.0, 80.0, 22.0 ],
+                    "patching_rect": [ 20.0, 741.0, 74.0, 22.0 ],
                     "text": "zl.stream 20"
                 }
             },
@@ -1201,7 +1199,7 @@
                     "numinlets": 2,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 20.0, 771.0, 65.0, 22.0 ],
+                    "patching_rect": [ 20.0, 771.0, 60.0, 22.0 ],
                     "text": "zl.median"
                 }
             },
@@ -1223,7 +1221,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 85.0, 802.0, 160.0, 20.0 ],
+                    "patching_rect": [ 85.0, 802.0, 146.0, 20.0 ],
                     "text": "median ms (last 20 pings)"
                 }
             },
@@ -1234,7 +1232,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 110.0, 741.0, 50.0, 22.0 ],
+                    "patching_rect": [ 110.0, 741.0, 43.0, 22.0 ],
                     "text": "zlclear"
                 }
             },
@@ -1245,7 +1243,7 @@
                     "numinlets": 2,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 620.0, 890.0, 80.0, 22.0 ],
+                    "patching_rect": [ 620.0, 890.0, 74.0, 22.0 ],
                     "text": "zl.stream 20"
                 }
             },
@@ -1256,7 +1254,7 @@
                     "numinlets": 2,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 620.0, 920.0, 65.0, 22.0 ],
+                    "patching_rect": [ 620.0, 920.0, 60.0, 22.0 ],
                     "text": "zl.median"
                 }
             },
@@ -1278,7 +1276,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 685.0, 951.0, 160.0, 20.0 ],
+                    "patching_rect": [ 685.0, 951.0, 146.0, 20.0 ],
                     "text": "median ms (last 20 pings)"
                 }
             },
@@ -1289,30 +1287,8 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 710.0, 890.0, 50.0, 22.0 ],
+                    "patching_rect": [ 710.0, 890.0, 43.0, 22.0 ],
                     "text": "zlclear"
-                }
-            },
-            {
-                "box": {
-                    "id": "pmax",
-                    "maxclass": "message",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "outlettype": [ "" ],
-                    "patching_rect": [ 705.0, 175.0, 95.0, 22.0 ],
-                    "text": "port mqtt-max"
-                }
-            },
-            {
-                "box": {
-                    "id": "pmidge",
-                    "maxclass": "message",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "outlettype": [ "" ],
-                    "patching_rect": [ 810.0, 175.0, 80.0, 22.0 ],
-                    "text": "port midge"
                 }
             }
         ],
@@ -1847,42 +1823,6 @@
                 "patchline": {
                     "destination": [ "sel", 0 ],
                     "source": [ "strip", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "pmax", 0 ],
-                    "destination": [ "ctl", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "pmidge", 0 ],
-                    "destination": [ "ctl", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "pmax", 0 ],
-                    "destination": [ "nin", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "pmidge", 0 ],
-                    "destination": [ "nin", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "pmax", 0 ],
-                    "destination": [ "bout", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "pmidge", 0 ],
-                    "destination": [ "bout", 0 ]
                 }
             }
         ],
