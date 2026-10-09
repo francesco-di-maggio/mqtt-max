@@ -130,7 +130,7 @@ All on `{prefix}/in/…`, on the channel set in Setup. **Echo notes** sends note
 - **No `mqtt-max` port**: the bridge patch must be open. If the Max Console shows `Cannot find module`, click `script npm install`.
 - **`node.script` can't find `mqtt-max.js`** in an example: the repo folder is missing from Max's search path.
 - **Every message twice**: two clients bridge the same prefix. Close one.
-- **Endless MIDI loop**: never patch `notein mqtt-max` / `ctlin mqtt-max` straight to `noteout mqtt-max` / `ctlout mqtt-max`, and never pick `mqtt-max` as the output port in `phone-to-live`.
+- **Notes repeat forever**: with Echo notes on, `notein mqtt-max` is patched to `noteout mqtt-max`. The phone sends every note back, and the patch sends it out again.
 
 ## Development
 

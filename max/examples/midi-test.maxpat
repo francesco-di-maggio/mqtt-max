@@ -9,7 +9,7 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 120.0, 120.0, 600.0, 470.0 ],
+        "rect": [ 177.0, 190.0, 568.0, 460.0 ],
         "boxes": [
             {
                 "box": {
@@ -294,8 +294,9 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 400.0, 511.0, 20.0 ],
-                    "text": "Never patch an IN object straight to an OUT object on the same port: endless loop over MQTT."
+                    "patching_rect": [ 20.0, 400.0, 511.0, 33.0 ],
+                    "text": "With Echo notes on, never patch notein mqtt-max to noteout mqtt-max:\nthe phone sends every note back and the notes repeat forever.",
+                    "linecount": 2
                 }
             }
         ],
