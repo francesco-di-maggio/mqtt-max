@@ -9,28 +9,28 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 140.0, 140.0, 600.0, 520.0 ],
+        "rect": [ 140.0, 140.0, 600.0, 550.0 ],
         "boxes": [
             {
                 "box": {
+                    "fontface": 1,
                     "id": "title",
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 15.0, 500.0, 20.0 ],
-                    "text": "MQTT CLIENT  (raw topics, no MIDI port)",
-                    "fontface": 1
+                    "patching_rect": [ 20.0, 15.0, 240.0, 20.0 ],
+                    "text": "MQTT CLIENT  (raw topics, no MIDI port)"
                 }
             },
             {
                 "box": {
                     "id": "info",
+                    "linecount": 2,
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 40.0, 550.0, 33.0 ],
-                    "text": "Plain MQTT for non-MIDI data, e.g. sensors or an ESP32. Without a port message no MIDI port\nis created, so this runs next to mqtt-bridge.maxpat.",
-                    "linecount": 2
+                    "patching_rect": [ 20.0, 40.0, 515.0, 33.0 ],
+                    "text": "Plain MQTT for non-MIDI data, e.g. sensors or an ESP32. Without a port message no MIDI port\nis created, so this runs next to mqtt-bridge.maxpat."
                 }
             },
             {
@@ -40,7 +40,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 85.0, 290.0, 22.0 ],
+                    "patching_rect": [ 20.0, 85.0, 261.0, 22.0 ],
                     "text": "connect mqtt://public.cloud.shiftr.io public public"
                 }
             },
@@ -51,7 +51,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 115.0, 175.0, 22.0 ],
+                    "patching_rect": [ 20.0, 115.0, 165.0, 22.0 ],
                     "text": "connect mqtt://localhost:1883"
                 }
             },
@@ -62,7 +62,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 205.0, 115.0, 70.0, 22.0 ],
+                    "patching_rect": [ 205.0, 115.0, 66.0, 22.0 ],
                     "text": "disconnect"
                 }
             },
@@ -73,7 +73,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 155.0, 110.0, 22.0 ],
+                    "patching_rect": [ 20.0, 155.0, 93.0, 22.0 ],
                     "text": "subscribe test/#"
                 }
             },
@@ -84,7 +84,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 140.0, 155.0, 150.0, 22.0 ],
+                    "patching_rect": [ 140.0, 155.0, 128.0, 22.0 ],
                     "text": "publish test/hello 1 2 3"
                 }
             },
@@ -95,7 +95,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 300.0, 155.0, 180.0, 22.0 ],
+                    "patching_rect": [ 300.0, 155.0, 160.0, 22.0 ],
                     "text": "publishbytes test/bytes 1 2 3"
                 }
             },
@@ -106,7 +106,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 185.0, 70.0, 22.0 ],
+                    "patching_rect": [ 20.0, 185.0, 65.0, 22.0 ],
                     "text": "format text"
                 }
             },
@@ -117,7 +117,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 100.0, 185.0, 80.0, 22.0 ],
+                    "patching_rect": [ 100.0, 185.0, 75.0, 22.0 ],
                     "text": "format bytes"
                 }
             },
@@ -127,7 +127,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 280.0, 185.0, 300.0, 20.0 ],
+                    "patching_rect": [ 280.0, 185.0, 299.0, 20.0 ],
                     "text": "payload as words/numbers, raw bytes, or JSON -> dict"
                 }
             },
@@ -138,8 +138,21 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 20.0, 225.0, 290.0, 22.0 ],
-                    "text": "node.script mqtt-client.js @autostart 1 @watch 1"
+                    "patching_rect": [ 20.0, 255.0, 267.0, 22.0 ],
+                    "saved_object_attributes": {
+                        "autostart": 1,
+                        "defer": 0,
+                        "node_bin_path": "",
+                        "npm_bin_path": "",
+                        "watch": 1
+                    },
+                    "text": "node.script mqtt-client.js @autostart 1 @watch 1",
+                    "textfile": {
+                        "filename": "mqtt-client.js",
+                        "flags": 0,
+                        "embed": 0,
+                        "autowatch": 1
+                    }
                 }
             },
             {
@@ -149,7 +162,7 @@
                     "numinlets": 4,
                     "numoutlets": 4,
                     "outlettype": [ "", "", "", "" ],
-                    "patching_rect": [ 20.0, 260.0, 170.0, 22.0 ],
+                    "patching_rect": [ 20.0, 290.0, 152.0, 22.0 ],
                     "text": "route message status error"
                 }
             },
@@ -159,8 +172,7 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "outlettype": [],
-                    "patching_rect": [ 20.0, 295.0, 110.0, 22.0 ],
+                    "patching_rect": [ 20.0, 325.0, 111.0, 22.0 ],
                     "text": "print mqtt-message"
                 }
             },
@@ -170,8 +182,7 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "outlettype": [],
-                    "patching_rect": [ 140.0, 295.0, 100.0, 22.0 ],
+                    "patching_rect": [ 140.0, 325.0, 95.0, 22.0 ],
                     "text": "print mqtt-status"
                 }
             },
@@ -181,8 +192,7 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "outlettype": [],
-                    "patching_rect": [ 250.0, 295.0, 95.0, 22.0 ],
+                    "patching_rect": [ 250.0, 325.0, 88.0, 22.0 ],
                     "text": "print mqtt-error"
                 }
             },
@@ -192,8 +202,7 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "outlettype": [],
-                    "patching_rect": [ 320.0, 260.0, 100.0, 22.0 ],
+                    "patching_rect": [ 320.0, 290.0, 95.0, 22.0 ],
                     "text": "print node-script"
                 }
             },
@@ -203,7 +212,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 325.0, 400.0, 20.0 ],
+                    "patching_rect": [ 20.0, 355.0, 200.0, 20.0 ],
                     "text": "mqtt-message: <topic> <payload...>"
                 }
             },
@@ -214,18 +223,18 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 190.0, 185.0, 80.0, 22.0 ],
+                    "patching_rect": [ 190.0, 185.0, 68.0, 22.0 ],
                     "text": "format json"
                 }
             },
             {
                 "box": {
+                    "fontface": 1,
                     "id": "cj",
                     "maxclass": "comment",
-                    "fontface": 1,
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 365.0, 400.0, 20.0 ],
+                    "patching_rect": [ 20.0, 395.0, 297.0, 20.0 ],
                     "text": "JSON  (click subscribe test/# and format json first)"
                 }
             },
@@ -237,17 +246,17 @@
                     "numoutlets": 2,
                     "outlettype": [ "", "bang" ],
                     "parameter_enable": 0,
-                    "patching_rect": [ 20.0, 390.0, 50.0, 22.0 ]
+                    "patching_rect": [ 20.0, 420.0, 50.0, 22.0 ]
                 }
             },
             {
                 "box": {
                     "id": "jpack",
                     "maxclass": "newobj",
-                    "numinlets": 1,
+                    "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "dictionary" ],
-                    "patching_rect": [ 20.0, 420.0, 90.0, 22.0 ],
+                    "patching_rect": [ 20.0, 450.0, 89.0, 22.0 ],
                     "text": "dict.pack temp:"
                 }
             },
@@ -258,7 +267,7 @@
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 450.0, 170.0, 22.0 ],
+                    "patching_rect": [ 20.0, 480.0, 164.0, 22.0 ],
                     "text": "prepend publishjson test/json"
                 }
             },
@@ -268,7 +277,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 75.0, 390.0, 120.0, 20.0 ],
+                    "patching_rect": [ 75.0, 420.0, 94.0, 20.0 ],
                     "text": "send {\"temp\": n}"
                 }
             },
@@ -279,7 +288,7 @@
                     "numinlets": 2,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 250.0, 390.0, 90.0, 22.0 ],
+                    "patching_rect": [ 250.0, 420.0, 84.0, 22.0 ],
                     "text": "route test/json"
                 }
             },
@@ -290,7 +299,10 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 250.0, 420.0, 100.0, 22.0 ],
+                    "patching_rect": [ 250.0, 450.0, 103.0, 22.0 ],
+                    "saved_object_attributes": {
+                        "legacy": 1
+                    },
                     "text": "dict.unpack temp:"
                 }
             },
@@ -302,7 +314,7 @@
                     "numoutlets": 2,
                     "outlettype": [ "", "bang" ],
                     "parameter_enable": 0,
-                    "patching_rect": [ 250.0, 450.0, 50.0, 22.0 ]
+                    "patching_rect": [ 250.0, 480.0, 50.0, 22.0 ]
                 }
             },
             {
@@ -311,132 +323,213 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 305.0, 450.0, 120.0, 20.0 ],
+                    "patching_rect": [ 305.0, 480.0, 84.0, 20.0 ],
                     "text": "received temp"
+                }
+            },
+            {
+                "box": {
+                    "id": "q0",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 20.0, 215.0, 45.0, 22.0 ],
+                    "text": "qos 0"
+                }
+            },
+            {
+                "box": {
+                    "id": "q1",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 70.0, 215.0, 45.0, 22.0 ],
+                    "text": "qos 1"
+                }
+            },
+            {
+                "box": {
+                    "id": "r0",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 125.0, 215.0, 55.0, 22.0 ],
+                    "text": "retain 0"
+                }
+            },
+            {
+                "box": {
+                    "id": "r1",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 185.0, 215.0, 55.0, 22.0 ],
+                    "text": "retain 1"
+                }
+            },
+            {
+                "box": {
+                    "id": "cqr",
+                    "maxclass": "comment",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 250.0, 208.0, 330.0, 33.0 ],
+                    "text": "for publish and subscribe from now on. retain 1: the broker keeps\nthe last message per topic for new subscribers."
                 }
             }
         ],
         "lines": [
             {
                 "patchline": {
-                    "source": [ "conn", 0 ],
+                    "destination": [ "node", 0 ],
+                    "source": [ "conn", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "node", 0 ],
+                    "source": [ "connl", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "node", 0 ],
+                    "source": [ "disc", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "node", 0 ],
+                    "source": [ "fbyt", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "node", 0 ],
+                    "source": [ "fjson", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "node", 0 ],
+                    "source": [ "ftxt", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "jpack", 0 ],
+                    "source": [ "jn", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "jpre", 0 ],
+                    "source": [ "jpack", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "node", 0 ],
+                    "source": [ "jpre", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "junpack", 0 ],
+                    "source": [ "jroute", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "jout", 0 ],
+                    "source": [ "junpack", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "pns", 0 ],
+                    "source": [ "node", 1 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "route", 0 ],
+                    "source": [ "node", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "node", 0 ],
+                    "source": [ "pub", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "node", 0 ],
+                    "source": [ "pubb", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "jroute", 0 ],
+                    "order": 0,
+                    "source": [ "route", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "perr", 0 ],
+                    "source": [ "route", 2 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "pmsg", 0 ],
+                    "order": 1,
+                    "source": [ "route", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "pst", 0 ],
+                    "source": [ "route", 1 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "node", 0 ],
+                    "source": [ "sub", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [ "q0", 0 ],
                     "destination": [ "node", 0 ]
                 }
             },
             {
                 "patchline": {
-                    "source": [ "connl", 0 ],
+                    "source": [ "q1", 0 ],
                     "destination": [ "node", 0 ]
                 }
             },
             {
                 "patchline": {
-                    "source": [ "disc", 0 ],
+                    "source": [ "r0", 0 ],
                     "destination": [ "node", 0 ]
                 }
             },
             {
                 "patchline": {
-                    "source": [ "sub", 0 ],
+                    "source": [ "r1", 0 ],
                     "destination": [ "node", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "pub", 0 ],
-                    "destination": [ "node", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "pubb", 0 ],
-                    "destination": [ "node", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "ftxt", 0 ],
-                    "destination": [ "node", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "fbyt", 0 ],
-                    "destination": [ "node", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "node", 0 ],
-                    "destination": [ "route", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "node", 1 ],
-                    "destination": [ "pns", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "route", 0 ],
-                    "destination": [ "pmsg", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "route", 1 ],
-                    "destination": [ "pst", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "route", 2 ],
-                    "destination": [ "perr", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "fjson", 0 ],
-                    "destination": [ "node", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "jn", 0 ],
-                    "destination": [ "jpack", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "jpack", 0 ],
-                    "destination": [ "jpre", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "jpre", 0 ],
-                    "destination": [ "node", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "route", 0 ],
-                    "destination": [ "jroute", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "jroute", 0 ],
-                    "destination": [ "junpack", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "junpack", 0 ],
-                    "destination": [ "jout", 0 ]
                 }
             }
-        ]
+        ],
+        "autosave": 0
     }
 }

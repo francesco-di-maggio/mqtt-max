@@ -11,6 +11,9 @@ const option = (name) => {
 
 let client = null;
 let format = "text";
+// Options for publish / publishbytes / publishjson and subscribe; MIDI from the port always uses QoS 0, no retain.
+let qos = 0;
+let retain = false;
 let prefix = option("prefix") ?? "remote";
 let port = null;
 
@@ -149,7 +152,7 @@ maxApi.addHandlers({
   disconnect,
   subscribe: (topic) => {
     if (!client) return maxApi.outlet("error", "not connected");
-    client.subscribe(String(topic));
+    client.subscribe(String(topic), { qos });
   },
   unsubscribe: (topic) => {
     if (!client) return;
@@ -157,19 +160,26 @@ maxApi.addHandlers({
   },
   publish: (topic, ...values) => {
     if (!client) return maxApi.outlet("error", "not connected");
-    client.publish(String(topic), values.join(" "));
+    client.publish(String(topic), values.join(" "), { qos, retain });
   },
   // Raw bytes payload, e.g. mqtt-midi: publishbytes remote/in/noteon/1/60 100
   publishbytes: (topic, ...bytes) => {
     if (!client) return maxApi.outlet("error", "not connected");
-    client.publish(String(topic), Buffer.from(bytes.map((b) => b & 0xff)));
+    client.publish(String(topic), Buffer.from(bytes.map((b) => b & 0xff)), { qos, retain });
   },
   // publishjson <topic> <dict>, e.g. from [dict.pack] -> [prepend publishjson sensors/esp1]
   publishjson: async (topic, ...rest) => {
     if (!client) return maxApi.outlet("error", "not connected");
     const dict = rest[0] === "dictionary" ? await maxApi.getDict(rest[1]) : rest[0];
     if (dict === null || typeof dict !== "object") return maxApi.outlet("error", "publishjson needs a dict");
-    client.publish(String(topic), JSON.stringify(dict));
+    client.publish(String(topic), JSON.stringify(dict), { qos, retain });
+  },
+  qos: (level) => {
+    qos = [0, 1, 2].includes(level) ? level : 0;
+  },
+  // retain 1 + publish <topic> with no payload clears the retained message on the broker
+  retain: (on) => {
+    retain = Boolean(on);
   },
   format: (mode) => {
     format = ["bytes", "json"].includes(mode) ? mode : "text";
