@@ -51,8 +51,8 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 40.0, 457.0, 87.0 ],
-                    "text": "SETUP\n1. Midge: host public.cloud.shiftr.io, port 1883, user/pass public, prefix remote\n   -> Connect. MIDI: Create virtual port (\"midge\") -> Listen\n2. Phone: francesco-di-maggio.github.io/mqtt-max/phone/ -> same prefix -> Connect\n3. Section 2 shows the phone. Sections 3-4 measure latency.\nSame prefix everywhere. Public shiftr is visible to anyone: test data only."
+                    "patching_rect": [ 20.0, 40.0, 540.0, 85.0 ],
+                    "text": "SETUP\n1. Bridge: open mqtt-bridge.maxpat and click connect. With Midge instead (prefix remote, virtual\n   port \"midge\", Listen), click port midge in section 2.\n2. Phone: francesco-di-maggio.github.io/mqtt-max/phone/ -> same prefix -> Connect\n3. Section 2 shows the phone. Sections 3-4 measure latency.\nSame prefix everywhere. Public shiftr is visible to anyone: test data only."
                 }
             },
             {
@@ -105,8 +105,8 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 230.0, 400.0, 20.0 ],
-                    "text": "first click connect; the local one needs ragazzi + Midge on 127.0.0.1"
+                    "patching_rect": [ 20.0, 230.0, 440.0, 20.0 ],
+                    "text": "first click connect; the local one needs ragazzi + the bridge on 127.0.0.1"
                 }
             },
             {
@@ -192,8 +192,8 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 620.0, 150.0, 360.0, 20.0 ],
-                    "text": "2 · PHONE INPUT  (MIDI from Midge, no MQTT here)"
+                    "patching_rect": [ 620.0, 150.0, 400.0, 20.0 ],
+                    "text": "2 · PHONE INPUT  (MIDI from the bridge, no MQTT here)"
                 }
             },
             {
@@ -204,7 +204,7 @@
                     "numoutlets": 3,
                     "outlettype": [ "int", "int", "int" ],
                     "patching_rect": [ 620.0, 175.0, 75.0, 22.0 ],
-                    "text": "ctlin midge"
+                    "text": "ctlin mqtt-max"
                 }
             },
             {
@@ -390,7 +390,7 @@
                     "numoutlets": 3,
                     "outlettype": [ "int", "int", "int" ],
                     "patching_rect": [ 820.0, 315.0, 80.0, 22.0 ],
-                    "text": "notein midge"
+                    "text": "notein mqtt-max"
                 }
             },
             {
@@ -463,8 +463,8 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 905.0, 330.0, 185.0, 60.0 ],
-                    "text": "notes 61/62 are latency pings,\neverything else is the phone pad.\nNever connect notein midge to\nnoteout midge: endless loop."
+                    "patching_rect": [ 905.0, 330.0, 185.0, 59.0 ],
+                    "text": "notes 61/62 are latency pings,\neverything else is the phone pad.\nNever connect notein to noteout\non the same port: endless loop."
                 }
             },
             {
@@ -486,7 +486,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 20.0, 443.0, 384.0, 33.0 ],
-                    "text": "Max publishes note 62 over MQTT -> broker -> Midge -> notein midge.\nNeeds section 1 connected to the same broker as Midge."
+                    "text": "Max publishes note 62 over MQTT -> broker -> bridge -> notein.\nNeeds section 1 connected to the same broker as the bridge."
                 }
             },
             {
@@ -833,7 +833,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 620.0, 562.0, 473.0, 33.0 ],
-                    "text": "Phone: tick \"Echo notes\" in settings, then Connect.\nMax -> Midge -> remote/out -> broker -> phone -> remote/in -> broker -> Midge -> Max."
+                    "text": "Phone: tick \"Echo notes\" in settings, then Connect.\nMax -> bridge -> remote/out -> broker -> phone -> remote/in -> broker -> bridge -> Max."
                 }
             },
             {
@@ -928,8 +928,8 @@
                     "maxclass": "newobj",
                     "numinlets": 3,
                     "numoutlets": 0,
-                    "patching_rect": [ 670.0, 700.0, 85.0, 22.0 ],
-                    "text": "noteout midge"
+                    "patching_rect": [ 670.0, 700.0, 105.0, 22.0 ],
+                    "text": "noteout mqtt-max"
                 }
             },
             {
@@ -1291,6 +1291,28 @@
                     "outlettype": [ "" ],
                     "patching_rect": [ 710.0, 890.0, 50.0, 22.0 ],
                     "text": "zlclear"
+                }
+            },
+            {
+                "box": {
+                    "id": "pmax",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 705.0, 175.0, 95.0, 22.0 ],
+                    "text": "port mqtt-max"
+                }
+            },
+            {
+                "box": {
+                    "id": "pmidge",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 810.0, 175.0, 80.0, 22.0 ],
+                    "text": "port midge"
                 }
             }
         ],
@@ -1825,6 +1847,42 @@
                 "patchline": {
                     "destination": [ "sel", 0 ],
                     "source": [ "strip", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [ "pmax", 0 ],
+                    "destination": [ "ctl", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [ "pmidge", 0 ],
+                    "destination": [ "ctl", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [ "pmax", 0 ],
+                    "destination": [ "nin", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [ "pmidge", 0 ],
+                    "destination": [ "nin", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [ "pmax", 0 ],
+                    "destination": [ "bout", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [ "pmidge", 0 ],
+                    "destination": [ "bout", 0 ]
                 }
             }
         ],

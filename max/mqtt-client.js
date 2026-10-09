@@ -1,8 +1,18 @@
 const maxApi = require("max-api");
 const mqtt = require("mqtt");
+const midi = require("@julusian/midi");
+
+// Launch options from @args, e.g. @args --prefix remote --port mqtt-max
+const args = process.argv.slice(2);
+const option = (name) => {
+  const i = args.indexOf(`--${name}`);
+  return i >= 0 ? args[i + 1] : undefined;
+};
 
 let client = null;
 let format = "text";
+let prefix = option("prefix") ?? "remote";
+let port = null;
 
 function toAtom(s) {
   const n = Number(s);
@@ -14,19 +24,88 @@ function decode(payload) {
   return payload.toString("utf8").split(" ").map(toAtom);
 }
 
-// mqtt-midi topics: {prefix}/{in|out}/{type}/{channel}[/{note|controller}], payload = raw bytes.
-const MIDI_TOPIC = /^.+\/(in|out)\/(noteon|noteoff|cc|program|pitchbend)\/(\d+)(?:\/(\d+))?$/;
+const STATUS = { noteoff: 0x80, noteon: 0x90, cc: 0xb0, program: 0xc0, pitchbend: 0xe0 };
+const TYPE = Object.fromEntries(Object.entries(STATUS).map(([type, status]) => [status, type]));
+const SYSTEM = { clock: 0xf8, start: 0xfa, continue: 0xfb, stop: 0xfc };
+const SYSTEM_TYPE = Object.fromEntries(Object.entries(SYSTEM).map(([type, status]) => [status, type]));
 
+const toInt = (s) => (/^\d+$/.test(s ?? "") ? Number(s) : NaN);
+const isChannel = (n) => n >= 1 && n <= 16;
+const isData = (n) => n >= 0 && n <= 127;
+
+// mqtt-midi topics, payload = raw bytes:
+//   {prefix}/{in|out}/{noteon|noteoff|cc}/{channel}/{note|controller}  1 byte
+//   {prefix}/{in|out}/program/{channel}                               1 byte
+//   {prefix}/{in|out}/pitchbend/{channel}                             2 bytes, lsb msb
+//   {prefix}/{in|out}/{clock|start|stop|continue}                     empty
 function parseMidi(topic, payload) {
-  const m = MIDI_TOPIC.exec(topic);
-  if (!m || payload.length === 0) return null;
-  const [, direction, type, channel, number] = m;
-  if (type === "pitchbend") {
-    return [direction, type, Number(channel), payload[0] | ((payload[1] ?? 0) << 7)];
+  if (!topic.startsWith(`${prefix}/`)) return null;
+  const parts = topic.slice(prefix.length + 1).split("/");
+  const [direction, type] = parts;
+  if (direction !== "in" && direction !== "out") return null;
+  if (type in SYSTEM) {
+    if (parts.length !== 2) return null;
+    return { direction, list: [type], bytes: [SYSTEM[type]] };
   }
-  if (type === "program") return [direction, type, Number(channel), payload[0]];
-  if (number === undefined) return null;
-  return [direction, type, Number(channel), Number(number), payload[0]];
+  if (!(type in STATUS)) return null;
+  const channel = toInt(parts[2]);
+  if (!isChannel(channel) || !Array.from(payload).every(isData)) return null;
+  const status = STATUS[type] | (channel - 1);
+  if (type === "pitchbend") {
+    if (parts.length !== 3 || payload.length !== 2) return null;
+    const [lsb, msb] = payload;
+    return { direction, list: [type, channel, lsb | (msb << 7)], bytes: [status, lsb, msb] };
+  }
+  if (payload.length !== 1) return null;
+  const value = payload[0];
+  if (type === "program") {
+    if (parts.length !== 3) return null;
+    return { direction, list: [type, channel, value], bytes: [status, value] };
+  }
+  const number = toInt(parts[3]);
+  if (parts.length !== 4 || !isData(number)) return null;
+  return { direction, list: [type, channel, number, value], bytes: [status, number, value] };
+}
+
+// MIDI bytes -> mqtt-midi topic and payload, the inverse of parseMidi.
+// Note on with velocity 0 is published as noteoff.
+function toMqtt([status, data1, data2]) {
+  if (status in SYSTEM_TYPE) return [`${prefix}/out/${SYSTEM_TYPE[status]}`, []];
+  let type = TYPE[status & 0xf0];
+  if (!type) return null;
+  if (type === "noteon" && data2 === 0) type = "noteoff";
+  const base = `${prefix}/out/${type}/${(status & 0x0f) + 1}`;
+  if (type === "pitchbend") return [base, [data1, data2]];
+  if (type === "program") return [base, [data1]];
+  return [`${base}/${data1}`, [data2]];
+}
+
+// Virtual MIDI port pair: Max reads it with ctlin/notein, writes to it with ctlout/noteout.
+function closePort() {
+  if (!port) return;
+  port.input.closePort();
+  port.output.closePort();
+  port = null;
+}
+
+function openPort(name) {
+  closePort();
+  const output = new midi.Output();
+  output.openVirtualPort(name);
+  const input = new midi.Input();
+  // Pass clock/start/stop/continue; drop sysex and active sensing.
+  input.ignoreTypes(true, false, true);
+  input.on("message", (deltaTime, bytes) => {
+    const msg = toMqtt(bytes);
+    if (!msg || !client) return;
+    client.publish(msg[0], Buffer.from(msg[1]));
+  });
+  input.openVirtualPort(name);
+  port = { input, output };
+}
+
+function subscribeIn() {
+  if (port && client?.connected) client.subscribe(`${prefix}/in/#`);
 }
 
 function disconnect() {
@@ -39,14 +118,19 @@ maxApi.addHandlers({
   connect: (url = "mqtt://localhost:1883", username, password) => {
     disconnect();
     client = mqtt.connect(url, { username, password });
-    client.on("connect", () => maxApi.outlet("status", "connected", url));
+    client.on("connect", () => {
+      subscribeIn();
+      maxApi.outlet("status", "connected", url);
+    });
     client.on("reconnect", () => maxApi.outlet("status", "reconnecting"));
     client.on("close", () => maxApi.outlet("status", "disconnected"));
     client.on("error", (err) => maxApi.outlet("error", err.message));
     client.on("message", (topic, payload) => {
       maxApi.outlet("message", topic, ...decode(payload));
-      const midi = parseMidi(topic, payload);
-      if (midi) maxApi.outlet("midi", ...midi);
+      const parsed = parseMidi(topic, payload);
+      if (!parsed) return;
+      maxApi.outlet("midi", parsed.direction, ...parsed.list);
+      if (port && parsed.direction === "in") port.output.sendMessage(parsed.bytes);
     });
   },
   disconnect,
@@ -70,4 +154,17 @@ maxApi.addHandlers({
   format: (mode) => {
     format = mode === "bytes" ? "bytes" : "text";
   },
+  // Opens a virtual MIDI port: {prefix}/in/... is subscribed and played on it, MIDI sent to it goes to {prefix}/out/...
+  port: (name = "mqtt-max") => {
+    openPort(String(name));
+    subscribeIn();
+  },
+  prefix: (name) => {
+    if (port && client) client.unsubscribe(`${prefix}/in/#`);
+    prefix = String(name);
+    subscribeIn();
+  },
 });
+
+const portName = option("port");
+if (portName) openPort(portName);

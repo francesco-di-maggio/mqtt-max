@@ -2,6 +2,7 @@
   "name": "max-mqtt-client",
   "private": true,
   "dependencies": {
+    "@julusian/midi": "^3.8.1",
     "mqtt": "^5.16.0"
   }
 }
