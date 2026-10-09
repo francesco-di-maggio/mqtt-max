@@ -9,7 +9,7 @@ phone --MQTT--> broker --MQTT--> mqtt-bridge.maxpat (or Midge) --MIDI--> ctlin /
 ## Contents
 
 - `phone/` — web controller, served at [francesco-di-maggio.github.io/mqtt-max/phone/](https://francesco-di-maggio.github.io/mqtt-max/phone/). Pitch / roll / yaw → CC 1–3, slider → CC 4, pad → note 60, all on `{prefix}/in/…`. "Echo notes" sends notes arriving on `{prefix}/out/…` back on `{prefix}/in/…`, for latency tests.
-- `max/mqtt-client.js` — Max `node.script` MQTT client (`connect`, `subscribe`, `publish`, `publishbytes`, `format text|bytes`, `prefix`, `port`). mqtt-midi topics under the prefix also come out decoded, e.g. `midi in cc 1 7 64`. `@args --prefix <prefix> --port <name>` (or the `prefix` / `port` messages) sets the prefix (default `remote`) and creates a virtual MIDI port: `{prefix}/in/…` is subscribed and played on it, and MIDI sent to it is published on `{prefix}/out/…`, as Midge does (note on with velocity 0 → `noteoff`, clock/start/stop/continue included, SysEx not).
+- `max/mqtt-client.js` — Max `node.script` MQTT client (`connect`, `subscribe`, `publish`, `publishbytes`, `publishjson`, `format text|bytes|json`, `prefix`, `port`). mqtt-midi topics under the prefix also come out decoded, e.g. `midi in cc 1 7 64`. `@args --prefix <prefix> --port <name>` (or the `prefix` / `port` messages) sets the prefix (default `remote`) and creates a virtual MIDI port: `{prefix}/in/…` is subscribed and played on it, and MIDI sent to it is published on `{prefix}/out/…`, as Midge does (note on with velocity 0 → `noteoff`, clock/start/stop/continue included, SysEx not).
 
 | Patch | |
 |---|---|
@@ -17,7 +17,7 @@ phone --MQTT--> broker --MQTT--> mqtt-bridge.maxpat (or Midge) --MIDI--> ctlin /
 | `midi-test.maxpat` | Phone in with `ctlin`/`notein`, CC and note out with `ctlout`/`noteout`. |
 | `phone-to-live.maxpat` | Smooths CC 1–4 with `line` and sends them as CC 20–23 (pad note passed through) to a MIDI output such as "from Max 1". |
 | `phone-latency.maxpat` | Phone input + latency tests: laptop ↔ broker, and the full loop through the phone. |
-| `mqtt-raw.maxpat` | Plain MQTT client for non-MIDI data, no MIDI port. |
+| `mqtt-raw.maxpat` | Plain MQTT client for non-MIDI data, no MIDI port. `format json` turns JSON payloads into dicts; `publishjson` sends a dict as JSON. |
 
 The MIDI patches read the `mqtt-max` port; click `port midge` in them to use Midge instead. Run one bridge at a time, or every message arrives twice.
 

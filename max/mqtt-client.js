@@ -19,9 +19,22 @@ function toAtom(s) {
   return s !== "" && !isNaN(n) ? n : s;
 }
 
+function parseJson(text) {
+  try {
+    const value = JSON.parse(text);
+    return value !== null && typeof value === "object" && !Array.isArray(value) ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+// format json: JSON objects come out as a Max dict, anything else as text.
 function decode(payload) {
   if (format === "bytes") return Array.from(payload);
-  return payload.toString("utf8").split(" ").map(toAtom);
+  const text = payload.toString("utf8");
+  const json = format === "json" && parseJson(text);
+  if (json) return [json];
+  return text.split(" ").map(toAtom);
 }
 
 const STATUS = { noteoff: 0x80, noteon: 0x90, cc: 0xb0, program: 0xc0, pitchbend: 0xe0 };
@@ -151,8 +164,15 @@ maxApi.addHandlers({
     if (!client) return maxApi.outlet("error", "not connected");
     client.publish(String(topic), Buffer.from(bytes.map((b) => b & 0xff)));
   },
+  // publishjson <topic> <dict>, e.g. from [dict.pack] -> [prepend publishjson sensors/esp1]
+  publishjson: async (topic, ...rest) => {
+    if (!client) return maxApi.outlet("error", "not connected");
+    const dict = rest[0] === "dictionary" ? await maxApi.getDict(rest[1]) : rest[0];
+    if (dict === null || typeof dict !== "object") return maxApi.outlet("error", "publishjson needs a dict");
+    client.publish(String(topic), JSON.stringify(dict));
+  },
   format: (mode) => {
-    format = mode === "bytes" ? "bytes" : "text";
+    format = ["bytes", "json"].includes(mode) ? mode : "text";
   },
   // Opens a virtual MIDI port: {prefix}/in/... is subscribed and played on it, MIDI sent to it goes to {prefix}/out/...
   port: (name = "mqtt-max") => {

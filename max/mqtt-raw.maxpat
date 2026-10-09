@@ -9,7 +9,7 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 140.0, 140.0, 600.0, 400.0 ],
+        "rect": [ 140.0, 140.0, 600.0, 520.0 ],
         "boxes": [
             {
                 "box": {
@@ -127,8 +127,8 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 190.0, 185.0, 320.0, 20.0 ],
-                    "text": "incoming payload as words/numbers, or as raw bytes"
+                    "patching_rect": [ 280.0, 185.0, 300.0, 20.0 ],
+                    "text": "payload as words/numbers, raw bytes, or JSON -> dict"
                 }
             },
             {
@@ -205,6 +205,114 @@
                     "numoutlets": 0,
                     "patching_rect": [ 20.0, 325.0, 400.0, 20.0 ],
                     "text": "mqtt-message: <topic> <payload...>"
+                }
+            },
+            {
+                "box": {
+                    "id": "fjson",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 190.0, 185.0, 80.0, 22.0 ],
+                    "text": "format json"
+                }
+            },
+            {
+                "box": {
+                    "id": "cj",
+                    "maxclass": "comment",
+                    "fontface": 1,
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 20.0, 365.0, 400.0, 20.0 ],
+                    "text": "JSON  (click subscribe test/# and format json first)"
+                }
+            },
+            {
+                "box": {
+                    "id": "jn",
+                    "maxclass": "number",
+                    "numinlets": 1,
+                    "numoutlets": 2,
+                    "outlettype": [ "", "bang" ],
+                    "parameter_enable": 0,
+                    "patching_rect": [ 20.0, 390.0, 50.0, 22.0 ]
+                }
+            },
+            {
+                "box": {
+                    "id": "jpack",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 1,
+                    "outlettype": [ "dictionary" ],
+                    "patching_rect": [ 20.0, 420.0, 90.0, 22.0 ],
+                    "text": "dict.pack temp:"
+                }
+            },
+            {
+                "box": {
+                    "id": "jpre",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 20.0, 450.0, 170.0, 22.0 ],
+                    "text": "prepend publishjson test/json"
+                }
+            },
+            {
+                "box": {
+                    "id": "cjs",
+                    "maxclass": "comment",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 75.0, 390.0, 120.0, 20.0 ],
+                    "text": "send {\"temp\": n}"
+                }
+            },
+            {
+                "box": {
+                    "id": "jroute",
+                    "maxclass": "newobj",
+                    "numinlets": 2,
+                    "numoutlets": 2,
+                    "outlettype": [ "", "" ],
+                    "patching_rect": [ 250.0, 390.0, 90.0, 22.0 ],
+                    "text": "route test/json"
+                }
+            },
+            {
+                "box": {
+                    "id": "junpack",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 2,
+                    "outlettype": [ "", "" ],
+                    "patching_rect": [ 250.0, 420.0, 100.0, 22.0 ],
+                    "text": "dict.unpack temp:"
+                }
+            },
+            {
+                "box": {
+                    "id": "jout",
+                    "maxclass": "number",
+                    "numinlets": 1,
+                    "numoutlets": 2,
+                    "outlettype": [ "", "bang" ],
+                    "parameter_enable": 0,
+                    "patching_rect": [ 250.0, 450.0, 50.0, 22.0 ]
+                }
+            },
+            {
+                "box": {
+                    "id": "cjr",
+                    "maxclass": "comment",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 305.0, 450.0, 120.0, 20.0 ],
+                    "text": "received temp"
                 }
             }
         ],
@@ -285,6 +393,48 @@
                 "patchline": {
                     "source": [ "route", 2 ],
                     "destination": [ "perr", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [ "fjson", 0 ],
+                    "destination": [ "node", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [ "jn", 0 ],
+                    "destination": [ "jpack", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [ "jpack", 0 ],
+                    "destination": [ "jpre", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [ "jpre", 0 ],
+                    "destination": [ "node", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [ "route", 0 ],
+                    "destination": [ "jroute", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [ "jroute", 0 ],
+                    "destination": [ "junpack", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [ "junpack", 0 ],
+                    "destination": [ "jout", 0 ]
                 }
             }
         ]
