@@ -2,100 +2,150 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<title>Phone MIDI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#f2f2f0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0b0c" media="(prefers-color-scheme: dark)">
+<title>mqtt-max phone</title>
+<link rel="icon" href="data:,">
 <style>
-  :root { --bg: #0e0f12; --card: #181a1f; --field: #22252c; --fg: #eceef2; --dim: #8a8f99;
-          --accent: #9ebef3; --line: #2a2d35; --err: #f39e9e; }
+  :root {
+    --bg: #f2f2f0; --surface: #ffffff; --ink: #111111; --dim: #8b8b88; --line: #e3e3df;
+    --accent: #ff5a1f; --ok: #22b35e; --err: #e5484d;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0b0b0c; --surface: #161618; --ink: #f2f2f2; --dim: #7c7c82; --line: #26262a; }
+  }
   * { box-sizing: border-box; }
-  body { margin: 0; padding: 14px 16px calc(14px + env(safe-area-inset-bottom)); min-height: 100dvh;
-         display: flex; flex-direction: column; gap: 12px; background: var(--bg); color: var(--fg);
-         font: 15px system-ui, -apple-system, sans-serif; -webkit-user-select: none; user-select: none;
-         -webkit-tap-highlight-color: transparent; }
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; }
-  summary { font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; }
-  summary::-webkit-details-marker { display: none; }
-  summary::after { content: "settings ▾"; color: var(--dim); font-weight: 400; font-size: 13px; }
-  details[open] summary::after { content: "▴"; }
-  label { display: block; color: var(--dim); font-size: 12px; margin: 10px 0 4px; }
-  input:not([type]), input[type=password], input[type=number] {
-    width: 100%; padding: 10px; font: inherit; background: var(--field); color: var(--fg);
-    border: 1px solid var(--line); border-radius: 8px; outline: none; }
-  input:focus { border-color: var(--accent); }
-  .row { display: flex; gap: 10px; }
-  .row > div { flex: 1; }
-  .check { display: flex; align-items: center; gap: 8px; margin-top: 12px; color: var(--fg); font-size: 14px; }
-  .check input { accent-color: var(--accent); width: 18px; height: 18px; }
-  button { width: 100%; margin-top: 14px; padding: 13px; font: inherit; font-weight: 600;
-           background: var(--accent); color: #0e0f12; border: 0; border-radius: 10px; }
-  button:active { opacity: 0.8; }
-  #status { display: flex; align-items: center; gap: 8px; color: var(--dim); font-size: 13px; }
-  #status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--dim); }
-  #status.ok::before { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+  html, body { height: 100%; }
+  body {
+    margin: 0; display: flex; flex-direction: column; gap: 10px;
+    padding: calc(12px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));
+    background: var(--bg); color: var(--ink);
+    font: 16px -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
+    -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent;
+  }
+  .label { font: 500 11px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 14px; }
+
+  header { display: flex; align-items: center; justify-content: space-between; height: 28px; }
+  .mark { font: 600 13px var(--mono); letter-spacing: 0.04em; }
+  .mark i { color: var(--accent); font-style: normal; }
+  #status { display: flex; align-items: center; gap: 7px; }
+  #status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--dim); }
+  #status.ok { color: var(--ink); }
+  #status.ok::before { background: var(--ok); }
+  #status.busy::before { background: var(--accent); animation: blink 0.8s steps(2) infinite; }
   #status.err { color: var(--err); }
   #status.err::before { background: var(--err); }
-  .meters { display: flex; flex-direction: column; gap: 12px; }
-  .meter span { display: flex; justify-content: space-between; font-size: 13px; color: var(--dim); margin-bottom: 6px; }
-  .meter b { color: var(--fg); font-variant-numeric: tabular-nums; }
-  .bar { height: 10px; background: var(--field); border-radius: 5px; overflow: hidden; }
-  .bar i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 5px;
-           transition: width 60ms linear; }
-  #pad { flex: 1; min-height: 100px; border: 1.5px solid var(--accent); border-radius: 16px;
-         background: rgba(158, 190, 243, 0.06); display: flex; align-items: center; justify-content: center;
-         color: var(--accent); font-weight: 600; letter-spacing: 0.02em; touch-action: none; }
-  #pad.on { background: var(--accent); color: #0e0f12; }
-  #slider { -webkit-appearance: none; appearance: none; width: 100%; height: 44px; margin: 0;
-            background: transparent; touch-action: none; --p: 0%; }
-  #slider::-webkit-slider-runnable-track { height: 16px; border-radius: 8px;
-    background: linear-gradient(to right, var(--accent) var(--p), var(--field) var(--p)); }
-  #slider::-moz-range-track { height: 16px; border-radius: 8px; background: var(--field); }
-  #slider::-moz-range-progress { height: 16px; border-radius: 8px; background: var(--accent); }
-  #slider::-webkit-slider-thumb { -webkit-appearance: none; width: 30px; height: 30px; margin-top: -7px;
-    border-radius: 50%; background: var(--fg); border: 3px solid var(--accent); }
-  #slider::-moz-range-thumb { width: 24px; height: 24px; border-radius: 50%; background: var(--fg);
-    border: 3px solid var(--accent); }
+  @keyframes blink { 50% { opacity: 0.2; } }
+
+  details summary { display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none; }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::after { content: "+"; font: 400 18px var(--mono); color: var(--dim); line-height: 1; }
+  details[open] summary::after { content: "–"; }
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .fields .wide { grid-column: 1 / -1; }
+  .fields label { display: flex; flex-direction: column; gap: 6px; }
+  input:not([type]), input[type=password], input[type=number] {
+    width: 100%; padding: 11px 12px; font: 16px var(--mono); color: var(--ink);
+    background: var(--bg); border: 1px solid var(--line); border-radius: 10px; outline: none;
+    -webkit-user-select: text; user-select: text;
+  }
+  input:focus { border-color: var(--ink); }
+  .switch input { align-self: flex-start; margin-top: 9px !important; }
+  .switch input { appearance: none; -webkit-appearance: none; margin: 0; width: 42px; height: 26px; border-radius: 13px;
+                  background: var(--line); position: relative; transition: background 150ms; }
+  .switch input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%;
+                         background: var(--surface); box-shadow: 0 1px 2px rgb(0 0 0 / 0.25); transition: transform 150ms; }
+  .switch input:checked { background: var(--accent); }
+  .switch input:checked::after { transform: translateX(16px); }
+  #connect { width: 100%; height: 48px; margin-top: 14px; border: 0; border-radius: 12px; cursor: pointer;
+             background: var(--ink); color: var(--bg); font: 600 15px -apple-system, system-ui, sans-serif; }
+  #connect:active { opacity: 0.8; }
+
+  .meters { display: grid; gap: 12px; }
+  .meter { display: grid; grid-template-columns: 74px 1fr 28px; align-items: center; gap: 12px; }
+  .meter b { font: 500 13px var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
+  .bar { height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--ink); transition: width 60ms linear; }
+
+  .slider-head { display: flex; justify-content: space-between; margin-bottom: 10px; }
+  .slider-head b { font: 500 13px var(--mono); font-variant-numeric: tabular-nums; }
+  #slider { -webkit-appearance: none; appearance: none; display: block; width: 100%; height: 44px; margin: 0;
+            border-radius: 12px; touch-action: none; --p: 0%;
+            background: linear-gradient(to right, var(--accent) var(--p), var(--bg) var(--p)); }
+  #slider::-webkit-slider-thumb { -webkit-appearance: none; width: 4px; height: 44px; background: transparent; }
+  #slider::-moz-range-thumb { width: 4px; height: 44px; border: 0; background: transparent; }
+  #slider::-moz-range-track { background: transparent; }
+
+  #pad { flex: 1; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between;
+         padding: 14px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line);
+         touch-action: none; transition: background 40ms, border-color 40ms; }
+  #pad .big { align-self: center; font: 500 13px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
+  #pad.on { background: var(--accent); border-color: var(--accent); }
+  #pad.on .label, #pad.on .big { color: #fff; }
+
+  .devices { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 26px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px; border-radius: 999px;
+          border: 1px solid var(--line); font: 500 11px var(--mono); }
+  .chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ok); }
+  .chip.me { border-color: var(--ink); }
 </style>
 </head>
 <body>
-<details id="settings" class="card" open>
-  <summary>Phone → MQTT → MIDI</summary>
-  <label>Broker URL</label>
-  <input id="url" value="wss://public.cloud.shiftr.io">
-  <div class="row">
-    <div><label>Username</label><input id="username" value="public"></div>
-    <div><label>Password</label><input id="password" type="password" value="public"></div>
+<header>
+  <span class="mark">mqtt<i>·</i>max</span>
+  <span id="status" class="label">offline</span>
+</header>
+
+<details id="settings" class="panel" open>
+  <summary class="label">Setup</summary>
+  <div class="fields">
+    <label class="wide"><span class="label">Broker</span><input id="url" value="wss://public.cloud.shiftr.io"></label>
+    <label><span class="label">User</span><input id="username" value="public"></label>
+    <label><span class="label">Password</span><input id="password" type="password" value="public"></label>
+    <label><span class="label">Prefix</span><input id="prefix" value="remote"></label>
+    <label><span class="label">Name</span><input id="name"></label>
+    <label><span class="label">Channel</span><input id="channel" type="number" min="1" max="16" value="1"></label>
+    <label class="switch"><span class="label">Echo notes</span><input id="echo" type="checkbox"></label>
   </div>
-  <div class="row">
-    <div><label>Prefix</label><input id="prefix" value="remote"></div>
-    <div><label>MIDI channel</label><input id="channel" type="number" min="1" max="16" value="1"></div>
-  </div>
-  <label class="check"><input id="echo" type="checkbox"> Echo notes (latency test)</label>
   <button id="connect">Connect</button>
 </details>
-<div id="status">disconnected</div>
 
-<div class="card meters">
-  <div class="meter"><span>CC 1 · pitch <b id="v1">–</b></span><div class="bar"><i id="b1"></i></div></div>
-  <div class="meter"><span>CC 2 · roll <b id="v2">–</b></span><div class="bar"><i id="b2"></i></div></div>
-  <div class="meter"><span>CC 3 · yaw <b id="v3">–</b></span><div class="bar"><i id="b3"></i></div></div>
+<div class="panel meters">
+  <div class="meter"><span class="label">01 Pitch</span><div class="bar"><i id="b1"></i></div><b id="v1">–</b></div>
+  <div class="meter"><span class="label">02 Roll</span><div class="bar"><i id="b2"></i></div><b id="v2">–</b></div>
+  <div class="meter"><span class="label">03 Yaw</span><div class="bar"><i id="b3"></i></div><b id="v3">–</b></div>
 </div>
-<div id="pad">hold · note 60</div>
-<div class="card">
-  <div class="meter"><span>CC 4 · slider <b id="v4">–</b></span></div>
+
+<div class="panel">
+  <div class="slider-head"><span class="label">04 Slider</span><b id="v4">–</b></div>
   <input id="slider" type="range" min="0" max="127" value="0">
 </div>
+
+<div id="pad">
+  <span class="label">Pad</span>
+  <span class="big">Hold · Note 60</span>
+  <span></span>
+</div>
+
+<div class="devices" id="devices"><span class="label">Online</span></div>
 
 <script type="module">
 import { MqttMidi } from "https://esm.sh/@grantler-instruments/mqtt-midi@0.1.0?deps=mqtt@5.16.0";
 
 const SEND_INTERVAL_MS = 33;
-const FIELDS = ["url", "username", "password", "prefix", "channel"];
+const FIELDS = ["url", "username", "password", "prefix", "name", "channel"];
 const CCS = [1, 2, 3, 4];
+const STATUS_OPTIONS = { qos: 1, retain: true };
 const $ = (id) => document.getElementById(id);
 
 let midi = null;
 const current = { 1: null, 2: null, 3: null, 4: null };
 const sent = { 1: null, 2: null, 3: null, 4: null };
+const online = new Set();
 
 function loadSettings() {
   for (const f of FIELDS) {
@@ -104,6 +154,7 @@ function loadSettings() {
       if (v !== null) $(f).value = v;
     } catch {}
   }
+  if (!$("name").value) $("name").value = "phone-" + Math.random().toString(16).slice(2, 6);
 }
 
 function saveSettings() {
@@ -114,8 +165,12 @@ function saveSettings() {
 
 function setStatus(text, state = "") {
   $("status").textContent = text;
-  $("status").className = state;
+  $("status").className = "label " + state;
 }
+
+const prefix = () => $("prefix").value.trim();
+const name = () => $("name").value.trim();
+const statusTopic = () => `${prefix()}/status/${name()}`;
 
 function toCC(value, min, max) {
   const t = (Math.min(Math.max(value, min), max) - min) / (max - min);
@@ -146,16 +201,16 @@ function sendChanged() {
     if (v === null || v === sent[cc]) continue;
     sent[cc] = v;
     show(cc, v);
-    if (midi) midi.sendControlChange(channel(), cc, v);
+    if (midi?.connected) midi.sendControlChange(channel(), cc, v);
   }
 }
 
 async function requestMotion() {
   const DOE = window.DeviceOrientationEvent;
-  if (!DOE) return setStatus("no orientation sensor in this browser", "err");
+  if (!DOE) return setStatus("no motion sensor", "err");
   if (typeof DOE.requestPermission === "function") {
     const result = await DOE.requestPermission();
-    if (result !== "granted") return setStatus("motion permission denied", "err");
+    if (result !== "granted") return setStatus("motion denied", "err");
   }
   window.addEventListener("deviceorientation", onOrientation);
 }
@@ -174,44 +229,95 @@ function listenForEcho() {
   });
 }
 
+function renderDevices() {
+  const list = $("devices");
+  list.replaceChildren(list.firstElementChild);
+  for (const id of [...online].sort()) {
+    const chip = document.createElement("span");
+    chip.className = id === name() ? "chip me" : "chip";
+    chip.textContent = id;
+    list.append(chip);
+  }
+}
+
+// Uses the underlying MQTT.js client: MqttMidi has no publish options or raw message events,
+// and it drops its client on close while MQTT.js keeps reconnecting it.
+function wireClient(client) {
+  const base = `${prefix()}/status/`;
+  const announce = () => client.publish(statusTopic(), "online", STATUS_OPTIONS);
+  announce();
+  client.on("reconnect", () => setStatus("reconnecting", "busy"));
+  client.on("connect", () => {
+    if (!midi) return;
+    midi.client = client;
+    announce();
+    setStatus("online · " + prefix(), "ok");
+  });
+  client.subscribe(base + "+");
+  client.on("message", (topic, payload) => {
+    if (!topic.startsWith(base)) return;
+    const id = topic.slice(base.length);
+    if (String(payload) === "online") online.add(id);
+    else online.delete(id);
+    renderDevices();
+  });
+}
+
+async function disconnect() {
+  if (!midi) return;
+  if (midi.connected) midi.client.publish(statusTopic(), "offline", STATUS_OPTIONS);
+  await midi.disconnect();
+  midi = null;
+  online.clear();
+  renderDevices();
+  setStatus("offline");
+  $("connect").textContent = "Connect";
+}
+
 async function connect() {
+  if (midi) return disconnect();
   saveSettings();
   // iOS only grants motion permission when asked directly inside the tap handler, before any other await.
   await requestMotion();
-  if (midi) await midi.disconnect();
-  setStatus("connecting…");
+  setStatus("connecting", "busy");
   midi = new MqttMidi({
     url: $("url").value.trim(),
-    prefix: $("prefix").value.trim(),
+    prefix: prefix(),
     mqttOptions: {
       username: $("username").value || undefined,
       password: $("password").value || undefined,
+      keepalive: 10,
+      will: { topic: statusTopic(), payload: "offline", ...STATUS_OPTIONS },
     },
   });
-  midi.on("connect", () => setStatus("connected · prefix " + $("prefix").value.trim(), "ok"));
-  midi.on("disconnect", () => setStatus("disconnected"));
-  midi.on("error", (err) => setStatus("error: " + err.message, "err"));
+  midi.on("connect", () => setStatus("online · " + prefix(), "ok"));
+  midi.on("disconnect", () => setStatus("offline"));
+  midi.on("error", (err) => setStatus(err.message, "err"));
   listenForEcho();
   try {
     await midi.connect();
+    wireClient(midi.client);
+    $("connect").textContent = "Disconnect";
     $("settings").open = false;
     keepAwake();
   } catch (err) {
-    setStatus("error: " + err.message, "err");
+    midi = null;
+    setStatus(err.message, "err");
   }
 }
 
 function padDown(e) {
   e.preventDefault();
   $("pad").classList.add("on");
-  if (midi) midi.sendNoteOn(channel(), 60, 100);
+  navigator.vibrate?.(8);
+  if (midi?.connected) midi.sendNoteOn(channel(), 60, 100);
 }
 
 function padUp(e) {
   e.preventDefault();
   if (!$("pad").classList.contains("on")) return;
   $("pad").classList.remove("on");
-  if (midi) midi.sendNoteOff(channel(), 60);
+  if (midi?.connected) midi.sendNoteOff(channel(), 60);
 }
 
 loadSettings();
