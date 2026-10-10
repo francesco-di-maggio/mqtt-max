@@ -91,7 +91,7 @@
   #yaw { cursor: pointer; }
 
   #padbox { flex: 1; min-height: 220px; container-type: size; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-  #pad, #slider { --side: min(100cqw, calc(100cqh - 58px)); width: var(--side); }
+  #pad, #slider { --side: min(100cqw, calc(100cqh - 60px)); width: var(--side); }
   #pad { position: relative; height: var(--side);
          display: flex; flex-direction: column; justify-content: space-between; padding: 14px;
          border-radius: var(--radius); border: 1px solid var(--line); touch-action: none; overflow: hidden;
@@ -105,7 +105,7 @@
   #pad.on { background: var(--accent); border-color: var(--accent); }
   #pad.on .label, #pad.on .xy { color: #fff; }
   #pad.on #dot { border-color: #fff; }
-  #slider { flex: none; height: 48px; display: flex; justify-content: space-between; align-items: center; padding: 0 14px;
+  #slider { flex: none; height: 50px; display: flex; justify-content: space-between; align-items: center; padding: 0 14px;
             border-radius: var(--radius); border: 1px solid var(--line); touch-action: none; cursor: pointer; --p: 0%;
             background: linear-gradient(to right, var(--accent) var(--p), var(--surface) var(--p)); }
   #slider .label { color: var(--ink); }

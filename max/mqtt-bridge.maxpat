@@ -9,7 +9,7 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 124.0, 213.0, 644.0, 608.0 ],
+        "rect": [ 106.0, 170.0, 644.0, 608.0 ],
         "boxes": [
             {
                 "box": {
@@ -72,7 +72,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 320.0, 115.0, 165.0, 20.0 ],
+                    "patching_rect": [ 291.0, 116.0, 165.0, 20.0 ],
                     "text": "click one; local needs ragazzi"
                 }
             },
@@ -238,7 +238,7 @@
                     "maxclass": "dict.view",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 465.0, 300.0, 120.0 ]
+                    "patching_rect": [ 20.0, 465.0, 278.0, 125.0 ]
                 }
             }
         ],
