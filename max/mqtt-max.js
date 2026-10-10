@@ -129,6 +129,17 @@ function subscribeIn() {
   if (port && client?.connected) client.subscribe(`${prefix}/in/#`);
 }
 
+// With a name, other clients' presence comes out as: presence <name> online|offline
+function subscribeStatus() {
+  if (clientName && client?.connected) client.subscribe(`${prefix}/status/+`, { qos: 1 });
+}
+
+function parsePresence(topic, payload) {
+  const base = `${prefix}/status/`;
+  if (!clientName || !topic.startsWith(base) || payload.length === 0) return null;
+  return [topic.slice(base.length), payload.toString("utf8")];
+}
+
 function disconnect() {
   if (!client) return;
   if (clientName && client.connected) client.publish(statusTopic(), "offline", STATUS_OPTIONS);
@@ -150,6 +161,7 @@ maxApi.addHandlers({
     client.on("connect", () => {
       if (clientName) client.publish(statusTopic(), "online", STATUS_OPTIONS);
       subscribeIn();
+      subscribeStatus();
       maxApi.outlet("status", "connected", url);
     });
     client.on("reconnect", () => maxApi.outlet("status", "reconnecting"));
@@ -157,6 +169,8 @@ maxApi.addHandlers({
     client.on("error", (err) => maxApi.outlet("error", err.message));
     client.on("message", (topic, payload) => {
       maxApi.outlet("message", topic, ...decode(payload));
+      const presence = parsePresence(topic, payload);
+      if (presence) maxApi.outlet("presence", ...presence);
       const parsed = parseMidi(topic, payload);
       if (!parsed) return;
       maxApi.outlet("midi", parsed.direction, ...parsed.list);
@@ -209,8 +223,10 @@ maxApi.addHandlers({
   },
   prefix: (name) => {
     if (port && client) client.unsubscribe(`${prefix}/in/#`);
+    if (clientName && client) client.unsubscribe(`${prefix}/status/+`);
     prefix = String(name);
     subscribeIn();
+    subscribeStatus();
   },
 });
 

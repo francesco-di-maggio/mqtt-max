@@ -66,7 +66,7 @@
   #connect:active { opacity: 0.8; }
 
   .meters { display: grid; gap: 12px; }
-  .meter { display: grid; grid-template-columns: 74px 1fr 28px; align-items: center; gap: 12px; }
+  .meter { display: grid; grid-template-columns: 84px 1fr 52px; align-items: center; gap: 12px; }
   .meter b { font: 500 13px var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
   .bar { height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
   .bar i { display: block; height: 100%; width: 0; background: var(--ink); transition: width 60ms linear; }
@@ -76,12 +76,20 @@
   #slider { height: 48px; border-radius: 12px; touch-action: none; cursor: pointer; --p: 0%;
             background: linear-gradient(to right, var(--accent) var(--p), var(--bg) var(--p)); }
 
-  #pad { flex: 1; min-height: 120px; display: flex; flex-direction: column; justify-content: space-between;
-         padding: 14px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line);
-         touch-action: none; transition: background 40ms, border-color 40ms; }
-  #pad .big { align-self: center; font: 500 13px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
+  #padbox { flex: 1; min-height: 160px; container-type: size; display: flex; align-items: flex-start; justify-content: center; }
+  #pad { position: relative; width: min(100cqw, 100cqh); height: min(100cqw, 100cqh);
+         display: flex; flex-direction: column; justify-content: space-between; padding: 14px;
+         border-radius: 20px; border: 1px solid var(--line); touch-action: none; overflow: hidden;
+         background: linear-gradient(var(--dim), var(--dim)) center / 1px 14px no-repeat,
+                     linear-gradient(var(--dim), var(--dim)) center / 14px 1px no-repeat, var(--surface);
+         transition: background-color 40ms; }
+  #pad .xy { font: 500 13px var(--mono); font-variant-numeric: tabular-nums; color: var(--dim); }
+  #dot { position: absolute; left: 50%; top: 50%; width: 28px; height: 28px; margin: -14px 0 0 -14px;
+         border-radius: 50%; border: 2px solid var(--ink); opacity: 0; pointer-events: none; }
+  #pad.touched #dot { opacity: 1; }
   #pad.on { background: var(--accent); border-color: var(--accent); }
-  #pad.on .label, #pad.on .big { color: #fff; }
+  #pad.on .label, #pad.on .xy { color: #fff; }
+  #pad.on #dot { border-color: #fff; }
 
   .devices { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 26px; }
   .chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px; border-radius: 999px;
@@ -114,6 +122,7 @@
   <div class="meter"><span class="label">01 Pitch</span><div class="bar"><i id="b1"></i></div><b id="v1">–</b></div>
   <div class="meter"><span class="label">02 Roll</span><div class="bar"><i id="b2"></i></div><b id="v2">–</b></div>
   <div class="meter"><span class="label">03 Yaw</span><div class="bar"><i id="b3"></i></div><b id="v3">–</b></div>
+  <div class="meter"><span class="label">05 Network</span><div class="bar"><i id="bnet"></i></div><b id="vnet">–</b></div>
 </div>
 
 <div class="panel">
@@ -121,10 +130,12 @@
   <div id="slider" role="slider" aria-label="CC 4" aria-valuemin="0" aria-valuemax="127" aria-valuenow="0"></div>
 </div>
 
-<div id="pad">
-  <span class="label">Pad</span>
-  <span class="big">Hold · Note 60</span>
-  <span></span>
+<div id="padbox">
+  <div id="pad" role="application" aria-label="XY pad: X CC 6, Y CC 7, hold for note 60">
+    <span class="label">06/07 XY · Hold for note 60</span>
+    <span class="xy" id="xy">X – · Y –</span>
+    <i id="dot"></i>
+  </div>
 </div>
 
 <div class="devices" id="devices"><span class="label">Online</span></div>
@@ -134,13 +145,17 @@ import { MqttMidi } from "https://esm.sh/@grantler-instruments/mqtt-midi@0.1.0?d
 
 const SEND_INTERVAL_MS = 33;
 const FIELDS = ["url", "username", "password", "prefix", "name", "channel"];
-const CCS = [1, 2, 3, 4];
+const CCS = [1, 2, 3, 4, 5, 6, 7];
+const PING_INTERVAL_MS = 500;
+const PING_TIMEOUT_MS = 1000;
+const RTT_MAX_MS = 500;
 const STATUS_OPTIONS = { qos: 1, retain: true };
 const $ = (id) => document.getElementById(id);
 
 let midi = null;
-const current = { 1: null, 2: null, 3: null, 4: null };
-const sent = { 1: null, 2: null, 3: null, 4: null };
+const current = { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null };
+const sent = { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null };
+let pingSent = null;
 const online = new Set();
 
 function loadSettings() {
@@ -178,7 +193,8 @@ function channel() {
 }
 
 function show(cc, value) {
-  $("v" + cc).textContent = value;
+  const label = $("v" + cc);
+  if (label) label.textContent = value;
   const bar = $("b" + cc);
   if (bar) bar.style.width = (value / 127 * 100) + "%";
 }
@@ -200,6 +216,32 @@ function sendChanged() {
     show(cc, v);
     if (midi?.connected) midi.sendControlChange(channel(), cc, v);
   }
+}
+
+// CC 5 is the round trip phone -> broker -> phone: 0-500 ms -> 0-127, a ping lost for 1 s -> 127.
+const pingTopic = () => `${prefix()}/ping/${name()}`;
+
+function showRtt(ms, text) {
+  current[5] = toCC(ms, 0, RTT_MAX_MS);
+  $("vnet").textContent = text;
+  $("bnet").style.width = (current[5] / 127 * 100) + "%";
+}
+
+function ping() {
+  if (!midi?.connected) return;
+  const now = performance.now();
+  if (pingSent !== null && now - pingSent < PING_TIMEOUT_MS) return;
+  if (pingSent !== null) showRtt(RTT_MAX_MS, "lost");
+  pingSent = now;
+  midi.client.publish(pingTopic(), String(now));
+}
+
+function onPong(payload) {
+  const sentAt = Number(String(payload));
+  if (sentAt !== pingSent) return;
+  pingSent = null;
+  const ms = performance.now() - sentAt;
+  showRtt(ms, Math.round(ms) + " ms");
 }
 
 async function requestMotion() {
@@ -251,7 +293,9 @@ function wireClient(client) {
     setStatus("online · " + prefix(), "ok");
   });
   client.subscribe(base + "+");
+  client.subscribe(pingTopic());
   client.on("message", (topic, payload) => {
+    if (topic === pingTopic()) return onPong(payload);
     if (!topic.startsWith(base)) return;
     const id = topic.slice(base.length);
     if (String(payload) === "online") online.add(id);
@@ -267,6 +311,8 @@ async function disconnect() {
   midi = null;
   online.clear();
   renderDevices();
+  pingSent = null;
+  $("vnet").textContent = "–";
   setStatus("offline");
   $("connect").textContent = "Connect";
 }
@@ -303,11 +349,29 @@ async function connect() {
   }
 }
 
+// X -> CC 6 (left 0, right 127), Y -> CC 7 (bottom 0, top 127); values stay after release.
+function setXY(e) {
+  const rect = $("pad").getBoundingClientRect();
+  const x = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+  const y = Math.min(Math.max((e.clientY - rect.top) / rect.height, 0), 1);
+  current[6] = Math.round(x * 127);
+  current[7] = Math.round((1 - y) * 127);
+  $("dot").style.left = x * 100 + "%";
+  $("dot").style.top = y * 100 + "%";
+  $("xy").textContent = `X ${current[6]} · Y ${current[7]}`;
+}
+
 function padDown(e) {
   e.preventDefault();
-  $("pad").classList.add("on");
+  $("pad").setPointerCapture(e.pointerId);
+  $("pad").classList.add("on", "touched");
+  setXY(e);
   navigator.vibrate?.(8);
   if (midi?.connected) midi.sendNoteOn(channel(), 60, 100);
+}
+
+function padMove(e) {
+  if ($("pad").hasPointerCapture(e.pointerId)) setXY(e);
 }
 
 function padUp(e) {
@@ -320,9 +384,9 @@ function padUp(e) {
 loadSettings();
 $("connect").addEventListener("click", connect);
 $("pad").addEventListener("pointerdown", padDown);
+$("pad").addEventListener("pointermove", padMove);
 $("pad").addEventListener("pointerup", padUp);
 $("pad").addEventListener("pointercancel", padUp);
-$("pad").addEventListener("pointerleave", padUp);
 // The whole bar is the touch target: touching sets the value at that position, dragging follows.
 function setSlider(e) {
   const rect = $("slider").getBoundingClientRect();
@@ -339,6 +403,7 @@ $("slider").addEventListener("pointermove", (e) => {
   if ($("slider").hasPointerCapture(e.pointerId)) setSlider(e);
 });
 setInterval(sendChanged, SEND_INTERVAL_MS);
+setInterval(ping, PING_INTERVAL_MS);
 </script>
 </body>
 </html>

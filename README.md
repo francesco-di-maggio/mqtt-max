@@ -15,7 +15,7 @@ MIDI uses the topic format of [@grantler-instruments/mqtt-midi](https://github.c
 - **Any MQTT data**: subscribe and publish text, raw bytes or JSON (as Max dicts).
 - **Retain and QoS** for publish and subscribe.
 - **Presence**: named clients appear as `online` / `offline`, also after a crash (last will).
-- **Web controller** for phones: tilt, slider and pad as MIDI, with a list of who is online.
+- **Web controller** for phones: tilt, slider, XY pad and network round trip as MIDI, with a list of who is online.
 
 ## Requirements
 
@@ -53,7 +53,7 @@ max/
 |---|---|---|
 | `--prefix <prefix>` | `remote` | Topic prefix for MIDI and presence |
 | `--port <name>` | none | Create a virtual MIDI port and subscribe to `{prefix}/in/#` |
-| `--name <id>` | none | Enable presence on `{prefix}/status/{id}` |
+| `--name <id>` | none | Enable presence: announce `{prefix}/status/{id}`, report other clients as `presence` |
 
 Patches outside `max/`, including `max/examples/`, find the script through Max's search path: add the repo folder in Options → File Preferences.
 
@@ -82,6 +82,7 @@ MIDI from the port is always sent with QoS 0 and no retain.
 |---|---|
 | `message <topic> <payload…>` | Every incoming message. With `format json`, JSON objects arrive as a dict |
 | `midi <in\|out> <type> <channel> [<number>] <value>` | Decoded MIDI under the prefix, e.g. `midi in cc 1 7 64` |
+| `presence <name> online\|offline` | Clients under the prefix, when named |
 | `status connected <url>` / `reconnecting` / `disconnected` | Connection state |
 | `error <text>` | Errors |
 
@@ -89,7 +90,7 @@ MIDI from the port is always sent with QoS 0 and no retain.
 
 | Patch | |
 |---|---|
-| `mqtt-bridge.maxpat` | Creates the `mqtt-max` port. Keep it open while using the MIDI patches. |
+| `mqtt-bridge.maxpat` | Creates the `mqtt-max` port and shows who is online. Keep it open while using the MIDI patches. |
 | `examples/midi-test.maxpat` | `ctlin` / `notein` in, `ctlout` / `noteout` out |
 | `examples/phone-to-live.maxpat` | Smooths CC 1–4 and sends them as CC 20–23, pad note passed through, to a MIDI output for Ableton Live |
 | `examples/phone-latency.maxpat` | Latency: laptop ↔ broker, and the full loop through the phone |
@@ -107,7 +108,8 @@ Served at [francesco-di-maggio.github.io/mqtt-max/phone/](https://francesco-di-m
 | Roll (left / right) | CC 2 |
 | Yaw (rotation, wraps 360° → 0°) | CC 3 |
 | Slider | CC 4 |
-| Pad (hold) | Note 60, velocity 100 |
+| XY pad | X → CC 6, Y → CC 7 (bottom-left 0, top-right 127); note 60, velocity 100, while touched |
+| Network round trip, phone → broker → phone | CC 5: 0–500 ms → 0–127; a ping lost for 1 s → 127 |
 
 All on `{prefix}/in/…`, on the channel set in Setup. **Echo notes** sends notes arriving on `{prefix}/out/…` back on `{prefix}/in/…`, for round-trip latency tests. The page announces itself as `{prefix}/status/{name}` and lists the clients online under the same prefix.
 
@@ -122,6 +124,7 @@ All on `{prefix}/in/…`, on the channel set in Setup. **Echo notes** sends note
 | `{prefix}/{in\|out}/pitchbend/{channel}` | 2 bytes, LSB MSB |
 | `{prefix}/{in\|out}/{clock\|start\|stop\|continue}` | empty |
 | `{prefix}/status/{name}` | `online` / `offline`, retained, QoS 1 |
+| `{prefix}/ping/{name}` | Web controller's round-trip ping to itself |
 
 `in` is toward the MIDI port, `out` is from it. Channels are 1–16, data bytes 0–127; other MIDI topics are not played on the port, but still arrive as `message`.
 
