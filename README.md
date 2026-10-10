@@ -106,7 +106,7 @@ Served at [francesco-di-maggio.github.io/mqtt-max/phone/](https://francesco-di-m
 |---|---|
 | Pitch (front / back) | CC 1 |
 | Roll (left / right) | CC 2 |
-| Yaw (rotation; the starting direction is 64, tap the Yaw row to re-centre) | CC 3 |
+| Yaw (rotation, ±90° around the starting direction = 64; tap the Yaw row to re-centre) | CC 3 |
 | Network round trip, phone → broker → phone | CC 4: 0–500 ms → 0–127; a ping lost for 1 s → 127 |
 | XY pad | X → CC 5, Y → CC 6 (bottom-left 0, top-right 127); note 60, velocity 100, while touched |
 

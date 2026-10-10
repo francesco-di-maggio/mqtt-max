@@ -45,7 +45,8 @@
   details summary { display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none; }
   details summary::-webkit-details-marker { display: none; }
   details summary::after { content: "+"; font: 400 18px var(--mono); color: var(--dim); line-height: 1; }
-  details[open] summary::after { content: "–"; }
+  details[open] summary::after { content: "Close"; font: 500 11px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); }
+  body:has(#settings[open]) .meters, body:has(#settings[open]) #padbox { display: none; }
   .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
   .fields .wide { grid-column: 1 / -1; }
   .fields label { display: flex; flex-direction: column; gap: 6px; }
@@ -62,8 +63,8 @@
                          background: var(--surface); box-shadow: 0 1px 2px rgb(0 0 0 / 0.25); transition: transform 150ms; }
   .switch input:checked { background: var(--accent); }
   .switch input:checked::after { transform: translateX(16px); }
-  #connect { width: 100%; height: 48px; margin-top: 14px; border: 0; border-radius: 12px; cursor: pointer;
-             background: var(--ink); color: var(--bg); font: 600 15px -apple-system, system-ui, sans-serif; }
+  #connect { width: 100%; height: 56px; margin-top: 16px; border: 0; border-radius: 14px; cursor: pointer;
+             background: var(--ink); color: var(--bg); font: 600 17px -apple-system, system-ui, sans-serif; }
   #connect:active { opacity: 0.8; }
 
   .meters { display: grid; gap: 12px; }
@@ -196,14 +197,14 @@ function show(cc, value) {
 
 // beta = pitch (front/back), gamma = roll (left/right), alpha = yaw (rotation around the screen axis).
 // Yaw is relative to yawOrigin, the first reading after Connect or after a tap on the Yaw row: that direction is CC 64,
-// turning right raises it (alpha grows counter-clockwise), and it wraps facing the opposite way.
+// turning right raises it (alpha grows counter-clockwise), and it stays at 0 / 127 beyond 90 degrees either way.
 function onOrientation(e) {
   if (e.beta === null) return;
   const alpha = e.alpha ?? 0;
   if (yawOrigin === null) yawOrigin = alpha;
   current[1] = toCC(e.beta, -90, 90);
   current[2] = toCC(e.gamma, -90, 90);
-  current[3] = toCC((yawOrigin - alpha + 540) % 360, 0, 360);
+  current[3] = toCC(((yawOrigin - alpha + 540) % 360) - 180, -90, 90);
 }
 
 function sendChanged() {
