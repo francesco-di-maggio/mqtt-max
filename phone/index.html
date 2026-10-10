@@ -19,9 +19,9 @@
     :root { --bg: #0b0b0c; --surface: #161618; --ink: #f2f2f2; --dim: #7c7c82; --line: #26262a; }
   }
   * { box-sizing: border-box; }
-  html, body { height: 100%; }
+  html, body { height: 100%; background: var(--bg); }
   body {
-    margin: 0; display: flex; flex-direction: column; gap: 10px;
+    max-width: 592px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px;
     padding: calc(12px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));
     background: var(--bg); color: var(--ink);
     font: 16px -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
@@ -70,6 +70,7 @@
   #connect { display: flex; align-items: center; justify-content: center; width: 100%; cursor: pointer;
              background: var(--ink); border-color: var(--ink); color: var(--bg);
              font: 600 11px/20px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; }
+  #connect.connected { background: var(--surface); border-color: var(--line); color: var(--ink); }
   #connect:active, #setup-bar:active { opacity: 0.8; }
 
   .meters { display: grid; gap: 12px; }
@@ -332,6 +333,7 @@ async function disconnect() {
   $("vnet").textContent = "–";
   setStatus("offline");
   $("connect").textContent = "Connect";
+  $("connect").classList.remove("connected");
 }
 
 async function connect() {
@@ -359,6 +361,7 @@ async function connect() {
     await midi.connect();
     wireClient(midi.client);
     $("connect").textContent = "Disconnect";
+    $("connect").classList.add("connected");
     setSetup(false);
     keepAwake();
   } catch (err) {
