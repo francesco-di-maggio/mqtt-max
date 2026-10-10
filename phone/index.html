@@ -43,12 +43,15 @@
   #status.err::before { background: var(--err); }
   @keyframes blink { 50% { opacity: 0.2; } }
 
-  details summary { display: flex; justify-content: space-between; align-items: center; height: 20px; cursor: pointer; list-style: none; }
-  details summary::-webkit-details-marker { display: none; }
-  details summary::after { content: "+"; font: 400 18px/1 var(--mono); color: var(--dim); transition: transform 150ms; }
-  details[open] summary::after { transform: rotate(45deg); color: var(--ink); }
-  body:has(#settings[open]) .meters, body:has(#settings[open]) #padbox { display: none; }
-  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+  #setup-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; color: var(--ink);
+               font: inherit; text-align: left; cursor: pointer; transition: background-color 150ms, border-color 150ms; }
+  #setup-bar span { line-height: 20px; }
+  #setup-bar .icon { font: 400 18px/20px var(--mono); color: var(--dim); transition: transform 150ms; }
+  body:not(.setup) #setup-bar { background: var(--ink); border-color: var(--ink); }
+  body:not(.setup) #setup-bar span { color: var(--bg); }
+  body.setup #setup-bar .icon { transform: rotate(45deg); }
+  body.setup .meters, body.setup #padbox, body:not(.setup) #settings { display: none; }
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .fields .wide { grid-column: 1 / -1; }
   .fields label { display: flex; flex-direction: column; gap: 6px; }
   input:not([type]), input[type=password], input[type=number] {
@@ -104,14 +107,17 @@
   .chip.me { border-color: var(--ink); }
 </style>
 </head>
-<body>
+<body class="setup">
 <header>
   <span class="mark">mqtt<i>·</i>max</span>
   <span id="status" class="label"><span id="status-text">offline</span></span>
 </header>
 
-<details id="settings" class="panel" open>
-  <summary class="label">Setup</summary>
+<button id="setup-bar" class="panel" aria-expanded="true" aria-controls="settings">
+  <span class="label">Setup</span><span class="icon">+</span>
+</button>
+
+<div id="settings" class="panel">
   <div class="fields">
     <label class="wide"><span class="label">Broker</span><input id="url" value="wss://public.cloud.shiftr.io"></label>
     <label><span class="label">User</span><input id="username" value="public"></label>
@@ -123,7 +129,7 @@
   </div>
   <button id="connect">Connect</button>
   <div class="devices" id="devices"><span class="label">Online</span></div>
-</details>
+</div>
 
 <div class="panel meters">
   <div class="meter"><span class="label">01 Pitch</span><div class="bar"><i id="b1"></i></div><b id="v1">–</b></div>
@@ -351,7 +357,7 @@ async function connect() {
     await midi.connect();
     wireClient(midi.client);
     $("connect").textContent = "Disconnect";
-    $("settings").open = false;
+    setSetup(false);
     keepAwake();
   } catch (err) {
     midi = null;
@@ -391,7 +397,13 @@ function padUp(e) {
   if (midi?.connected) midi.sendNoteOff(channel(), 60);
 }
 
+function setSetup(open) {
+  document.body.classList.toggle("setup", open);
+  $("setup-bar").setAttribute("aria-expanded", open);
+}
+
 loadSettings();
+$("setup-bar").addEventListener("click", () => setSetup(!document.body.classList.contains("setup")));
 $("connect").addEventListener("click", connect);
 $("pad").addEventListener("pointerdown", padDown);
 $("pad").addEventListener("pointermove", padMove);
