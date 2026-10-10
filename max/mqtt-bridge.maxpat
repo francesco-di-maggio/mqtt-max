@@ -9,7 +9,7 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 106.0, 170.0, 644.0, 608.0 ],
+        "rect": [ 106.0, 170.0, 759.0, 561.0 ],
         "boxes": [
             {
                 "box": {
@@ -18,7 +18,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 15.0, 143.0, 20.0 ],
+                    "patching_rect": [ 20.0, 21.0, 143.0, 20.0 ],
                     "text": "MQTT <-> MIDI BRIDGE"
                 }
             },
@@ -29,7 +29,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 40.0, 356.0, 60.0 ],
+                    "patching_rect": [ 20.0, 46.0, 356.0, 60.0 ],
                     "text": "Keep this patch open: it creates the MIDI port mqtt-max.\nremote/in/...  ->  mqtt-max  ->  ctlin / notein mqtt-max in any patch\nctlout / noteout mqtt-max  ->  remote/out/...\nRun one bridge per prefix, or every message arrives twice."
                 }
             },
@@ -40,7 +40,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 115.0, 261.0, 22.0 ],
+                    "patching_rect": [ 20.0, 130.0, 261.0, 22.0 ],
                     "text": "connect mqtt://public.cloud.shiftr.io public public"
                 }
             },
@@ -51,7 +51,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 145.0, 165.0, 22.0 ],
+                    "patching_rect": [ 308.0, 130.0, 165.0, 22.0 ],
                     "text": "connect mqtt://localhost:1883"
                 }
             },
@@ -62,7 +62,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 205.0, 145.0, 66.0, 22.0 ],
+                    "patching_rect": [ 215.0, 163.0, 66.0, 22.0 ],
                     "text": "disconnect"
                 }
             },
@@ -72,8 +72,8 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 291.0, 116.0, 165.0, 20.0 ],
-                    "text": "click one; local needs ragazzi"
+                    "patching_rect": [ 477.0, 131.0, 227.0, 20.0 ],
+                    "text": "localhost needs a broker on this machine"
                 }
             },
             {
@@ -83,11 +83,13 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 20.0, 190.0, 535.0, 22.0 ],
+                    "patching_rect": [ 20.0, 236.0, 535.0, 22.0 ],
                     "saved_object_attributes": {
                         "args": [ "--prefix", "remote", "--port", "mqtt-max", "--name", "max" ],
                         "autostart": 1,
                         "defer": 0,
+                        "node_bin_path": "",
+                        "npm_bin_path": "",
                         "watch": 1
                     },
                     "text": "node.script mqtt-max.js @autostart 1 @watch 1 @args --prefix remote --port mqtt-max --name max",
@@ -106,8 +108,8 @@
                     "numinlets": 4,
                     "numoutlets": 4,
                     "outlettype": [ "", "", "", "" ],
-                    "patching_rect": [ 20.0, 225.0, 153.0, 22.0 ],
-                    "text": "route status error presence"
+                    "patching_rect": [ 20.0, 278.0, 137.0, 22.0 ],
+                    "text": "route status error clients"
                 }
             },
             {
@@ -116,7 +118,7 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 310.0, 225.0, 95.0, 22.0 ],
+                    "patching_rect": [ 536.0, 278.0, 95.0, 22.0 ],
                     "text": "print node-script"
                 }
             },
@@ -127,7 +129,7 @@
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 260.0, 72.0, 22.0 ],
+                    "patching_rect": [ 20.0, 339.0, 72.0, 22.0 ],
                     "text": "prepend set"
                 }
             },
@@ -139,7 +141,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 100.0, 260.0, 205.0, 22.0 ]
+                    "patching_rect": [ 20.0, 374.0, 205.0, 22.0 ]
                 }
             },
             {
@@ -148,7 +150,7 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 200.0, 225.0, 88.0, 22.0 ],
+                    "patching_rect": [ 101.0, 339.0, 88.0, 22.0 ],
                     "text": "print mqtt-error"
                 }
             },
@@ -159,7 +161,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 300.0, 98.0, 22.0 ],
+                    "patching_rect": [ 375.0, 163.0, 98.0, 22.0 ],
                     "text": "script npm install"
                 }
             },
@@ -169,7 +171,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 150.0, 300.0, 139.0, 20.0 ],
+                    "patching_rect": [ 480.0, 164.0, 139.0, 20.0 ],
                     "text": "once, on a new machine"
                 }
             },
@@ -179,7 +181,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 168.0, 605.0, 20.0 ],
+                    "patching_rect": [ 68.0, 212.0, 605.0, 20.0 ],
                     "text": "--prefix: topic prefix (default remote)   --port: MIDI port (none = no port)   --name: presence on remote/status/max"
                 }
             },
@@ -190,46 +192,8 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 345.0, 318.0, 20.0 ],
-                    "text": "ONLINE  (clients with presence under the same prefix)"
-                }
-            },
-            {
-                "box": {
-                    "id": "ptb",
-                    "maxclass": "newobj",
-                    "numinlets": 1,
-                    "numoutlets": 2,
-                    "outlettype": [ "bang", "" ],
-                    "patching_rect": [ 20.0, 370.0, 29.5, 22.0 ],
-                    "text": "t b l"
-                }
-            },
-            {
-                "box": {
-                    "id": "ppre",
-                    "maxclass": "newobj",
-                    "numinlets": 1,
-                    "numoutlets": 1,
-                    "outlettype": [ "" ],
-                    "patching_rect": [ 30.5, 399.0, 72.0, 22.0 ],
-                    "text": "prepend set"
-                }
-            },
-            {
-                "box": {
-                    "id": "pdict",
-                    "maxclass": "newobj",
-                    "numinlets": 2,
-                    "numoutlets": 5,
-                    "outlettype": [ "dictionary", "", "", "", "" ],
-                    "patching_rect": [ 20.0, 430.0, 107.0, 22.0 ],
-                    "saved_object_attributes": {
-                        "legacy": 1,
-                        "parameter_enable": 0,
-                        "parameter_mappable": 0
-                    },
-                    "text": "dict mqtt-presence"
+                    "patching_rect": [ 255.0, 524.0, 255.0, 20.0 ],
+                    "text": "CLIENTS  (presence under the same prefix)"
                 }
             },
             {
@@ -238,7 +202,85 @@
                     "maxclass": "dict.view",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 465.0, 278.0, 125.0 ]
+                    "patching_rect": [ 240.0, 339.0, 285.0, 178.0 ]
+                }
+            },
+            {
+                "box": {
+                    "id": "punpack",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 3,
+                    "outlettype": [ "", "", "" ],
+                    "patching_rect": [ 540.0, 339.0, 144.0, 22.0 ],
+                    "saved_object_attributes": {
+                        "legacy": 1
+                    },
+                    "text": "dict.unpack online: count:"
+                }
+            },
+            {
+                "box": {
+                    "id": "ponset",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 540.0, 389.0, 72.0, 22.0 ],
+                    "text": "prepend set"
+                }
+            },
+            {
+                "box": {
+                    "id": "ponmsg",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 540.0, 495.0, 200.0, 22.0 ]
+                }
+            },
+            {
+                "box": {
+                    "id": "pcount",
+                    "maxclass": "number",
+                    "numinlets": 1,
+                    "numoutlets": 2,
+                    "outlettype": [ "", "bang" ],
+                    "parameter_enable": 0,
+                    "patching_rect": [ 645.0, 389.0, 50.0, 22.0 ]
+                }
+            },
+            {
+                "box": {
+                    "id": "cclients",
+                    "maxclass": "comment",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 699.0, 390.0, 41.0, 20.0 ],
+                    "text": "online"
+                }
+            },
+            {
+                "box": {
+                    "id": "pzero",
+                    "maxclass": "newobj",
+                    "numinlets": 2,
+                    "numoutlets": 2,
+                    "outlettype": [ "bang", "" ],
+                    "patching_rect": [ 645.0, 419.0, 34.0, 22.0 ],
+                    "text": "sel 0"
+                }
+            },
+            {
+                "box": {
+                    "id": "pclear",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 645.0, 449.0, 29.5, 22.0 ],
+                    "text": "set"
                 }
             }
         ],
@@ -246,84 +288,121 @@
             {
                 "patchline": {
                     "destination": [ "node", 0 ],
+                    "midpoints": [ 29.5, 153.0, 29.5, 153.0 ],
                     "source": [ "conn", 0 ]
                 }
             },
             {
                 "patchline": {
                     "destination": [ "node", 0 ],
+                    "midpoints": [ 317.5, 198.0, 29.5, 198.0 ],
                     "source": [ "connl", 0 ]
                 }
             },
             {
                 "patchline": {
                     "destination": [ "node", 0 ],
+                    "midpoints": [ 224.5, 198.0, 29.5, 198.0 ],
                     "source": [ "disc", 0 ]
                 }
             },
             {
                 "patchline": {
                     "destination": [ "pns", 0 ],
+                    "midpoints": [ 545.5, 261.0, 545.5, 261.0 ],
                     "source": [ "node", 1 ]
                 }
             },
             {
                 "patchline": {
                     "destination": [ "route", 0 ],
+                    "midpoints": [ 29.5, 261.0, 29.5, 261.0 ],
                     "source": [ "node", 0 ]
                 }
             },
             {
                 "patchline": {
                     "destination": [ "node", 0 ],
+                    "midpoints": [ 384.5, 198.0, 29.5, 198.0 ],
                     "source": [ "npm", 0 ]
                 }
             },
             {
                 "patchline": {
-                    "destination": [ "pview", 0 ],
-                    "source": [ "pdict", 0 ]
+                    "destination": [ "ponmsg", 0 ],
+                    "midpoints": [ 654.5, 474.0, 549.5, 474.0 ],
+                    "source": [ "pclear", 0 ]
                 }
             },
             {
                 "patchline": {
-                    "destination": [ "pdict", 0 ],
-                    "source": [ "ppre", 0 ]
+                    "destination": [ "pzero", 0 ],
+                    "midpoints": [ 654.5, 414.0, 654.5, 414.0 ],
+                    "source": [ "pcount", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "ponmsg", 0 ],
+                    "midpoints": [ 549.5, 414.0, 549.5, 414.0 ],
+                    "source": [ "ponset", 0 ]
                 }
             },
             {
                 "patchline": {
                     "destination": [ "state", 0 ],
+                    "midpoints": [ 29.5, 363.0, 29.5, 363.0 ],
                     "source": [ "pset", 0 ]
                 }
             },
             {
                 "patchline": {
-                    "destination": [ "pdict", 0 ],
-                    "source": [ "ptb", 0 ]
+                    "destination": [ "pcount", 0 ],
+                    "midpoints": [ 612.0, 375.0, 654.5, 375.0 ],
+                    "source": [ "punpack", 1 ]
                 }
             },
             {
                 "patchline": {
-                    "destination": [ "ppre", 0 ],
-                    "source": [ "ptb", 1 ]
+                    "destination": [ "ponset", 0 ],
+                    "midpoints": [ 549.5, 363.0, 549.5, 363.0 ],
+                    "source": [ "punpack", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "pclear", 0 ],
+                    "midpoints": [ 654.5, 444.0, 654.5, 444.0 ],
+                    "source": [ "pzero", 0 ]
                 }
             },
             {
                 "patchline": {
                     "destination": [ "perr", 0 ],
+                    "midpoints": [ 68.83333333333334, 324.0, 110.5, 324.0 ],
                     "source": [ "route", 1 ]
                 }
             },
             {
                 "patchline": {
                     "destination": [ "pset", 0 ],
+                    "midpoints": [ 29.5, 303.0, 29.5, 303.0 ],
                     "source": [ "route", 0 ]
                 }
             },
             {
                 "patchline": {
-                    "destination": [ "ptb", 0 ],
+                    "destination": [ "punpack", 0 ],
+                    "midpoints": [ 108.16666666666667, 324.0, 549.5, 324.0 ],
+                    "order": 0,
+                    "source": [ "route", 2 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "pview", 0 ],
+                    "midpoints": [ 108.16666666666667, 324.0, 249.5, 324.0 ],
+                    "order": 1,
                     "source": [ "route", 2 ]
                 }
             }

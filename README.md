@@ -82,7 +82,8 @@ max/
 |---|---|
 | `message <topic> <payload…>` | Every message, a dict with `format json` |
 | `midi <in\|out> <type> <channel> …` | Decoded MIDI, e.g. `midi in cc 1 7 64` |
-| `presence <name> <state>` | `online` / `offline`, if named |
+| `presence <name> <state>` | `online` / `offline` on each change, if named |
+| `clients <dict>` | `online`, `offline`, `count` (online), if named |
 | `status <state>` | `connected`, `reconnecting`, `disconnected` |
 | `error <text>` | Errors |
 
@@ -90,7 +91,7 @@ max/
 
 | Patch | |
 |---|---|
-| `mqtt-bridge.maxpat` | Creates the `mqtt-max` port, shows who is online |
+| `mqtt-bridge.maxpat` | Creates the `mqtt-max` port, shows the clients |
 | `examples/midi-test.maxpat` | MIDI in and out |
 | `examples/phone-to-live.maxpat` | Smoothed phone CCs to Ableton Live |
 | `examples/phone-latency.maxpat` | Latency tests |
@@ -116,6 +117,7 @@ Keep the bridge open while using the MIDI patches. Run one bridge per prefix, or
 
 - **No `mqtt-max` port.** The bridge patch must be open. If the Max Console shows `Cannot find module`, click `script npm install`.
 - **`node.script` can't find `mqtt-max.js`.** The repo folder is missing from Max's search path.
+- **Old names under `offline`.** Statuses are retained until deleted. To delete one, send `retain 1`, then `publish {prefix}/status/{name}`, then `retain 0`.
 - **Every message twice.** Two clients bridge the same prefix. Close one.
 - **Notes repeat forever.** With Echo notes on in the phone app, `notein mqtt-max` is patched to `noteout mqtt-max`. The phone sends every note back, and the patch sends it out again.
 
@@ -127,4 +129,4 @@ Keep the bridge open while using the MIDI patches. Run one bridge per prefix, or
 
 ## License
 
-MIT, see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).

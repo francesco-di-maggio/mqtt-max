@@ -18,6 +18,8 @@ let qos = 0;
 let retain = false;
 // Presence: with a name, {prefix}/status/{name} is "online" while connected and "offline" after (retained, QoS 1).
 let clientName = option("name") ?? null;
+// The status topic of the current connection, fixed at connect so that its online, offline and will match.
+let ownStatus = null;
 
 const statusTopic = () => `${prefix}/status/${clientName}`;
 const STATUS_OPTIONS = { qos: 1, retain: true };
@@ -129,37 +131,67 @@ function subscribeIn() {
   if (port && client?.connected) client.subscribe(`${prefix}/in/#`);
 }
 
-// With a name, other clients' presence comes out as: presence <name> online|offline
+// With a name, every client with a retained status under {prefix}/status/+ comes out as
+//   presence <name> online|offline   on each change
+//   clients <dict>                   { online: [...], offline: [...], count }, count = number online
+let clients = new Map();
+
 function subscribeStatus() {
   if (clientName && client?.connected) client.subscribe(`${prefix}/status/+`, { qos: 1 });
 }
 
 function parsePresence(topic, payload) {
   const base = `${prefix}/status/`;
-  if (!clientName || !topic.startsWith(base) || payload.length === 0) return null;
+  if (!clientName || !topic.startsWith(base)) return null;
   return [topic.slice(base.length), payload.toString("utf8")];
+}
+
+// An empty payload deletes the retained status, and with it the client.
+function updateClients(name, state) {
+  const known = clients.get(name);
+  if (state === "") return clients.delete(name);
+  const online = state === "online";
+  if (known === online) return false;
+  clients.set(name, online);
+  return true;
+}
+
+function sendClients() {
+  const names = [...clients.keys()].sort();
+  const online = names.filter((name) => clients.get(name));
+  const offline = names.filter((name) => !clients.get(name));
+  maxApi.outlet("clients", { online, offline, count: online.length });
+}
+
+function resetClients() {
+  clients = new Map();
+  if (clientName) sendClients();
 }
 
 function disconnect() {
   if (!client) return;
-  if (clientName && client.connected) client.publish(statusTopic(), "offline", STATUS_OPTIONS);
+  if (ownStatus && client.connected) client.publish(ownStatus, "offline", STATUS_OPTIONS);
+  client.removeAllListeners("message");
   client.end();
   client = null;
+  ownStatus = null;
+  resetClients();
 }
 
 maxApi.addHandlers({
   connect: (url = "mqtt://localhost:1883", username, password) => {
     disconnect();
     const options = { username, password };
-    if (clientName) {
+    ownStatus = clientName ? statusTopic() : null;
+    if (ownStatus) {
       // The broker publishes the will when the connection drops without a disconnect;
       // keepalive 10 s detects a silent drop in about 15 s.
-      options.will = { topic: statusTopic(), payload: "offline", ...STATUS_OPTIONS };
+      options.will = { topic: ownStatus, payload: "offline", ...STATUS_OPTIONS };
       options.keepalive = 10;
     }
     client = mqtt.connect(url, options);
     client.on("connect", () => {
-      if (clientName) client.publish(statusTopic(), "online", STATUS_OPTIONS);
+      if (ownStatus) client.publish(ownStatus, "online", STATUS_OPTIONS);
       subscribeIn();
       subscribeStatus();
       maxApi.outlet("status", "connected", url);
@@ -170,7 +202,10 @@ maxApi.addHandlers({
     client.on("message", (topic, payload) => {
       maxApi.outlet("message", topic, ...decode(payload));
       const presence = parsePresence(topic, payload);
-      if (presence) maxApi.outlet("presence", ...presence);
+      if (presence && updateClients(...presence)) {
+        if (presence[1]) maxApi.outlet("presence", ...presence);
+        sendClients();
+      }
       const parsed = parseMidi(topic, payload);
       if (!parsed) return;
       maxApi.outlet("midi", parsed.direction, ...parsed.list);
@@ -225,6 +260,7 @@ maxApi.addHandlers({
     if (port && client) client.unsubscribe(`${prefix}/in/#`);
     if (clientName && client) client.unsubscribe(`${prefix}/status/+`);
     prefix = String(name);
+    resetClients();
     subscribeIn();
     subscribeStatus();
   },

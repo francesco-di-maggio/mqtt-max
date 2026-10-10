@@ -69,6 +69,7 @@
     -webkit-user-select: text; user-select: text;
   }
   input:focus { border-color: var(--ink); }
+  input:disabled { color: var(--dim); -webkit-text-fill-color: var(--dim); opacity: 1; }
   .switch input { align-self: flex-start; margin-top: 9px !important; }
   .switch input { appearance: none; -webkit-appearance: none; margin: 0; width: 42px; height: 26px; border-radius: 13px;
                   background: var(--line); position: relative; transition: background 150ms; }
@@ -199,8 +200,15 @@ function setStatus(text, state = "") {
   $("status").className = "label " + state;
 }
 
-const prefix = () => $("prefix").value.trim();
-const name = () => $("name").value.trim();
+// Fixed at Connect, so that status, will and ping keep one prefix and name until Disconnect.
+let identity = null;
+const prefix = () => identity?.prefix ?? $("prefix").value.trim();
+const name = () => identity?.name ?? $("name").value.trim();
+
+// Connection fields take effect on Connect, so they are read-only while connected.
+function lockFields(locked) {
+  for (const id of ["url", "username", "password", "prefix", "name"]) $(id).disabled = locked;
+}
 const statusTopic = () => `${prefix()}/status/${name()}`;
 
 function toCC(value, min, max) {
@@ -332,6 +340,8 @@ async function disconnect() {
   if (midi.connected) midi.client.publish(statusTopic(), "offline", STATUS_OPTIONS);
   await midi.disconnect();
   midi = null;
+  identity = null;
+  lockFields(false);
   online.clear();
   renderDevices();
   pingSent = null;
@@ -347,6 +357,8 @@ async function connect() {
   // iOS only grants motion permission when asked directly inside the tap handler, before any other await.
   await requestMotion();
   yawOrigin = null;
+  identity = { prefix: prefix(), name: name() };
+  lockFields(true);
   setStatus("connecting", "busy");
   midi = new MqttMidi({
     url: $("url").value.trim(),
@@ -371,6 +383,8 @@ async function connect() {
     keepAwake();
   } catch (err) {
     midi = null;
+    identity = null;
+    lockFields(false);
     setStatus(err.message, "err");
   }
 }
