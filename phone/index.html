@@ -50,7 +50,7 @@
   body:not(.setup) #setup-bar { background: var(--ink); border-color: var(--ink); }
   body:not(.setup) #setup-bar span { color: var(--bg); }
   body.setup #setup-bar .icon { transform: rotate(45deg); }
-  body.setup .meters, body.setup #padbox, body:not(.setup) #settings { display: none; }
+  body.setup .meters, body.setup #padbox, body:not(.setup) #settings, body:not(.setup) #connect { display: none; }
   .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .fields .wide { grid-column: 1 / -1; }
   .fields label { display: flex; flex-direction: column; gap: 6px; }
@@ -67,12 +67,13 @@
                          background: var(--surface); box-shadow: 0 1px 2px rgb(0 0 0 / 0.25); transition: transform 150ms; }
   .switch input:checked { background: var(--accent); }
   .switch input:checked::after { transform: translateX(16px); }
-  #connect { width: 100%; height: 56px; margin-top: 16px; border: 0; border-radius: var(--radius-inner); cursor: pointer;
-             background: var(--ink); color: var(--bg); font: 600 17px -apple-system, system-ui, sans-serif; }
-  #connect:active { opacity: 0.8; }
+  #connect { display: flex; align-items: center; width: 100%; text-align: left; cursor: pointer;
+             background: var(--ink); border-color: var(--ink); color: var(--bg);
+             font: 500 11px/20px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; }
+  #connect:active, #setup-bar:active { opacity: 0.8; }
 
   .meters { display: grid; gap: 12px; }
-  .meter { display: grid; grid-template-columns: 84px 1fr 52px; align-items: center; gap: 12px; }
+  .meter { display: grid; grid-template-columns: 96px 1fr 52px; align-items: center; gap: 12px; }
   .meter b { font: 500 13px var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
   .bar { height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
   .bar i { display: block; height: 100%; width: 0; background: var(--ink); transition: width 60ms linear; }
@@ -127,26 +128,27 @@
     <label><span class="label">Channel</span><input id="channel" type="number" min="1" max="16" value="1"></label>
     <label class="switch"><span class="label">Echo notes</span><input id="echo" type="checkbox"></label>
   </div>
-  <button id="connect">Connect</button>
   <div class="devices" id="devices"><span class="label">Online</span></div>
 </div>
 
+<button id="connect" class="panel">Connect</button>
+
 <div class="panel meters">
-  <div class="meter"><span class="label">01 Pitch</span><div class="bar"><i id="b1"></i></div><b id="v1">–</b></div>
-  <div class="meter"><span class="label">02 Roll</span><div class="bar"><i id="b2"></i></div><b id="v2">–</b></div>
-  <div class="meter" id="yaw" title="Tap to center"><span class="label">03 Yaw</span><div class="bar"><i id="b3"></i></div><b id="v3">–</b></div>
-  <div class="meter"><span class="label">04 Network</span><div class="bar"><i id="bnet"></i></div><b id="vnet">–</b></div>
+  <div class="meter"><span class="label">CC1 Pitch</span><div class="bar"><i id="b1"></i></div><b id="v1">–</b></div>
+  <div class="meter"><span class="label">CC2 Roll</span><div class="bar"><i id="b2"></i></div><b id="v2">–</b></div>
+  <div class="meter" id="yaw" title="Tap to center"><span class="label">CC3 Yaw</span><div class="bar"><i id="b3"></i></div><b id="v3">–</b></div>
+  <div class="meter"><span class="label">CC4 Network</span><div class="bar"><i id="bnet"></i></div><b id="vnet">–</b></div>
 </div>
 
 
 <div id="padbox">
   <div id="pad" role="application" aria-label="XY pad: X CC 5, Y CC 6, hold for note 60">
-    <span class="label">05/06 XY · Hold for note 60</span>
+    <span class="label">CC5/6 XY · Hold for note 60</span>
     <span class="xy" id="xy">X – · Y –</span>
     <i id="dot"></i>
   </div>
   <div id="slider" role="slider" aria-label="CC 7" aria-valuemin="0" aria-valuemax="127" aria-valuenow="0">
-    <span class="label">07 Slider</span><b id="v7">–</b>
+    <span class="label">CC7 Slider</span><b id="v7">–</b>
   </div>
 </div>
 
