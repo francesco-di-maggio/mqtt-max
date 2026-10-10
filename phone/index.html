@@ -12,6 +12,7 @@
     --bg: #f2f2f0; --surface: #ffffff; --ink: #111111; --dim: #8b8b88; --line: #e3e3df;
     --accent: #ff5a1f; --ok: #22b35e; --err: #e5484d;
     --mono: ui-monospace, "SF Mono", Menlo, monospace;
+    --radius: 16px; --radius-inner: 10px;
     color-scheme: light dark;
   }
   @media (prefers-color-scheme: dark) {
@@ -27,7 +28,7 @@
     -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent;
   }
   .label { font: 500 11px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
-  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 14px; }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; }
 
   header { display: flex; align-items: center; justify-content: space-between; height: 28px; }
   .mark { font: 600 13px var(--mono); letter-spacing: 0.04em; }
@@ -42,17 +43,17 @@
   #status.err::before { background: var(--err); }
   @keyframes blink { 50% { opacity: 0.2; } }
 
-  details summary { display: flex; justify-content: space-between; align-items: center; cursor: pointer; list-style: none; }
+  details summary { display: flex; justify-content: space-between; align-items: center; height: 20px; cursor: pointer; list-style: none; }
   details summary::-webkit-details-marker { display: none; }
-  details summary::after { content: "+"; font: 400 18px var(--mono); color: var(--dim); line-height: 1; }
-  details[open] summary::after { content: "Close"; font: 500 11px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink); }
+  details summary::after { content: "+"; font: 400 18px/1 var(--mono); color: var(--dim); transition: transform 150ms; }
+  details[open] summary::after { transform: rotate(45deg); color: var(--ink); }
   body:has(#settings[open]) .meters, body:has(#settings[open]) #padbox { display: none; }
   .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
   .fields .wide { grid-column: 1 / -1; }
   .fields label { display: flex; flex-direction: column; gap: 6px; }
   input:not([type]), input[type=password], input[type=number] {
     width: 100%; padding: 11px 12px; font: 16px var(--mono); color: var(--ink);
-    background: var(--bg); border: 1px solid var(--line); border-radius: 10px; outline: none;
+    background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-inner); outline: none;
     -webkit-user-select: text; user-select: text;
   }
   input:focus { border-color: var(--ink); }
@@ -63,7 +64,7 @@
                          background: var(--surface); box-shadow: 0 1px 2px rgb(0 0 0 / 0.25); transition: transform 150ms; }
   .switch input:checked { background: var(--accent); }
   .switch input:checked::after { transform: translateX(16px); }
-  #connect { width: 100%; height: 56px; margin-top: 16px; border: 0; border-radius: 14px; cursor: pointer;
+  #connect { width: 100%; height: 56px; margin-top: 16px; border: 0; border-radius: var(--radius-inner); cursor: pointer;
              background: var(--ink); color: var(--bg); font: 600 17px -apple-system, system-ui, sans-serif; }
   #connect:active { opacity: 0.8; }
 
@@ -79,7 +80,7 @@
   #pad, #slider { --side: min(100cqw, calc(100cqh - 58px)); width: var(--side); }
   #pad { position: relative; height: var(--side);
          display: flex; flex-direction: column; justify-content: space-between; padding: 14px;
-         border-radius: 20px; border: 1px solid var(--line); touch-action: none; overflow: hidden;
+         border-radius: var(--radius); border: 1px solid var(--line); touch-action: none; overflow: hidden;
          background: linear-gradient(var(--dim), var(--dim)) center / 1px 14px no-repeat,
                      linear-gradient(var(--dim), var(--dim)) center / 14px 1px no-repeat, var(--surface);
          transition: background-color 40ms; }
@@ -91,7 +92,7 @@
   #pad.on .label, #pad.on .xy { color: #fff; }
   #pad.on #dot { border-color: #fff; }
   #slider { flex: none; height: 48px; display: flex; justify-content: space-between; align-items: center; padding: 0 14px;
-            border-radius: 14px; border: 1px solid var(--line); touch-action: none; cursor: pointer; --p: 0%;
+            border-radius: var(--radius); border: 1px solid var(--line); touch-action: none; cursor: pointer; --p: 0%;
             background: linear-gradient(to right, var(--accent) var(--p), var(--surface) var(--p)); }
   #slider .label { color: var(--ink); }
   #slider b { font: 500 13px var(--mono); font-variant-numeric: tabular-nums; }
