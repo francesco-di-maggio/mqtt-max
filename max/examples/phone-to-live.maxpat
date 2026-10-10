@@ -521,7 +521,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 410.0, 451.0, 113.0, 20.0 ],
-                    "text": "CC4 slider -> CC23"
+                    "text": "CC4 network -> CC23"
                 }
             },
             {

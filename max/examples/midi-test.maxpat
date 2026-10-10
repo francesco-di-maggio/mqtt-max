@@ -41,7 +41,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 20.0, 130.0, 163.0, 20.0 ],
-                    "text": "IN  (phone tilt / slider / pad)"
+                    "text": "IN  (phone tilt / network / XY pad)"
                 }
             },
             {

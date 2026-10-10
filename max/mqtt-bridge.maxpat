@@ -9,7 +9,7 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 129.0, 285.0, 638.0, 640.0 ],
+        "rect": [ 124.0, 213.0, 644.0, 608.0 ],
         "boxes": [
             {
                 "box": {
@@ -88,8 +88,6 @@
                         "args": [ "--prefix", "remote", "--port", "mqtt-max", "--name", "max" ],
                         "autostart": 1,
                         "defer": 0,
-                        "node_bin_path": "",
-                        "npm_bin_path": "",
                         "watch": 1
                     },
                     "text": "node.script mqtt-max.js @autostart 1 @watch 1 @args --prefix remote --port mqtt-max --name max",
@@ -108,7 +106,7 @@
                     "numinlets": 4,
                     "numoutlets": 4,
                     "outlettype": [ "", "", "", "" ],
-                    "patching_rect": [ 20.0, 225.0, 170.0, 22.0 ],
+                    "patching_rect": [ 20.0, 225.0, 153.0, 22.0 ],
                     "text": "route status error presence"
                 }
             },
@@ -187,12 +185,12 @@
             },
             {
                 "box": {
+                    "fontface": 1,
                     "id": "cpres",
                     "maxclass": "comment",
-                    "fontface": 1,
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 345.0, 400.0, 20.0 ],
+                    "patching_rect": [ 20.0, 345.0, 318.0, 20.0 ],
                     "text": "ONLINE  (clients with presence under the same prefix)"
                 }
             },
@@ -203,7 +201,7 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "bang", "" ],
-                    "patching_rect": [ 20.0, 370.0, 40.0, 22.0 ],
+                    "patching_rect": [ 20.0, 370.0, 29.5, 22.0 ],
                     "text": "t b l"
                 }
             },
@@ -214,7 +212,7 @@
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 70.0, 400.0, 75.0, 22.0 ],
+                    "patching_rect": [ 30.5, 399.0, 72.0, 22.0 ],
                     "text": "prepend set"
                 }
             },
@@ -225,7 +223,12 @@
                     "numinlets": 2,
                     "numoutlets": 5,
                     "outlettype": [ "dictionary", "", "", "", "" ],
-                    "patching_rect": [ 20.0, 430.0, 125.0, 22.0 ],
+                    "patching_rect": [ 20.0, 430.0, 107.0, 22.0 ],
+                    "saved_object_attributes": {
+                        "legacy": 1,
+                        "parameter_enable": 0,
+                        "parameter_mappable": 0
+                    },
                     "text": "dict mqtt-presence"
                 }
             },
@@ -278,8 +281,32 @@
             },
             {
                 "patchline": {
+                    "destination": [ "pview", 0 ],
+                    "source": [ "pdict", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "pdict", 0 ],
+                    "source": [ "ppre", 0 ]
+                }
+            },
+            {
+                "patchline": {
                     "destination": [ "state", 0 ],
                     "source": [ "pset", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "pdict", 0 ],
+                    "source": [ "ptb", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "ppre", 0 ],
+                    "source": [ "ptb", 1 ]
                 }
             },
             {
@@ -296,32 +323,8 @@
             },
             {
                 "patchline": {
-                    "source": [ "route", 2 ],
-                    "destination": [ "ptb", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "ptb", 1 ],
-                    "destination": [ "ppre", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "ppre", 0 ],
-                    "destination": [ "pdict", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "ptb", 0 ],
-                    "destination": [ "pdict", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "source": [ "pdict", 0 ],
-                    "destination": [ "pview", 0 ]
+                    "destination": [ "ptb", 0 ],
+                    "source": [ "route", 2 ]
                 }
             }
         ],

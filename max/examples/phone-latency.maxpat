@@ -377,7 +377,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 736.0, 475.0, 37.0, 33.0 ],
-                    "text": "CC4\nslider"
+                    "text": "CC4\nnetwork"
                 }
             },
             {
