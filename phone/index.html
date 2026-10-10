@@ -184,11 +184,12 @@ function show(cc, value) {
 }
 
 // beta = pitch (front/back), gamma = roll (left/right), alpha = yaw (rotation around the screen axis, wraps 360 -> 0).
+// alpha grows counter-clockwise; it is inverted so turning right raises CC 3.
 function onOrientation(e) {
   if (e.beta === null) return;
   current[1] = toCC(e.beta, -90, 90);
   current[2] = toCC(e.gamma, -90, 90);
-  current[3] = toCC(e.alpha ?? 0, 0, 360);
+  current[3] = toCC((360 - (e.alpha ?? 0)) % 360, 0, 360);
 }
 
 function sendChanged() {

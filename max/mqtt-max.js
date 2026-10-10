@@ -10,12 +10,12 @@ const option = (name) => {
 };
 
 let client = null;
+let prefix = option("prefix") ?? "remote";
+let port = null;
 let format = "text";
 // Options for publish / publishbytes / publishjson and subscribe; MIDI from the port always uses QoS 0, no retain.
 let qos = 0;
 let retain = false;
-let prefix = option("prefix") ?? "remote";
-let port = null;
 // Presence: with a name, {prefix}/status/{name} is "online" while connected and "offline" after (retained, QoS 1).
 let clientName = option("name") ?? null;
 
@@ -184,7 +184,7 @@ maxApi.addHandlers({
   // publishjson <topic> <dict>, e.g. from [dict.pack] -> [prepend publishjson sensors/esp1]
   publishjson: async (topic, ...rest) => {
     if (!client) return maxApi.outlet("error", "not connected");
-    const dict = rest[0] === "dictionary" ? await maxApi.getDict(rest[1]) : rest[0];
+    const dict = rest[0] === "dictionary" ? await maxApi.getDict(rest[1]).catch(() => null) : rest[0];
     if (dict === null || typeof dict !== "object") return maxApi.outlet("error", "publishjson needs a dict");
     client.publish(String(topic), JSON.stringify(dict), { qos, retain });
   },
