@@ -75,8 +75,9 @@
 
   #yaw { cursor: pointer; }
 
-  #padbox { flex: 1; min-height: 160px; container-type: size; display: flex; align-items: flex-start; justify-content: center; }
-  #pad { position: relative; width: min(100cqw, 100cqh); height: min(100cqw, 100cqh);
+  #padbox { flex: 1; min-height: 220px; container-type: size; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  #pad, #slider { --side: min(100cqw, calc(100cqh - 58px)); width: var(--side); }
+  #pad { position: relative; height: var(--side);
          display: flex; flex-direction: column; justify-content: space-between; padding: 14px;
          border-radius: 20px; border: 1px solid var(--line); touch-action: none; overflow: hidden;
          background: linear-gradient(var(--dim), var(--dim)) center / 1px 14px no-repeat,
@@ -89,6 +90,11 @@
   #pad.on { background: var(--accent); border-color: var(--accent); }
   #pad.on .label, #pad.on .xy { color: #fff; }
   #pad.on #dot { border-color: #fff; }
+  #slider { flex: none; height: 48px; display: flex; justify-content: space-between; align-items: center; padding: 0 14px;
+            border-radius: 14px; border: 1px solid var(--line); touch-action: none; cursor: pointer; --p: 0%;
+            background: linear-gradient(to right, var(--accent) var(--p), var(--surface) var(--p)); }
+  #slider .label { color: var(--ink); }
+  #slider b { font: 500 13px var(--mono); font-variant-numeric: tabular-nums; }
 
   .devices { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 26px; margin-top: 14px; }
   .chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px; border-radius: 999px;
@@ -132,6 +138,9 @@
     <span class="xy" id="xy">X – · Y –</span>
     <i id="dot"></i>
   </div>
+  <div id="slider" role="slider" aria-label="CC 7" aria-valuemin="0" aria-valuemax="127" aria-valuenow="0">
+    <span class="label">07 Slider</span><b id="v7">–</b>
+  </div>
 </div>
 
 
@@ -140,7 +149,7 @@ import { MqttMidi } from "https://esm.sh/@grantler-instruments/mqtt-midi@0.1.0?d
 
 const SEND_INTERVAL_MS = 33;
 const FIELDS = ["url", "username", "password", "prefix", "name", "channel"];
-const CCS = [1, 2, 3, 4, 5, 6];
+const CCS = [1, 2, 3, 4, 5, 6, 7];
 const PING_INTERVAL_MS = 500;
 const PING_TIMEOUT_MS = 1000;
 const RTT_MAX_MS = 500;
@@ -148,8 +157,8 @@ const STATUS_OPTIONS = { qos: 1, retain: true };
 const $ = (id) => document.getElementById(id);
 
 let midi = null;
-const current = { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null };
-const sent = { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null };
+const current = { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null };
+const sent = { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null };
 let yawOrigin = null;
 let pingSent = null;
 const online = new Set();
@@ -388,6 +397,21 @@ $("pad").addEventListener("pointermove", padMove);
 $("pad").addEventListener("pointerup", padUp);
 $("pad").addEventListener("pointercancel", padUp);
 $("yaw").addEventListener("click", () => { yawOrigin = null; });
+// The whole bar is the touch target: touching sets the value at that position, dragging follows.
+function setSlider(e) {
+  const rect = $("slider").getBoundingClientRect();
+  const t = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+  current[7] = Math.round(t * 127);
+  $("slider").style.setProperty("--p", t * 100 + "%");
+  $("slider").setAttribute("aria-valuenow", current[7]);
+}
+$("slider").addEventListener("pointerdown", (e) => {
+  $("slider").setPointerCapture(e.pointerId);
+  setSlider(e);
+});
+$("slider").addEventListener("pointermove", (e) => {
+  if ($("slider").hasPointerCapture(e.pointerId)) setSlider(e);
+});
 setInterval(sendChanged, SEND_INTERVAL_MS);
 setInterval(ping, PING_INTERVAL_MS);
 </script>

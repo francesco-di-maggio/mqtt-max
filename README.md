@@ -15,7 +15,7 @@ MIDI uses the topic format of [@grantler-instruments/mqtt-midi](https://github.c
 - **Any MQTT data**: subscribe and publish text, raw bytes or JSON (as Max dicts).
 - **Retain and QoS** for publish and subscribe.
 - **Presence**: named clients appear as `online` / `offline`, also after a crash (last will).
-- **Web controller** for phones: tilt, XY pad and network round trip as MIDI, with a list of who is online.
+- **Web controller** for phones: tilt, XY pad, slider and network round trip as MIDI, with a list of who is online.
 
 ## Requirements
 
@@ -109,6 +109,7 @@ Served at [francesco-di-maggio.github.io/mqtt-max/phone/](https://francesco-di-m
 | Yaw (rotation, 360° around the starting direction = 64; tap the Yaw row to re-centre) | CC 3 |
 | Network round trip, phone → broker → phone | CC 4: 0–500 ms → 0–127; a ping lost for 1 s → 127 |
 | XY pad | X → CC 5, Y → CC 6 (bottom-left 0, top-right 127); note 60, velocity 100, while touched |
+| Slider | CC 7 |
 
 All on `{prefix}/in/…`, on the channel set in Setup. **Echo notes** sends notes arriving on `{prefix}/out/…` back on `{prefix}/in/…`, for round-trip latency tests. The page announces itself as `{prefix}/status/{name}`, shown in the header, and lists the clients online under the same prefix in Setup.
 
