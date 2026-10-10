@@ -90,21 +90,17 @@
 
   #yaw { cursor: pointer; }
 
-  #padbox { flex: 1; min-height: 220px; container-type: size; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-  #pad, #slider { --side: min(100cqw, calc(100cqh - 60px)); width: var(--side); }
-  #pad { position: relative; height: var(--side);
+  #padbox { flex: 1; min-height: 220px; display: flex; flex-direction: column; gap: 10px; }
+  #pad { position: relative; flex: 1;
          display: flex; flex-direction: column; justify-content: space-between; padding: 14px;
          border-radius: var(--radius); border: 1px solid var(--line); touch-action: none; overflow: hidden;
          background: linear-gradient(var(--dim), var(--dim)) center / 1px 14px no-repeat,
-                     linear-gradient(var(--dim), var(--dim)) center / 14px 1px no-repeat, var(--surface);
-         transition: background-color 40ms; }
+                     linear-gradient(var(--dim), var(--dim)) center / 14px 1px no-repeat, var(--surface); }
   #pad .xy { font: 500 13px var(--mono); font-variant-numeric: tabular-nums; color: var(--dim); }
   #dot { position: absolute; left: 50%; top: 50%; width: 28px; height: 28px; margin: -14px 0 0 -14px;
          border-radius: 50%; border: 2px solid var(--ink); opacity: 0; pointer-events: none; }
   #pad.touched #dot { opacity: 1; }
-  #pad.on { background: var(--accent); border-color: var(--accent); }
-  #pad.on .label, #pad.on .xy { color: #fff; }
-  #pad.on #dot { border-color: #fff; }
+  #pad.on #dot { background: var(--accent); border-color: var(--accent); }
   #slider { flex: none; height: 50px; display: flex; justify-content: space-between; align-items: center; padding: 0 14px;
             border-radius: var(--radius); border: 1px solid var(--line); touch-action: none; cursor: pointer; --p: 0%;
             background: linear-gradient(to right, var(--accent) var(--p), var(--surface) var(--p)); }
