@@ -4,18 +4,18 @@ MIDI and data over MQTT between Max and any device: phones, microcontrollers, ot
 
 ```
 device ──MQTT──▶ broker ──MQTT──▶ mqtt-max.js ──MIDI port "mqtt-max"──▶ ctlin / notein
-       ◀──────────────────────────             ◀───────────────────────── ctlout / noteout
+       ◀──────────────────────────           ◀───────────────────────── ctlout / noteout
 ```
 
 MIDI uses the topic format of [@grantler-instruments/mqtt-midi](https://github.com/grantler-instruments/mqtt-midi), so any client that speaks it can join.
 
 ## Features
 
-- **MIDI port in Max**: `{prefix}/in/…` plays on a virtual port; MIDI sent to it is published on `{prefix}/out/…`. Note on/off, CC, program change, pitch bend, clock / start / stop / continue.
-- **Any MQTT data**: subscribe and publish text, raw bytes or JSON (as Max dicts).
+- **MIDI port in Max.** `{prefix}/in/…` plays on a virtual port, and MIDI sent to it is published on `{prefix}/out/…`. Note on/off, CC, program change, pitch bend, clock, start, stop and continue.
+- **Any MQTT data.** Subscribe and publish text, raw bytes or JSON (as Max dicts).
 - **Retain and QoS** for publish and subscribe.
-- **Presence**: named clients appear as `online` / `offline`, also after a crash (last will).
-- **Web controller** for phones: tilt, XY pad, slider and network round trip as MIDI, with a list of who is online.
+- **Presence.** Named clients appear as `online` or `offline`, also after a crash (last will).
+- **[Phone app](phone/).** A web page that sends tilt, an XY pad, a slider and the network round trip as MIDI.
 
 ## Requirements
 
@@ -25,10 +25,11 @@ MIDI uses the topic format of [@grantler-instruments/mqtt-midi](https://github.c
 
 ## Quick start
 
-1. Clone the repo and add its folder to Max's search path (Options → File Preferences). Open `max/mqtt-bridge.maxpat`; on first use on a machine, click `script npm install`.
-2. Click `connect mqtt://public.cloud.shiftr.io public public`. The MIDI port `mqtt-max` now exists.
-3. On a phone, open [francesco-di-maggio.github.io/mqtt-max/phone/](https://francesco-di-maggio.github.io/mqtt-max/phone/), keep prefix `remote` and tap Connect.
-4. Open `max/examples/midi-test.maxpat` and tilt the phone: `ctlin mqtt-max` shows CC 1–3.
+1. Clone the repo and add its folder to Max's search path (Options → File Preferences).
+2. Open `max/mqtt-bridge.maxpat`. On first use on a machine, click `script npm install`.
+3. Click `connect mqtt://public.cloud.shiftr.io public public`. The MIDI port `mqtt-max` now exists.
+4. On a phone, open [francesco-di-maggio.github.io/mqtt-max/phone/](https://francesco-di-maggio.github.io/mqtt-max/phone/), keep prefix `remote` and tap Connect.
+5. Open `max/examples/midi-test.maxpat` and tilt the phone. `ctlin mqtt-max` shows CC 1–3.
 
 The public broker is shared and readable by anyone. Use a prefix of your own and send test data only.
 
@@ -36,7 +37,8 @@ The public broker is shared and readable by anyone. Use a prefix of your own and
 
 ```
 index.html              landing page (GitHub Pages)
-phone/index.html        web controller
+assets/                 icon and link preview image
+phone/                  phone app, see phone/README.md
 max/
   mqtt-max.js           Node for Max script: MQTT client and MIDI port
   mqtt-bridge.maxpat    the bridge
@@ -51,67 +53,50 @@ max/
 
 | Launch option | Default | |
 |---|---|---|
-| `--prefix <prefix>` | `remote` | Topic prefix for MIDI and presence |
-| `--port <name>` | none | Create a virtual MIDI port and subscribe to `{prefix}/in/#` |
-| `--name <id>` | none | Enable presence: announce `{prefix}/status/{id}`, report other clients as `presence` |
-
-Patches outside `max/`, including `max/examples/`, find the script through Max's search path: add the repo folder in Options → File Preferences.
+| `--prefix <prefix>` | `remote` | Topic prefix |
+| `--port <name>` | none | Create a MIDI port, subscribe to `{prefix}/in/#` |
+| `--name <id>` | none | Announce presence, report other clients |
 
 ### Messages
 
 | Message | |
 |---|---|
-| `connect <url> [user] [password]` | `mqtt://`, `mqtts://`, `ws://` or `wss://` URL |
-| `disconnect` | Disconnect; publishes `offline` when named |
-| `subscribe <topic>` / `unsubscribe <topic>` | Wildcards `+` and `#` allowed |
-| `publish <topic> <values…>` | Text payload, values joined by spaces |
-| `publishbytes <topic> <bytes…>` | Raw byte payload |
-| `publishjson <topic> <dict>` | A Max dict as JSON, e.g. `[dict.pack]` → `[prepend publishjson <topic>]` |
-| `format text \| bytes \| json` | How incoming payloads are output (default `text`) |
-| `qos 0 \| 1 \| 2` | QoS for following publishes and subscribes (default 0) |
-| `retain 0 \| 1` | Retain following publishes (default 0). `retain 1` + `publish <topic>` with no payload clears a retained message |
+| `connect <url> [user] [password]` | Connect, `mqtt(s)://` or `ws(s)://` |
+| `disconnect` | Disconnect, publish `offline` if named |
+| `subscribe <topic>` | Subscribe, `+` and `#` allowed |
+| `unsubscribe <topic>` | Unsubscribe |
+| `publish <topic> <values…>` | Text, values joined by spaces |
+| `publishbytes <topic> <bytes…>` | Raw bytes |
+| `publishjson <topic> <dict>` | A dict as JSON, e.g. from `[dict.pack]` |
+| `format text \| bytes \| json` | Incoming payload format, default `text` |
+| `qos 0 \| 1 \| 2` | QoS from now on, default 0, MIDI 0 |
+| `retain 0 \| 1` | Retain from now on, default 0 |
+| `publish <topic>` | With `retain 1`, clears a retained message |
 | `port <name>` | As `--port`, at runtime |
 | `prefix <prefix>` | As `--prefix`, at runtime |
-| `name <id>` | As `--name`; takes effect on the next connect |
-
-MIDI from the port is always sent with QoS 0 and no retain.
+| `name <id>` | As `--name`, from the next connect |
 
 ### Output
 
 | Output | |
 |---|---|
-| `message <topic> <payload…>` | Every incoming message. With `format json`, JSON objects arrive as a dict |
-| `midi <in\|out> <type> <channel> [<number>] <value>` | Decoded MIDI under the prefix, e.g. `midi in cc 1 7 64` |
-| `presence <name> online\|offline` | Clients under the prefix, when named |
-| `status connected <url>` / `reconnecting` / `disconnected` | Connection state |
+| `message <topic> <payload…>` | Every message, a dict with `format json` |
+| `midi <in\|out> <type> <channel> …` | Decoded MIDI, e.g. `midi in cc 1 7 64` |
+| `presence <name> <state>` | `online` / `offline`, if named |
+| `status <state>` | `connected`, `reconnecting`, `disconnected` |
 | `error <text>` | Errors |
 
 ## Patches
 
 | Patch | |
 |---|---|
-| `mqtt-bridge.maxpat` | Creates the `mqtt-max` port and shows who is online. Keep it open while using the MIDI patches. |
-| `examples/midi-test.maxpat` | `ctlin` / `notein` in, `ctlout` / `noteout` out |
-| `examples/phone-to-live.maxpat` | Smooths CC 1–4 and sends them as CC 20–23, pad note passed through, to a MIDI output for Ableton Live |
-| `examples/phone-latency.maxpat` | Latency: laptop ↔ broker, and the full loop through the phone |
-| `examples/mqtt-raw.maxpat` | MQTT without a MIDI port: text, bytes, JSON, QoS, retain, presence |
+| `mqtt-bridge.maxpat` | Creates the `mqtt-max` port, shows who is online |
+| `examples/midi-test.maxpat` | MIDI in and out |
+| `examples/phone-to-live.maxpat` | Smoothed phone CCs to Ableton Live |
+| `examples/phone-latency.maxpat` | Latency tests |
+| `examples/mqtt-raw.maxpat` | MQTT without MIDI: text, bytes, JSON |
 
-Run one bridge per prefix, or every message arrives twice.
-
-## Web controller
-
-Served at [francesco-di-maggio.github.io/mqtt-max/phone/](https://francesco-di-maggio.github.io/mqtt-max/phone/). Motion sensors need HTTPS; iOS asks for permission on the first Connect.
-
-| Control | Sends |
-|---|---|
-| Pitch (front / back, −180° … 180°, flat = 64) | CC 1 |
-| Roll (left / right, −90° … 90°, flat = 64) | CC 2 |
-| Yaw (rotation, 360° around the starting direction = 64; tap the Yaw row to re-centre) | CC 3 |
-| Network round trip, phone → broker → phone | CC 4: 0–500 ms → 0–127; a ping lost for 1 s → 127 |
-| XY pad | X → CC 5, Y → CC 6 (bottom-left 0, top-right 127); note 60, velocity 100, while touched |
-| Slider | CC 7 |
-
-All on `{prefix}/in/…`, on the channel set in Setup. **Echo notes** sends notes arriving on `{prefix}/out/…` back on `{prefix}/in/…`, for round-trip latency tests. The page announces itself as `{prefix}/status/{name}`, shown in the header, and lists the clients online under the same prefix in Setup.
+Keep the bridge open while using the MIDI patches. Run one bridge per prefix, or every message arrives twice.
 
 ## Topics
 
@@ -124,24 +109,19 @@ All on `{prefix}/in/…`, on the channel set in Setup. **Echo notes** sends note
 | `{prefix}/{in\|out}/pitchbend/{channel}` | 2 bytes, LSB MSB |
 | `{prefix}/{in\|out}/{clock\|start\|stop\|continue}` | empty |
 | `{prefix}/status/{name}` | `online` / `offline`, retained, QoS 1 |
-| `{prefix}/ping/{name}` | Web controller's round-trip ping to itself |
 
-`in` is toward the MIDI port, `out` is from it. Channels are 1–16, data bytes 0–127; other MIDI topics are not played on the port, but still arrive as `message`.
+`in` is toward the MIDI port, `out` is from it. Channels are 1–16 and data bytes 0–127. Other MIDI topics are not played on the port, but still arrive as `message`.
 
 ## Troubleshooting
 
-- **No `mqtt-max` port**: the bridge patch must be open. If the Max Console shows `Cannot find module`, click `script npm install`.
-- **`node.script` can't find `mqtt-max.js`** in an example: the repo folder is missing from Max's search path.
-- **Every message twice**: two clients bridge the same prefix. Close one.
-- **Notes repeat forever**: with Echo notes on, `notein mqtt-max` is patched to `noteout mqtt-max`. The phone sends every note back, and the patch sends it out again.
+- **No `mqtt-max` port.** The bridge patch must be open. If the Max Console shows `Cannot find module`, click `script npm install`.
+- **`node.script` can't find `mqtt-max.js`.** The repo folder is missing from Max's search path.
+- **Every message twice.** Two clients bridge the same prefix. Close one.
+- **Notes repeat forever.** With Echo notes on in the phone app, `notein mqtt-max` is patched to `noteout mqtt-max`. The phone sends every note back, and the patch sends it out again.
 
-## Development
+## Acknowledgements
 
-The web pages are plain HTML, served by GitHub Pages from `main`: pushing updates the live page. The Max side needs `npm install` in `max/` (or `script npm install` in Max) for `mqtt` and `@julusian/midi`.
-
-## Credits
-
-- [@grantler-instruments/mqtt-midi](https://github.com/grantler-instruments/mqtt-midi) by Grantler Instruments: topic format, and the web controller's MIDI client
+- [@grantler-instruments/mqtt-midi](https://github.com/grantler-instruments/mqtt-midi) by Grantler Instruments: topic format, and the phone app's MIDI client
 - [MQTT.js](https://github.com/mqttjs/MQTT.js)
 - [@julusian/midi](https://github.com/Julusian/node-midi) (RtMidi)
 

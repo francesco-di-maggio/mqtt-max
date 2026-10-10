@@ -2,37 +2,93 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Exchange MIDI and data between Max and any device that speaks MQTT.">
+<meta name="theme-color" content="#f2f2f0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0b0c" media="(prefers-color-scheme: dark)">
 <title>mqtt-max</title>
-<link rel="icon" href="data:,">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="mqtt-max">
+<meta property="og:description" content="Exchange MIDI and data between Max and any device that speaks MQTT.">
+<meta property="og:url" content="https://francesco-di-maggio.github.io/mqtt-max/">
+<meta property="og:image" content="https://francesco-di-maggio.github.io/mqtt-max/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
 <style>
-  :root { --bg: #f2f2f0; --surface: #ffffff; --ink: #111111; --dim: #8b8b88; --line: #e3e3df; --accent: #ff5a1f;
-          --mono: ui-monospace, "SF Mono", Menlo, monospace; color-scheme: light dark; }
+  :root {
+    --bg: #f2f2f0; --surface: #ffffff; --ink: #111111; --dim: #8b8b88; --line: #e3e3df; --accent: #ff5a1f;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+    --radius: 16px;
+    color-scheme: light dark;
+  }
   @media (prefers-color-scheme: dark) {
     :root { --bg: #0b0b0c; --surface: #161618; --ink: #f2f2f2; --dim: #7c7c82; --line: #26262a; }
   }
-  body { margin: 0; padding: 48px 16px; background: var(--bg); color: var(--ink);
-         font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif; }
-  main { max-width: 520px; margin: 0 auto; }
-  h1 { margin: 0 0 8px; font: 600 15px var(--mono); letter-spacing: 0.04em; }
-  h1 i { color: var(--accent); font-style: normal; }
-  p { margin: 0 0 32px; color: var(--dim); }
-  a.card { display: flex; justify-content: space-between; align-items: center; padding: 16px; border-radius: 16px;
-           background: var(--surface); border: 1px solid var(--line); color: inherit; text-decoration: none; }
-  a.card:active { opacity: 0.8; }
-  .label { font: 500 11px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
-  a.card b { display: block; font-weight: 600; margin-bottom: 2px; }
-  a.card span:last-child { font: 18px var(--mono); color: var(--dim); }
+  * { box-sizing: border-box; }
+  html { background: var(--bg); }
+  body {
+    max-width: 592px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px;
+    padding: calc(12px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));
+    background: var(--bg); color: var(--ink);
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
+  }
+  .label { font: 500 11px/20px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
+  header { display: flex; align-items: center; height: 28px; margin-bottom: min(40px, 5vh); }
+  .mark { font: 600 13px var(--mono); letter-spacing: 0.04em; }
+  .mark i { color: var(--accent); font-style: normal; }
+  h1 { margin: 0 0 12px; font-size: clamp(28px, 8vw, 34px); line-height: 1.15; font-weight: 600; letter-spacing: -0.02em; }
+  .lead { margin: 0 0 min(28px, 4vh); color: var(--dim); }
+  h2 { margin: min(20px, 2.5vh) 0 0; }
+  ol { display: grid; gap: 10px; margin: 0; list-style: none; }
+  .row { display: grid; grid-template-columns: 96px 1fr; gap: 12px; font-size: 15px; line-height: 20px; }
+  .panel { padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+  a.panel { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: inherit; text-decoration: none; }
+  a.panel:active { opacity: 0.8; }
+  a.panel .label { display: block; color: var(--ink); }
+  .caption { display: block; font-size: 14px; line-height: 20px; color: var(--dim); }
+  .arrow { font: 400 18px/20px var(--mono); color: var(--dim); }
+  .primary { background: var(--ink); border-color: var(--ink); }
+  a.primary .label, a.primary .arrow { color: var(--bg); }
+  a.primary .caption { color: var(--bg); opacity: 0.7; }
+  footer { display: flex; justify-content: space-between; margin-top: min(30px, 3vh); }
+  footer a { color: inherit; text-decoration: none; }
+  @media (max-height: 600px) {
+    h2 { display: none; }
+    h1 { font-size: 26px; }
+    .lead { font-size: 15px; line-height: 1.4; margin-bottom: 14px; }
+    header { margin-bottom: 12px; }
+    footer { margin-top: 10px; }
+  }
 </style>
 </head>
 <body>
-<main>
-  <h1>mqtt<i>·</i>max</h1>
-  <p>MIDI and data over MQTT between Max and any device.</p>
-  <a class="card" href="phone/">
-    <span><b>Phone controller</b><span class="label">Tilt → CC 1–3 · Network → CC 4 · XY → CC 5–6 · Slider → CC 7</span></span>
-    <span>→</span>
-  </a>
-</main>
+<header><span class="mark">mqtt<i>·</i>max</span></header>
+
+<h1>MIDI over MQTT, for Max.</h1>
+<p class="lead">Exchange MIDI and data between Max and any device that speaks MQTT.</p>
+
+<a class="panel primary" href="phone/">
+  <span><span class="label">Open the phone app</span><span class="caption">Tilt, XY pad and slider as MIDI. Runs in the browser, no install.</span></span>
+  <span class="arrow">→</span>
+</a>
+
+<h2 class="label">How it works</h2>
+<ol class="panel">
+  <li class="row"><span class="label">01 Device</span><span>Publishes to an MQTT broker</span></li>
+  <li class="row"><span class="label">02 Broker</span><span>Relays it over any network</span></li>
+  <li class="row"><span class="label">03 Max</span><span>Plays it as MIDI, or as data</span></li>
+</ol>
+
+<a class="panel" href="https://github.com/francesco-di-maggio/mqtt-max#readme">
+  <span><span class="label">Documentation</span><span class="caption">Setup, reference and examples on GitHub.</span></span>
+  <span class="arrow">→</span>
+</a>
+
+<footer class="label">
+  <span>MIT License</span>
+  <a href="https://github.com/francesco-di-maggio">Francesco Di Maggio</a>
+</footer>
 </body>
 </html>
