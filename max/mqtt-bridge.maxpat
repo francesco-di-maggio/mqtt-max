@@ -18,8 +18,8 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 21.0, 143.0, 20.0 ],
-                    "text": "MQTT <-> MIDI BRIDGE"
+                    "patching_rect": [ 20.0, 21.0, 260.0, 20.0 ],
+                    "text": "MQTT BRIDGE  (MIDI port, Homie devices)"
                 }
             },
             {
@@ -109,7 +109,7 @@
                     "numoutlets": 4,
                     "outlettype": [ "", "", "", "" ],
                     "patching_rect": [ 20.0, 278.0, 137.0, 22.0 ],
-                    "text": "route status error clients"
+                    "text": "route status error devices"
                 }
             },
             {
@@ -182,7 +182,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 68.0, 212.0, 605.0, 20.0 ],
-                    "text": "--prefix: topic prefix (default remote)   --port: MIDI port (none = no port)   --name: presence on remote/status/max"
+                    "text": "--prefix: topic prefix (default remote)   --port: MIDI port (none = no port)   --name: Homie device remote/5/max"
                 }
             },
             {

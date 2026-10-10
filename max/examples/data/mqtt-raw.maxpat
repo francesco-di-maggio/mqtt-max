@@ -420,7 +420,7 @@
                     "numoutlets": 1,
                     "outlettype": [ "" ],
                     "patching_rect": [ 315.0, 245.0, 146.0, 22.0 ],
-                    "text": "subscribe remote/status/#"
+                    "text": "subscribe remote/5/#"
                 }
             },
             {
@@ -431,7 +431,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 480.0, 238.0, 125.0, 33.0 ],
-                    "text": "name before connect:\nremote/status/raw"
+                    "text": "name before connect:\nHomie device remote/5/raw"
                 }
             }
         ],

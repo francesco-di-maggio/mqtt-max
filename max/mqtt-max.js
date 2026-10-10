@@ -16,13 +16,14 @@ let format = "text";
 // Options for publish / publishbytes / publishjson and subscribe; MIDI from the port always uses QoS 0, no retain.
 let qos = 0;
 let retain = false;
-// Presence: with a name, {prefix}/status/{name} is "online" while connected and "offline" after (retained, QoS 1).
+// With a name, Max is the Homie 5 device {prefix}/5/{name}: the prefix is the Homie domain, the name the device ID.
 let clientName = option("name") ?? null;
-// The status topic of the current connection, fixed at connect so that its online, offline and will match.
-let ownStatus = null;
+// The device topic of the current connection, fixed at connect so that its $state and will match.
+let ownDevice = null;
 
-const statusTopic = () => `${prefix}/status/${clientName}`;
-const STATUS_OPTIONS = { qos: 1, retain: true };
+// Homie device attributes are retained, QoS 2 recommended. Topic level IDs: lowercase a-z, 0-9 and hyphens.
+const ATTRIBUTE = { qos: 2, retain: true };
+const ID = /^[a-z0-9-]+$/;
 
 function toAtom(s) {
   const n = Number(s);
@@ -131,69 +132,96 @@ function subscribeIn() {
   if (port && client?.connected) client.subscribe(`${prefix}/in/#`);
 }
 
-// With a name, every client with a retained status under {prefix}/status/+ comes out as
-//   presence <name> online|offline   on each change
-//   clients <dict>                   { online: [...], offline: [...], count }, count = number online
-let clients = new Map();
-
-function subscribeStatus() {
-  if (clientName && client?.connected) client.subscribe(`${prefix}/status/+`, { qos: 1 });
+// FNV-1a, so that the description's version changes whenever its content does.
+function hash(text) {
+  let h = 0x811c9dc5;
+  for (const c of text) h = Math.imul(h ^ c.codePointAt(0), 0x01000193);
+  return h >>> 0;
 }
 
-function parsePresence(topic, payload) {
-  const base = `${prefix}/status/`;
-  if (!clientName || !topic.startsWith(base)) return null;
-  return [topic.slice(base.length), payload.toString("utf8")];
+function description() {
+  const doc = { homie: "5.0", name: "mqtt-max", nodes: {} };
+  return JSON.stringify({ ...doc, version: hash(JSON.stringify(doc)) });
 }
 
-// An empty payload deletes the retained status, and with it the client.
-function updateClients(name, state) {
-  const known = clients.get(name);
-  if (state === "") return clients.delete(name);
-  const online = state === "online";
-  if (known === online) return false;
-  clients.set(name, online);
+function announce() {
+  client.publish(`${ownDevice}/$state`, "init", ATTRIBUTE);
+  client.publish(`${ownDevice}/$description`, description(), ATTRIBUTE);
+  client.publish(`${ownDevice}/$state`, "ready", ATTRIBUTE);
+}
+
+// With a name, the Homie devices under {prefix}/5/+ come out as
+//   presence <id> <state>   on each change of $state: init, ready, disconnected, sleeping or lost
+//   devices <dict>          { online: [...], offline: [...], count, states: { id: state } }
+// online lists the devices that are ready, count is their number.
+let devices = new Map();
+
+function subscribeState() {
+  if (clientName && client?.connected) client.subscribe(`${prefix}/5/+/$state`, { qos: 2 });
+}
+
+function parseState(topic, payload) {
+  const base = `${prefix}/5/`;
+  if (!clientName || !topic.startsWith(base) || !topic.endsWith("/$state")) return null;
+  const id = topic.slice(base.length, -"/$state".length);
+  return ID.test(id) ? [id, payload.toString("utf8")] : null;
+}
+
+// An empty payload deletes the retained $state, and with it the device.
+function updateDevices(id, state) {
+  if (state === "") return devices.delete(id);
+  if (devices.get(id) === state) return false;
+  devices.set(id, state);
   return true;
 }
 
-function sendClients() {
-  const names = [...clients.keys()].sort();
-  const online = names.filter((name) => clients.get(name));
-  const offline = names.filter((name) => !clients.get(name));
-  maxApi.outlet("clients", { online, offline, count: online.length });
+function sendDevices() {
+  const ids = [...devices.keys()].sort();
+  const online = ids.filter((id) => devices.get(id) === "ready");
+  const offline = ids.filter((id) => devices.get(id) !== "ready");
+  const states = Object.fromEntries(ids.map((id) => [id, devices.get(id)]));
+  maxApi.outlet("devices", { online, offline, count: online.length, states });
 }
 
-function resetClients() {
-  clients = new Map();
-  if (clientName) sendClients();
+function resetDevices() {
+  devices = new Map();
+  if (clientName) sendDevices();
 }
 
+// A QoS 2 publish completes in a handshake, so the client closes once "disconnected" is delivered.
 function disconnect() {
   if (!client) return;
-  if (ownStatus && client.connected) client.publish(ownStatus, "offline", STATUS_OPTIONS);
-  client.removeAllListeners("message");
-  client.end();
+  const closing = client;
+  closing.removeAllListeners("message");
+  if (ownDevice && closing.connected) {
+    closing.publish(`${ownDevice}/$state`, "disconnected", ATTRIBUTE, () => closing.end());
+  } else {
+    closing.end();
+  }
   client = null;
-  ownStatus = null;
-  resetClients();
+  ownDevice = null;
+  resetDevices();
 }
 
 maxApi.addHandlers({
   connect: (url = "mqtt://localhost:1883", username, password) => {
     disconnect();
+    if (clientName && !(ID.test(prefix) && ID.test(clientName))) {
+      return maxApi.outlet("error", "with a name, prefix and name may only contain a-z, 0-9 and -");
+    }
     const options = { username, password };
-    ownStatus = clientName ? statusTopic() : null;
-    if (ownStatus) {
+    ownDevice = clientName ? `${prefix}/5/${clientName}` : null;
+    if (ownDevice) {
       // The broker publishes the will when the connection drops without a disconnect;
       // keepalive 10 s detects a silent drop in about 15 s.
-      options.will = { topic: ownStatus, payload: "offline", ...STATUS_OPTIONS };
+      options.will = { topic: `${ownDevice}/$state`, payload: "lost", ...ATTRIBUTE };
       options.keepalive = 10;
     }
     client = mqtt.connect(url, options);
     client.on("connect", () => {
-      if (ownStatus) client.publish(ownStatus, "online", STATUS_OPTIONS);
+      if (ownDevice) announce();
       subscribeIn();
-      subscribeStatus();
+      subscribeState();
       maxApi.outlet("status", "connected", url);
     });
     client.on("reconnect", () => maxApi.outlet("status", "reconnecting"));
@@ -201,10 +229,10 @@ maxApi.addHandlers({
     client.on("error", (err) => maxApi.outlet("error", err.message));
     client.on("message", (topic, payload) => {
       maxApi.outlet("message", topic, ...decode(payload));
-      const presence = parsePresence(topic, payload);
-      if (presence && updateClients(...presence)) {
+      const presence = parseState(topic, payload);
+      if (presence && updateDevices(...presence)) {
         if (presence[1]) maxApi.outlet("presence", ...presence);
-        sendClients();
+        sendDevices();
       }
       const parsed = parseMidi(topic, payload);
       if (!parsed) return;
@@ -258,11 +286,11 @@ maxApi.addHandlers({
   },
   prefix: (name) => {
     if (port && client) client.unsubscribe(`${prefix}/in/#`);
-    if (clientName && client) client.unsubscribe(`${prefix}/status/+`);
+    if (clientName && client) client.unsubscribe(`${prefix}/5/+/$state`);
     prefix = String(name);
-    resetClients();
+    resetDevices();
     subscribeIn();
-    subscribeStatus();
+    subscribeState();
   },
 });
 
