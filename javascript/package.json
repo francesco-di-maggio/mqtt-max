@@ -1,8 +1,11 @@
 {
   "name": "mqtt-max",
-  "description": "Node for Max script: MQTT client and virtual MIDI port",
+  "description": "Node for Max scripts of the mqtt-max package",
   "private": true,
   "license": "MIT",
+  "scripts": {
+    "test": "node --test ../test/"
+  },
   "dependencies": {
     "@julusian/midi": "^3.8.1",
     "mqtt": "^5.16.0"
