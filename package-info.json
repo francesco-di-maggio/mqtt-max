@@ -1,0 +1,20 @@
+{
+	"name" : "mqtt-max",
+	"displayname" : "",
+	"version" : "0.1.0",
+	"author" : "Francesco Di Maggio",
+	"description" : "MQTT for Max: a client, MIDI over MQTT (mqtt-midi) and Homie devices. Requires Node for Max (bundled with Max).",
+	"tags" : [ "mqtt", "midi", "homie", "iot", "network", "node" ],
+	"website" : "https://github.com/francesco-di-maggio/mqtt-max",
+	"extensible" : 0,
+	"extends" : "",
+	"max_version_min" : "9.0",
+	"max_version_max" : "none",
+	"os" : {
+		"macintosh" : {
+			"min_version" : "none",
+			"platform" : [ "x64", "aarch64" ]
+		}
+	},
+	"homepatcher" : "mqtt-max.maxpat"
+}

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="mqtt.midi" module="max" category="MQTT">
+
+	<digest>
+		MIDI over MQTT
+	</digest>
+
+	<description>
+		Sends and receives MIDI with the mqtt-midi topic format, as raw MIDI bytes and through a virtual MIDI port.
+	</description>
+
+	<discussion>
+		<p>mqtt-midi (by Grantler Instruments) puts the message type and channel in the topic and the data in compact binary payloads: <i>{prefix}/{in|out}/cc/{channel}/{controller}</i>, <i>.../noteon/{channel}/{note}</i>, <i>.../noteoff/...</i>, <i>.../program/{channel}</i>, <i>.../pitchbend/{channel}</i>, <i>.../{clock|start|continue|stop}</i> and <i>.../sysex</i> (JSON). Channels are 1-16.</p>
+		<p>The two sides of mqtt-midi: an instrument listens to <i>in</i> and publishes <i>out</i>; a controller, like the phone app, publishes <i>in</i> and listens to <i>out</i>. <at>direction</at> sets the topics this object listens to.</p>
+		<p>The inlet and the left outlet carry raw MIDI bytes, like <o>midiout</o> and <o>midiin</o>: use <o>midiformat</o> and <o>midiparse</o>. With <at>port</at>, received messages also play on a virtual MIDI port that Max patches and other applications can open, and what they send to it is published. Virtual ports are available on macOS.</p>
+		<p>MIDI is published at QoS 0 and never retained. Messages mqtt-midi has no topic for, such as aftertouch, are not sent.</p>
+	</discussion>
+
+	<metadatalist>
+		<metadata name="author">Francesco Di Maggio</metadata>
+		<metadata name="tag">MQTT</metadata>
+		<metadata name="tag">Network</metadata>
+	</metadatalist>
+
+	<objarglist>
+		<objarg name="client" optional="0" type="symbol">
+			<digest>Name of the mqtt.client to use</digest>
+		</objarg>
+	</objarglist>
+
+	<methodlist>
+		<method name="int">
+			<arglist>
+				<arg name="byte" optional="0" type="int" />
+			</arglist>
+			<digest>MIDI byte</digest>
+			<description>Raw MIDI bytes, as <o>midiout</o> takes them, including running status, real-time bytes and SysEx. Complete messages are published.</description>
+		</method>
+		<method name="list">
+			<arglist>
+				<arg name="bytes" optional="0" type="list" />
+			</arglist>
+			<digest>MIDI bytes</digest>
+			<description>A list of raw MIDI bytes.</description>
+		</method>
+	</methodlist>
+
+	<attributelist>
+		<attribute name="prefix" get="0" set="1" type="symbol" size="1">
+			<digest>Topic prefix</digest>
+			<description>The mqtt-midi prefix. Both sides must use the same one.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="symbol" size="1" value="remote" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Topic prefix" />
+			</attributelist>
+		</attribute>
+		<attribute name="direction" get="0" set="1" type="symbol" size="1">
+			<digest>Direction</digest>
+			<description><i>in</i>: listen to <i>{prefix}/in</i>, publish to <i>{prefix}/out</i> (the instrument side). <i>out</i>: listen to <i>{prefix}/out</i>, publish to <i>{prefix}/in</i> (the controller side).</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="symbol" size="1" value="in" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Direction" />
+			</attributelist>
+		</attribute>
+		<attribute name="port" get="0" set="1" type="symbol" size="1">
+			<digest>Virtual MIDI port</digest>
+			<description>Name of a virtual MIDI port to create. Empty for none.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="symbol" size="1" value="" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Virtual MIDI port" />
+			</attributelist>
+		</attribute>
+	</attributelist>
+
+	<misc name="Output">
+		<entry name="left outlet">
+			<description>Received MIDI as raw bytes, one int at a time, as <o>midiin</o> outputs them.</description>
+		</entry>
+		<entry name="middle outlet">
+			<description><m>port</m> with the port name, once Max lists the virtual port as an input and an output device. Connect it to <o>ctlin</o>, <o>notein</o>, <o>ctlout</o> and other MIDI objects: they look up their port when they are created, which in the same patch is before the port exists.</description>
+		</entry>
+		<entry name="right outlet">
+			<description>Dumpout: <m>error</m> with a text.</description>
+		</entry>
+	</misc>
+
+	<seealsolist>
+		<seealso name="mqtt.client" />
+		<seealso name="midiparse" />
+		<seealso name="midiformat" />
+		<seealso name="midiin" />
+		<seealso name="midiout" />
+	</seealsolist>
+
+</c74object>

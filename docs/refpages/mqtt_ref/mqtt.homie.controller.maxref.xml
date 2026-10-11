@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="mqtt.homie.controller" module="max" category="MQTT">
+
+	<digest>
+		Discover and control Homie devices
+	</digest>
+
+	<description>
+		Discovers Homie 5 devices, reports which are online, outputs their property values and sends commands to them.
+	</description>
+
+	<discussion>
+		<p>A Homie controller discovers devices through their <i>$state</i> and <i>$description</i>. Without a <at>domain</at> it discovers devices in all domains, as Homie requires by default; devices are then named <i>{domain}/{device-id}</i>, otherwise just <i>{device-id}</i>.</p>
+		<p>A device is online when its state is <i>ready</i>. A child device is <i>lost</i> when its root device is.</p>
+		<p>Values are converted by the property datatype: integers and floats to numbers, booleans to 1/0, colors to their type and values (e.g. <i>rgb 255 0 0</i>), json to a dictionary. Values of <m>set</m> take the same form.</p>
+	</discussion>
+
+	<metadatalist>
+		<metadata name="author">Francesco Di Maggio</metadata>
+		<metadata name="tag">MQTT</metadata>
+		<metadata name="tag">Network</metadata>
+	</metadatalist>
+
+	<objarglist>
+		<objarg name="client" optional="0" type="symbol">
+			<digest>Name of the mqtt.client to use</digest>
+		</objarg>
+	</objarglist>
+
+	<methodlist>
+		<method name="set">
+			<arglist>
+				<arg name="device" optional="0" type="symbol" />
+				<arg name="node" optional="0" type="symbol" />
+				<arg name="property" optional="0" type="symbol" />
+				<arg name="value" optional="0" type="list" />
+			</arglist>
+			<digest>Command a device</digest>
+			<description>Publishes to the property's <i>/set</i> topic, never retained. Only settable properties of a known device.</description>
+		</method>
+		<method name="broadcast">
+			<arglist>
+				<arg name="subtopic" optional="0" type="symbol" />
+				<arg name="text" optional="1" type="list" />
+			</arglist>
+			<digest>Broadcast to all devices</digest>
+			<description>Publishes to <i>{domain}/5/$broadcast/{subtopic}</i>, never retained. Every device of the domain receives it; <o>mqtt.homie.device</o> reports it on its dumpout. Needs a <at>domain</at>.</description>
+		</method>
+	</methodlist>
+
+	<attributelist>
+		<attribute name="domain" get="0" set="1" type="symbol" size="1">
+			<digest>Homie domain</digest>
+			<description>The domain to discover, or <i>*</i> for all.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="symbol" size="1" value="*" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Homie domain" />
+			</attributelist>
+		</attribute>
+	</attributelist>
+
+	<misc name="Output">
+		<entry name="left outlet">
+			<description>Values: device, node, property and value.</description>
+		</entry>
+		<entry name="middle outlet">
+			<description>Devices: a dictionary with <i>online</i> and <i>offline</i> device lists, <i>count</i> (online) and <i>states</i>, on each change.</description>
+		</entry>
+		<entry name="right outlet">
+			<description>Dumpout: <m>description</m> with a device and its description as a dictionary; <m>alert</m> with a device, alert ID and text; <m>log</m> with a device, level and text; <m>error</m> with a text.</description>
+		</entry>
+	</misc>
+
+	<seealsolist>
+		<seealso name="mqtt.client" />
+		<seealso name="mqtt.homie.device" />
+		<seealso name="dict.view" />
+	</seealsolist>
+
+</c74object>

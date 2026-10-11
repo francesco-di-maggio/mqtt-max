@@ -36,8 +36,9 @@ function encodeText(atoms) {
   return atoms.join(" ");
 }
 
+// Integers 0-255, or null.
 function encodeBytes(atoms) {
-  return Buffer.from(atoms.map((b) => Number(b) & 0xff));
+  return atoms.every((b) => Number.isInteger(b) && b >= 0 && b <= 255) ? Buffer.from(atoms) : null;
 }
 
 module.exports = { FORMATS, decode, encodeText, encodeBytes, isObject, toAtom };

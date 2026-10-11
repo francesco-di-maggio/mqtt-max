@@ -13,6 +13,11 @@ class Client {
     return Boolean(this.mqtt?.connected);
   }
 
+  // Connected, connecting or reconnecting.
+  get active() {
+    return this.mqtt !== null;
+  }
+
   // settings: { url, username, password, clientid, keepalive, clean, will }
   connect(settings) {
     this.close();
@@ -24,7 +29,12 @@ class Client {
       will: settings.will || undefined,
     };
     if (settings.clientid) options.clientId = settings.clientid;
-    const connection = mqtt.connect(settings.url, options);
+    let connection;
+    try {
+      connection = mqtt.connect(settings.url, options);
+    } catch (err) {
+      return this.events.onError(`${settings.url}: ${err.message}`);
+    }
     this.mqtt = connection;
     connection.on("connect", () => {
       this.events.onStatus("connected");
@@ -44,11 +54,11 @@ class Client {
 
   // MQTT.js subscribes again by itself after a reconnect.
   subscribe(topic, options = {}) {
-    if (this.connected) this.mqtt.subscribe(topic, options);
+    if (this.connected) this.mqtt.subscribe(topic, options, (err) => err && this.events.onError(`subscribe ${topic}: ${err.message}`));
   }
 
   unsubscribe(topic) {
-    if (this.connected) this.mqtt.unsubscribe(topic);
+    if (this.connected) this.mqtt.unsubscribe(topic, (err) => err && this.events.onError(`unsubscribe ${topic}: ${err.message}`));
   }
 
   // last: an optional final publish, e.g. a Homie "disconnected", delivered before the connection closes.

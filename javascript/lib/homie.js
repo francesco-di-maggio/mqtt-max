@@ -7,6 +7,10 @@ const VERSION = "5.0";
 const ID = /^[a-z0-9-]+$/;
 const STATES = ["init", "ready", "disconnected", "sleeping", "lost"];
 const LOG_LEVELS = ["debug", "info", "warn", "error", "fatal"];
+const DATATYPES = ["integer", "float", "boolean", "string", "enum", "color", "datetime", "duration", "json"];
+// Color payloads start with their type; values per type and their maximum (minimum 0).
+const COLORS = { rgb: [255, 255, 255], hsv: [360, 100, 100], xyz: [1, 1] };
+const DURATION = /^PT(?=\d)(\d+H)?(\d+M)?(\d+(\.\d+)?S)?$/;
 // Retained attributes and values: QoS 2 recommended. Non-retained values and commands: QoS 0.
 const RETAINED = { qos: 2, retain: true };
 const STREAM = { qos: 0, retain: false };
@@ -20,32 +24,53 @@ function hash(text) {
   return h >>> 0;
 }
 
-// "min:max[:step]", either end may be empty.
-function inRange(n, format) {
-  if (!format) return true;
-  const [min, max] = format.split(":").map((s) => (s === "" ? NaN : Number(s)));
-  return !(n < min) && !(n > max);
+// Number format "[min]:[max][:step]": round to the step from min, else max, else the current value,
+// with floor(x + 0.5) as the spec recommends, then check the range.
+function fitNumber(n, format, current) {
+  const [min, max, step] = (format ?? "").split(":").map((s) => (s === undefined || s === "" ? NaN : Number(s)));
+  if (step > 0) {
+    const base = !Number.isNaN(min) ? min : !Number.isNaN(max) ? max : Number.isFinite(current) ? current : n;
+    const decimals = Math.max(...[step, base].map((v) => (String(v).split(".")[1] ?? "").length));
+    n = Number((base + Math.floor((n - base) / step + 0.5) * step).toFixed(decimals));
+  }
+  return n < min || n > max ? null : n;
 }
 
 // Max atoms -> Homie payload for a property, or null if the value does not fit its datatype.
-function formatValue(property, atoms) {
+// current: the property's current value, the base for rounding to a step.
+function formatValue(property, atoms, current) {
   const { datatype, format } = property;
   const [first] = atoms;
   switch (datatype) {
-    case "integer":
-      return Number.isInteger(first) && inRange(first, format) ? String(first) : null;
-    case "float":
-      return typeof first === "number" && Number.isFinite(first) && inRange(first, format) ? String(first) : null;
+    case "integer": {
+      const n = Number.isInteger(first) ? fitNumber(first, format, current) : null;
+      return n === null ? null : String(n);
+    }
+    case "float": {
+      const n = typeof first === "number" && Number.isFinite(first) ? fitNumber(first, format, current) : null;
+      return n === null ? null : String(n);
+    }
     case "boolean":
       return first === 1 || first === "true" ? "true" : first === 0 || first === "false" ? "false" : null;
     case "enum":
-      return format.split(",").includes(String(first)) ? String(first) : null;
-    case "color":
-      return atoms.length === 3 && atoms.every((n) => typeof n === "number") ? atoms.join(",") : null;
+      return first !== undefined && (format ?? "").split(",").includes(String(first)) ? String(first) : null;
+    case "color": {
+      const [type, ...values] = atoms;
+      const ranges = COLORS[type];
+      const fits = ranges && (format ?? "").split(",").includes(type) && values.length === ranges.length &&
+        values.every((v, i) => typeof v === "number" && v >= 0 && v <= ranges[i]);
+      return fits ? [type, ...values].join(",") : null;
+    }
+    case "datetime": {
+      const text = atoms.join(" ");
+      return text && !Number.isNaN(Date.parse(text)) ? text : null;
+    }
+    case "duration":
+      return DURATION.test(String(first)) && atoms.length === 1 ? String(first) : null;
     case "json":
       return isObject(first) || Array.isArray(first) ? JSON.stringify(first) : null;
     default:
-      // string, datetime, duration: text as given.
+      // string: any text, including empty.
       return atoms.join(" ");
   }
 }
@@ -56,11 +81,13 @@ function parseValue(property, text) {
   switch (property.datatype) {
     case "integer":
     case "float":
-      return [Number(text)];
+      return [toAtom(text)];
     case "boolean":
-      return [text === "true" ? 1 : 0];
-    case "color":
-      return text.split(",").map(Number);
+      return text === "true" ? [1] : text === "false" ? [0] : [text];
+    case "color": {
+      const [type, ...values] = text.split(",");
+      return [type, ...values.map(toAtom)];
+    }
     case "json":
       try {
         return [JSON.parse(text)];
@@ -76,59 +103,105 @@ function property(description, node, prop) {
   return description?.nodes?.[node]?.properties?.[prop];
 }
 
+// Returns an error text for a description the device must not publish, or null.
+function checkDescription(doc) {
+  if (!isObject(doc)) return "the description must be a dictionary";
+  if (doc.nodes !== undefined && !isObject(doc.nodes)) return "nodes must be a dictionary";
+  for (const [node, n] of Object.entries(doc.nodes ?? {})) {
+    if (!isId(node)) return `node ID ${node}: only a-z, 0-9 and -`;
+    for (const [prop, p] of Object.entries(n?.properties ?? {})) {
+      if (!isId(prop)) return `property ID ${node}/${prop}: only a-z, 0-9 and -`;
+      if (!DATATYPES.includes(p?.datatype)) return `${node}/${prop}: datatype must be one of ${DATATYPES.join(", ")}`;
+      if ((p.datatype === "enum" || p.datatype === "color") && !p.format) return `${node}/${prop}: a ${p.datatype} needs a format`;
+    }
+  }
+  return null;
+}
+
 // A Homie device on one MQTT client. The client must be connected with will().
+// onSet(node, property, atoms): a command; onState(state): each state it publishes;
+// onBroadcast(subtopic, text): a controller's broadcast to all devices of the domain.
 class HomieDevice {
-  constructor({ client, domain, id, onSet }) {
+  constructor({ client, domain, id, onSet, onState = () => {}, onBroadcast = () => {} }) {
     this.client = client;
     this.base = `${domain}/5/${id}`;
+    this.broadcastBase = `${domain}/5/$broadcast/`;
     this.onSet = onSet;
-    this.description = { homie: VERSION, version: 0, nodes: {} };
+    this.onState = onState;
+    this.onBroadcast = onBroadcast;
+    this.description = { homie: VERSION, version: hash("{}"), nodes: {} };
     this.values = new Map();
     this.state = null;
+    this.run = 0;
   }
 
   will() {
     return { topic: `${this.base}/$state`, payload: "lost", ...RETAINED };
   }
 
+  // Returns an error text, or null.
   setDescription(doc) {
+    const error = checkDescription(doc);
+    if (error) return error;
     const content = { ...doc, homie: VERSION };
     delete content.version;
     this.description = { ...content, version: hash(JSON.stringify(content)) };
     // The description may only change while the device is in init, disconnected or lost.
-    if (this.state === "ready" || this.state === "sleeping") return this.announce();
+    if (this.state === "ready" || this.state === "sleeping") this.announce();
+    return null;
   }
 
+  // Each announcement stops as soon as a newer one starts or the device stops.
   async announce() {
+    const run = ++this.run;
+    const current = () => run === this.run;
     await this.publishState("init");
+    if (!current()) return;
     await this.client.publish(`${this.base}/$description`, JSON.stringify(this.description), RETAINED);
-    for (const [key, payload] of this.values) await this.client.publish(`${this.base}/${key}`, payload, RETAINED);
+    for (const [key, payload] of this.values) {
+      if (!current()) return;
+      await this.client.publish(`${this.base}/${key}`, payload, RETAINED);
+    }
+    if (!current()) return;
     for (const [node, prop] of this.settable()) this.client.subscribe(`${this.base}/${node}/${prop}/set`, { qos: 2 });
+    this.client.subscribe(`${this.broadcastBase}#`, { qos: 0 });
     await this.publishState("ready");
+  }
+
+  // Before a clean disconnect: the caller publishes "disconnected" as the last message.
+  stop() {
+    this.run++;
+    this.setState("disconnected");
   }
 
   settable() {
     const pairs = [];
-    for (const [node, { properties = {} }] of Object.entries(this.description.nodes ?? {})) {
-      for (const [prop, p] of Object.entries(properties)) if (p.settable) pairs.push([node, prop]);
+    for (const [node, n] of Object.entries(this.description.nodes ?? {})) {
+      for (const [prop, p] of Object.entries(n?.properties ?? {})) if (p.settable) pairs.push([node, prop]);
     }
     return pairs;
   }
 
   publishState(state) {
-    this.state = state;
+    this.setState(state);
     return this.client.publish(`${this.base}/$state`, state, RETAINED);
   }
 
-  // Returns an error text, or null when published.
+  setState(state) {
+    this.state = state;
+    this.onState(state);
+  }
+
+  // Returns an error text, or null.
   setValue(node, prop, atoms) {
     const p = property(this.description, node, prop);
     if (!p) return `no property ${node}/${prop} in the description`;
-    const payload = formatValue(p, atoms);
-    if (payload === null) return `${atoms.join(" ")} is not a valid ${p.datatype} for ${node}/${prop}`;
+    const key = `${node}/${prop}`;
+    const payload = formatValue(p, atoms, Number(this.values.get(key)));
+    if (payload === null) return `${atoms.join(" ")} is not a valid ${p.datatype} for ${key}`;
     const retained = p.retained !== false;
-    if (retained) this.values.set(`${node}/${prop}`, payload);
-    if (this.state === "ready") this.client.publish(`${this.base}/${node}/${prop}`, payload, retained ? RETAINED : STREAM);
+    if (retained) this.values.set(key, payload);
+    if (this.state === "ready") this.client.publish(`${this.base}/${key}`, payload, retained ? RETAINED : STREAM);
     return null;
   }
 
@@ -144,8 +217,12 @@ class HomieDevice {
     return null;
   }
 
-  // Returns true if the message was a command for this device.
+  // Returns true if the message was a command or a broadcast for this device.
   handle(topic, payload) {
+    if (topic.startsWith(this.broadcastBase)) {
+      this.onBroadcast(topic.slice(this.broadcastBase.length), payload.toString("utf8"));
+      return true;
+    }
     if (!topic.startsWith(`${this.base}/`) || !topic.endsWith("/set")) return false;
     const [node, prop] = topic.slice(this.base.length + 1, -"/set".length).split("/");
     const p = property(this.description, node, prop);
@@ -155,28 +232,27 @@ class HomieDevice {
   }
 }
 
-// A Homie controller: discovers devices under a domain ("+" for all) and their values.
+// A Homie controller: discovers devices under a domain ("+" for all), then subscribes to each device's values.
 class HomieController {
-  constructor({ client, domain, onDevices, onDescription, onValue, onAlert }) {
+  constructor({ client, domain, onDevices, onDescription, onValue, onAlert, onLog = () => {} }) {
     this.client = client;
     this.domain = domain;
-    this.handlers = { onDevices, onDescription, onValue, onAlert };
+    this.handlers = { onDevices, onDescription, onValue, onAlert, onLog };
     this.devices = new Map();
     this.reported = null;
   }
 
-  topics() {
-    const d = this.domain;
-    // {device}/+/+ covers property values and $alert/{id}.
-    return [`${d}/5/+/$state`, `${d}/5/+/$description`, `${d}/5/+/+/+`];
+  discovery() {
+    return [`${this.domain}/5/+/$state`, `${this.domain}/5/+/$description`];
   }
 
   start() {
-    for (const topic of this.topics()) this.client.subscribe(topic, { qos: 2 });
+    for (const topic of this.discovery()) this.client.subscribe(topic, { qos: 2 });
   }
 
   stop() {
-    for (const topic of this.topics()) this.client.unsubscribe(topic);
+    for (const topic of this.discovery()) this.client.unsubscribe(topic);
+    for (const device of this.devices.values()) this.client.unsubscribe(device.values);
     this.devices.clear();
     this.reported = null;
   }
@@ -186,9 +262,22 @@ class HomieController {
     return this.domain === "+" ? `${domain}/${id}` : id;
   }
 
-  device(key) {
-    if (!this.devices.has(key)) this.devices.set(key, { state: null, description: null, descriptionText: null });
+  // {device}/+/+ covers its property values, its $alert/{id} and its $log/{level}.
+  device(domain, id) {
+    const key = this.key(domain, id);
+    if (!this.devices.has(key)) {
+      const device = { state: null, description: null, descriptionText: null, values: `${domain}/5/${id}/+/+`, current: new Map() };
+      this.devices.set(key, device);
+      this.client.subscribe(device.values, { qos: 2 });
+    }
     return this.devices.get(key);
+  }
+
+  remove(key) {
+    const device = this.devices.get(key);
+    if (!device) return;
+    this.client.unsubscribe(device.values);
+    this.devices.delete(key);
   }
 
   // A child device is lost when its root is lost.
@@ -219,38 +308,49 @@ class HomieController {
     if (parts.length < 4 || parts[1] !== "5" || !isId(parts[2])) return false;
     if (this.domain !== "+" && parts[0] !== this.domain) return false;
     const [domain, , id, ...rest] = parts;
-    const key = this.key(domain, id);
     const text = payload.toString("utf8");
-    if (rest.length === 1 && rest[0] === "$state") return this.handleState(key, text);
-    if (rest.length === 1 && rest[0] === "$description") return this.handleDescription(key, text);
-    if (rest.length === 2 && rest[0] === "$alert") {
+    if (rest.length === 1 && rest[0] === "$state") return this.handleState(domain, id, text);
+    if (rest.length === 1 && rest[0] === "$description") return this.handleDescription(domain, id, text);
+    const key = this.key(domain, id);
+    const device = this.devices.get(key);
+    if (!device || rest.length !== 2) return false;
+    if (rest[0] === "$alert") {
       this.handlers.onAlert(key, rest[1], text);
       return true;
     }
-    if (rest.length === 2 && !rest[0].startsWith("$") && !rest[1].startsWith("$")) {
-      const p = property(this.devices.get(key)?.description, rest[0], rest[1]);
-      this.handlers.onValue(key, rest[0], rest[1], parseValue(p, text));
+    if (rest[0] === "$log") {
+      if (LOG_LEVELS.includes(rest[1])) this.handlers.onLog(key, rest[1], text);
       return true;
     }
-    return false;
+    if (rest[0].startsWith("$") || rest[1].startsWith("$")) return false;
+    const atoms = parseValue(property(device.description, rest[0], rest[1]), text);
+    device.current.set(`${rest[0]}/${rest[1]}`, atoms[0]);
+    this.handlers.onValue(key, rest[0], rest[1], atoms);
+    return true;
   }
 
-  handleState(key, text) {
+  handleState(domain, id, text) {
     // An empty $state removes the device.
-    if (text === "") this.devices.delete(key);
-    else if (STATES.includes(text)) this.device(key).state = text;
+    if (text === "") this.remove(this.key(domain, id));
+    else if (STATES.includes(text)) this.device(domain, id).state = text;
     else return true;
     this.report();
     return true;
   }
 
-  handleDescription(key, text) {
+  handleDescription(domain, id, text) {
+    const key = this.key(domain, id);
     if (this.devices.get(key)?.descriptionText === text) return true;
+    if (text === "") {
+      if (this.devices.has(key)) Object.assign(this.devices.get(key), { description: null, descriptionText: text });
+      return true;
+    }
     try {
-      const description = text === "" ? null : JSON.parse(text);
-      if (description !== null && !isObject(description)) return true;
-      Object.assign(this.device(key), { description, descriptionText: text });
-      this.handlers.onDescription(key, description ?? {});
+      const description = JSON.parse(text);
+      // Controllers ignore invalid documents.
+      if (!isObject(description)) return true;
+      Object.assign(this.device(domain, id), { description, descriptionText: text });
+      this.handlers.onDescription(key, description);
       this.report();
     } catch {
       // Controllers ignore invalid documents.
@@ -258,24 +358,25 @@ class HomieController {
     return true;
   }
 
-  // Returns an error text, or null when published.
+  // Returns an error text, or null.
   set(key, node, prop, atoms) {
-    const [domain, id] = this.domain === "+" ? key.split("/") : [this.domain, key];
-    const p = property(this.devices.get(key)?.description, node, prop);
+    const device = this.devices.get(key);
+    const p = property(device?.description, node, prop);
     if (!p?.settable) return `${key} has no settable property ${node}/${prop}`;
-    const payload = formatValue(p, atoms);
+    const payload = formatValue(p, atoms, device.current.get(`${node}/${prop}`));
     if (payload === null) return `${atoms.join(" ")} is not a valid ${p.datatype} for ${node}/${prop}`;
-    // Commands are never retained.
-    const qos = p.retained === false ? 0 : 2;
-    this.client.publish(`${domain}/5/${id}/${node}/${prop}/set`, payload, { qos, retain: false });
+    const [domain, id] = this.domain === "+" ? key.split("/") : [this.domain, key];
+    // Commands are never retained; non-retained properties are time-critical and use QoS 0.
+    this.client.publish(`${domain}/5/${id}/${node}/${prop}/set`, payload, { qos: p.retained === false ? 0 : 2, retain: false });
     return null;
   }
 
   broadcast(subtopic, text) {
     if (this.domain === "+") return "broadcast needs a domain";
+    if (!subtopic.split("/").every(isId)) return "broadcast subtopic levels may only contain a-z, 0-9 and -";
     this.client.publish(`${this.domain}/5/$broadcast/${subtopic}`, text, STREAM);
     return null;
   }
 }
 
-module.exports = { VERSION, isId, hash, formatValue, parseValue, HomieDevice, HomieController };
+module.exports = { VERSION, isId, hash, fitNumber, formatValue, parseValue, checkDescription, HomieDevice, HomieController };

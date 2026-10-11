@@ -19,5 +19,8 @@ test("decodes JSON objects, other JSON as text", () => {
 test("encodes atoms as text and a dict as JSON", () => {
   assert.equal(encodeText([1, 2, "three"]), "1 2 three");
   assert.equal(encodeText([{ temp: 21 }]), '{"temp":21}');
-  assert.deepEqual(encodeBytes([1, 256, 255]), Buffer.from([1, 0, 255]));
+  assert.deepEqual(encodeBytes([1, 0, 255]), Buffer.from([1, 0, 255]));
+  assert.equal(encodeBytes([1, 256]), null);
+  assert.equal(encodeBytes([1.5]), null);
+  assert.equal(encodeBytes(['a']), null);
 });

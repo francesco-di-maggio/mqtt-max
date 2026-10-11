@@ -5,7 +5,7 @@
 const maxApi = require("max-api");
 const { Client } = require("./lib/client");
 const { Subscriptions } = require("./lib/subscriptions");
-const { FORMATS, decode, encodeText, encodeBytes } = require("./lib/payload");
+const { FORMATS, decode, encodeText, encodeBytes, toAtom } = require("./lib/payload");
 const mqttMidi = require("./lib/mqtt-midi");
 const { MidiStream } = require("./lib/midi-stream");
 const { MidiPort } = require("./lib/midi-port");
@@ -49,24 +49,27 @@ function onMessage(topic, payload) {
   controller?.homie?.handle(topic, payload);
 }
 
-function connect() {
+// A connection that is already open is closed cleanly first, so a Homie device publishes "disconnected", not "lost".
+async function connect() {
   if (!settings.url) return error("connect needs a url, e.g. connect mqtt://localhost:1883");
+  if (client.active) await disconnect();
   client.connect({ ...settings, will: device?.homie?.will() });
 }
 
 function disconnect() {
+  if (!client.active) return;
   const homie = device?.homie;
   const last = homie && client.connected ? { topic: `${homie.base}/$state`, payload: "disconnected", options: { qos: 2, retain: true } } : null;
-  if (homie) homie.state = "disconnected";
+  homie?.stop();
   return client.disconnect(last);
 }
 
 // The last will is part of the connection, so a change of device needs a new connection.
 async function withNewConnection(change) {
-  const wasConnected = client.connected;
-  if (wasConnected) await disconnect();
+  const wasActive = client.active;
+  if (wasActive) await disconnect();
   change();
-  if (wasConnected) connect();
+  if (wasActive) connect();
 }
 
 // --- [mqtt.midi] ---
@@ -86,99 +89,128 @@ function receiveMidi(id, role, topic, payload) {
   midiOut(id, "bytes", ...parsed.bytes);
 }
 
+// Settings are stored until "register", which the abstraction sends after all its arguments and attributes,
+// so a role starts once, with its final settings.
 function midiRole(id) {
   if (!midis.has(id)) {
-    const role = { prefix: "remote", direction: "in", port: null, portName: "" };
+    const role = { prefix: "remote", direction: "in", portName: "", port: null, active: false };
     role.stream = new MidiStream((bytes) => publishMidi(role, bytes));
     midis.set(id, role);
-    subscriptions.add(`midi ${id}`, midiFilter(role));
   }
   return midis.get(id);
 }
 
-function resubscribeMidi(id, role, change) {
-  subscriptions.remove(`midi ${id}`, midiFilter(role));
+function changeMidi(id, role, change) {
+  if (role.active) subscriptions.remove(`midi ${id}`, midiFilter(role));
   change();
-  subscriptions.add(`midi ${id}`, midiFilter(role));
+  if (role.active) subscriptions.add(`midi ${id}`, midiFilter(role));
 }
 
-function openPort(id, role, name) {
+// MIDI objects look up their port when created, so the port reports itself once it exists:
+// a patch passes "port <name>" on to [ctlin], [notein], [ctlout] etc.
+function openPort(id, role) {
   role.port?.close();
   role.port = null;
-  role.portName = name;
-  if (!name) return;
+  if (!role.portName) return;
   try {
-    role.port = new MidiPort(name, (bytes) => publishMidi(role, bytes));
+    role.port = new MidiPort(role.portName, (bytes) => publishMidi(role, bytes));
+    midiOut(id, "dumpout", "port", role.portName);
   } catch (err) {
-    midiOut(id, "dumpout", "error", `port ${name}: ${err.message}`);
+    midiOut(id, "dumpout", "error", `port ${role.portName}: ${err.message}`);
   }
 }
 
 const midiCommands = {
-  // Sent on load and on "ready", so that an [mqtt.midi] without attributes exists too.
-  register: () => {},
-  prefix: (id, role, value) => resubscribeMidi(id, role, () => (role.prefix = String(value))),
+  register: (id, role) => {
+    if (role.active) return;
+    role.active = true;
+    subscriptions.add(`midi ${id}`, midiFilter(role));
+    openPort(id, role);
+  },
+  prefix: (id, role, value) => changeMidi(id, role, () => (role.prefix = String(value))),
   direction: (id, role, value) => {
     if (!mqttMidi.DIRECTIONS.includes(value)) return midiOut(id, "dumpout", "error", "direction is in or out");
-    resubscribeMidi(id, role, () => (role.direction = value));
+    changeMidi(id, role, () => (role.direction = value));
   },
   port: (id, role, name = "") => {
-    if (String(name) !== role.portName) openPort(id, role, String(name));
+    if (String(name) === role.portName) return;
+    role.portName = String(name);
+    if (role.active) openPort(id, role);
   },
   bytes: (id, role, ...bytes) => {
+    if (!role.active) return;
     for (const byte of bytes) role.stream.write(byte);
   },
-  free: (id, role) => {
-    subscriptions.removeOwner(`midi ${id}`);
-    role.port?.close();
-    midis.delete(id);
-  },
 };
+
+function freeMidi(id) {
+  const role = midis.get(id);
+  if (!role) return;
+  subscriptions.removeOwner(`midi ${id}`);
+  role.port?.close();
+  midis.delete(id);
+}
 
 // --- [mqtt.homie.device] ---
 
 const roleError = (role, id) => (text) => text && maxApi.outlet(role, id, "dumpout", "error", text);
 
-// The device starts once its ID is known; domain and ID can arrive in any order, like attributes.
+// The device starts on "register", once domain and ID are known; later changes restart it.
+// A description and values sent before that are kept and applied at start.
 function startDevice() {
-  if (!device.deviceId) return;
+  if (!device.registered) return;
+  if (!device.deviceId) return roleError("device", device.id)("mqtt.homie.device needs a device ID: [mqtt.homie.device <client> <device-id>]");
   if (!isId(device.domain) || !isId(device.deviceId)) return roleError("device", device.id)("domain and device ID may only contain a-z, 0-9 and -");
   return withNewConnection(() => {
     subscriptions.removeOwner("device");
     const { id } = device;
+    const out = (...args) => maxApi.outlet("device", id, ...args);
     const homie = new HomieDevice({
       client: roleClient("device"),
       domain: device.domain,
       id: device.deviceId,
-      onSet: (node, prop, atoms) => maxApi.outlet("device", id, "set", node, prop, ...atoms),
+      onSet: (node, prop, atoms) => out("set", node, prop, ...atoms),
+      onState: (state) => out("dumpout", "state", state),
+      onBroadcast: (subtopic, text) => out("dumpout", "broadcast", subtopic, ...text.split(" ").filter(Boolean).map(toAtom)),
     });
     if (device.homie) Object.assign(homie, { description: device.homie.description, values: device.homie.values });
     device.homie = homie;
+    if (device.pending.description) roleError("device", id)(homie.setDescription(device.pending.description));
+    for (const [node, prop, atoms] of device.pending.values) roleError("device", id)(homie.setValue(node, prop, atoms));
+    device.pending = { description: null, values: [] };
   });
 }
 
 function needsHomie(command) {
-  return (id, ...args) => (device.homie ? command(id, ...args) : roleError("device", id)("set the device ID first"));
+  return (id, ...args) => (device.homie ? command(id, ...args) : roleError("device", id)("the device has not started: it needs a client and a device ID"));
 }
 
 const deviceCommands = {
-  register: () => {},
+  register: () => {
+    if (device.registered) return;
+    device.registered = true;
+    return startDevice();
+  },
   domain: (id, domain) => {
-    if (String(domain) === device.domain && device.homie) return;
+    if (String(domain) === device.domain) return;
     device.domain = String(domain);
     return startDevice();
   },
   id: (id, deviceId) => {
-    if (String(deviceId) === device.deviceId && device.homie) return;
+    if (String(deviceId) === device.deviceId) return;
     device.deviceId = String(deviceId);
     return startDevice();
   },
-  description: needsHomie(async (id, ...rest) => {
+  description: async (id, ...rest) => {
     const dict = rest[0] === "dictionary" ? await maxApi.getDict(rest[1]).catch(() => null) : rest[0];
-    if (!dict || typeof dict !== "object") return roleError("device", id)("description needs a dict");
-    device.homie.setDescription(dict);
-  }),
-  value: needsHomie((id, node, prop, ...atoms) => roleError("device", id)(device.homie.setValue(String(node), String(prop), atoms))),
+    if (!dict || typeof dict !== "object") return roleError("device", id)("description needs a dictionary");
+    if (!device.homie) return (device.pending.description = dict);
+    roleError("device", id)(device.homie.setDescription(dict));
+  },
+  value: (id, node, prop, ...atoms) => {
+    if (!device.homie) return device.pending.values.push([String(node), String(prop), atoms]);
+    roleError("device", id)(device.homie.setValue(String(node), String(prop), atoms));
+  },
   state: needsHomie((id, state) => {
     if (!["ready", "sleeping"].includes(state)) return roleError("device", id)("state is ready or sleeping");
     device.homie.publishState(state);
@@ -199,7 +231,6 @@ function startController(domain) {
   if (domain !== "+" && !isId(domain)) return roleError("controller", controller.id)("domain may only contain a-z, 0-9 and -, or * for all");
   controller.homie?.stop();
   const out = (...args) => maxApi.outlet("controller", controller.id, ...args);
-  controller.domain = domain;
   controller.homie = new HomieController({
     client: roleClient("controller"),
     domain,
@@ -207,15 +238,19 @@ function startController(domain) {
     onDescription: (key, description) => out("description", key, description),
     onValue: (key, node, prop, atoms) => out("value", key, node, prop, ...atoms),
     onAlert: (key, alertId, text) => out("alert", key, alertId, text),
+    onLog: (key, level, text) => out("log", key, level, text),
   });
   controller.homie.start();
 }
 
+// The controller starts on "register" with its domain; a later domain change restarts it.
 const controllerCommands = {
-  register: () => controller.homie || startController("+"),
+  register: () => controller.homie || startController(controller.domain),
   domain: (id, domain) => {
     const value = String(domain) === "*" ? "+" : String(domain);
-    if (value !== controller.domain || !controller.homie) startController(value);
+    if (value === controller.domain) return;
+    controller.domain = value;
+    if (controller.homie) startController(value);
   },
   set: (id, key, node, prop, ...atoms) => roleError("controller", id)(controller.homie?.set(String(key), String(node), String(prop), atoms)),
   broadcast: (id, subtopic, ...text) => roleError("controller", id)(controller.homie?.broadcast(String(subtopic), text.join(" "))),
@@ -231,6 +266,8 @@ const controllerCommands = {
 function roleHandler(role, commands, current, create) {
   return (id, command, ...args) => {
     if (!(command in commands)) return;
+    // free from an object that never had the role: nothing to do.
+    if (command === "free" && current()?.id !== String(id)) return;
     if (!current()) create(String(id));
     if (current().id !== String(id)) return roleError(role, String(id))(`this client already has a Homie ${role}`);
     commands[command](String(id), ...args);
@@ -240,10 +277,13 @@ function roleHandler(role, commands, current, create) {
 maxApi.addHandlers({
   connect: (url, username, password) => {
     if (url !== undefined) Object.assign(settings, { url: String(url), username: username ?? "", password: password ?? "" });
-    connect();
+    return connect();
   },
   disconnect,
-  subscribe: (topic, qos = 0) => subscriptions.add("client", String(topic), [0, 1, 2].includes(qos) ? qos : 0),
+  subscribe: (topic, qos = 0) => {
+    if (![0, 1, 2].includes(qos)) return error("qos is 0, 1 or 2");
+    subscriptions.add("client", String(topic), qos);
+  },
   unsubscribe: (topic) => subscriptions.remove("client", String(topic)),
   publish: async (topic, ...rest) => {
     if (!client.connected) return error("not connected");
@@ -253,7 +293,9 @@ maxApi.addHandlers({
   },
   publishbytes: (topic, ...bytes) => {
     if (!client.connected) return error("not connected");
-    client.publish(String(topic), encodeBytes(bytes), { qos: settings.qos, retain: settings.retain });
+    const payload = encodeBytes(bytes);
+    if (!payload) return error("publishbytes: bytes are integers 0-255");
+    client.publish(String(topic), payload, { qos: settings.qos, retain: settings.retain });
   },
   url: (value = "") => (settings.url = String(value)),
   username: (value = "") => (settings.username = String(value)),
@@ -261,14 +303,21 @@ maxApi.addHandlers({
   clientid: (value = "") => (settings.clientid = String(value)),
   keepalive: (seconds) => (settings.keepalive = Math.max(0, Number(seconds) || 0)),
   clean: (on) => (settings.clean = Boolean(on)),
-  qos: (level) => (settings.qos = [0, 1, 2].includes(level) ? level : 0),
+  qos: (level) => {
+    if (![0, 1, 2].includes(level)) return error("qos is 0, 1 or 2");
+    settings.qos = level;
+  },
   retain: (on) => (settings.retain = Boolean(on)),
-  format: (mode) => (settings.format = FORMATS.includes(mode) ? mode : "text"),
+  format: (mode) => {
+    if (!FORMATS.includes(mode)) return error(`format is ${FORMATS.join(", ")}`);
+    settings.format = mode;
+  },
   midi: (id, command, ...args) => {
+    if (command === "free") return freeMidi(String(id));
     if (command in midiCommands) midiCommands[command](String(id), midiRole(String(id)), ...args);
   },
-  device: roleHandler("device", deviceCommands, () => device, (id) => (device = { id, domain: "homie", deviceId: null, homie: null })),
-  controller: roleHandler("controller", controllerCommands, () => controller, (id) => (controller = { id, domain: null, homie: null })),
+  device: roleHandler("device", deviceCommands, () => device, (id) => (device = { id, domain: "homie", deviceId: null, homie: null, registered: false, pending: { description: null, values: [] } })),
+  controller: roleHandler("controller", controllerCommands, () => controller, (id) => (controller = { id, domain: "+", homie: null })),
 });
 
 // Objects created before this script started send their settings again on "ready".

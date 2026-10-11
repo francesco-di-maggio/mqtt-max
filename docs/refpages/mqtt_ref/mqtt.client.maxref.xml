@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="mqtt.client" module="max" category="MQTT">
+
+	<digest>
+		Connect to an MQTT broker
+	</digest>
+
+	<description>
+		Publishes and subscribes to MQTT topics. Other mqtt objects share its connection by name.
+	</description>
+
+	<discussion>
+		<p>MQTT is a publish/subscribe protocol: clients publish messages to named topics on a broker, and every client subscribed to a matching topic receives them. Topics are paths such as <i>studio/sensor/1</i>; in <m>subscribe</m>, <i>+</i> matches one level and <i>#</i> all remaining levels.</p>
+		<p><o>mqtt.client</o> speaks MQTT 3.1.1 through MQTT.js in a Node for Max process. Install its dependencies once per computer by sending <m>script npm install</m>.</p>
+		<p>Give the client a name to share its connection: <o>mqtt.midi</o>, <o>mqtt.homie.device</o> and <o>mqtt.homie.controller</o> with the same name use it. Without a name, the client works on its own.</p>
+		<p>Two clients with the same <at>clientid</at> disconnect each other: the broker closes the older connection. Leave it empty for a random one.</p>
+		<p>A <at>password</at> typed into the object box is saved in the patch in plain text. For anything other than a public test broker, send it with <m>connect</m> or a <m>password</m> message instead.</p>
+	</discussion>
+
+	<metadatalist>
+		<metadata name="author">Francesco Di Maggio</metadata>
+		<metadata name="tag">MQTT</metadata>
+		<metadata name="tag">Network</metadata>
+	</metadatalist>
+
+	<objarglist>
+		<objarg name="name" optional="1" type="symbol">
+			<digest>Connection name shared with other mqtt objects</digest>
+		</objarg>
+	</objarglist>
+
+	<methodlist>
+		<method name="connect">
+			<arglist>
+				<arg name="url" optional="1" type="symbol" />
+				<arg name="username" optional="1" type="symbol" />
+				<arg name="password" optional="1" type="symbol" />
+			</arglist>
+			<digest>Connect to the broker</digest>
+			<description>Connects with the current attributes. With arguments, sets <at>url</at>, <at>username</at> and <at>password</at> first. URLs: <i>mqtt://</i>, <i>mqtts://</i> (TLS), <i>ws://</i>, <i>wss://</i> (WebSocket). Subscriptions are restored on every connection.</description>
+		</method>
+		<method name="disconnect">
+			<digest>Disconnect from the broker</digest>
+			<description>Closes the connection cleanly. A connected <o>mqtt.homie.device</o> publishes its <i>disconnected</i> state first.</description>
+		</method>
+		<method name="subscribe">
+			<arglist>
+				<arg name="topic" optional="0" type="symbol" />
+				<arg name="qos" optional="1" type="int" />
+			</arglist>
+			<digest>Subscribe to a topic</digest>
+			<description>Messages on topics matching the filter come out the left outlet. <i>+</i> matches one level, <i>#</i> the rest. QoS 0 (default), 1 or 2.</description>
+		</method>
+		<method name="unsubscribe">
+			<arglist>
+				<arg name="topic" optional="0" type="symbol" />
+			</arglist>
+			<digest>Unsubscribe from a topic</digest>
+			<description>Stops a subscription made with <m>subscribe</m>. Subscriptions of other mqtt objects on the same connection are not affected.</description>
+		</method>
+		<method name="publish">
+			<arglist>
+				<arg name="topic" optional="0" type="symbol" />
+				<arg name="payload" optional="1" type="list" />
+			</arglist>
+			<digest>Publish a message</digest>
+			<description>Publishes the atoms as text, separated by spaces. A <m>dictionary</m> is published as JSON. Uses <at>qos</at> and <at>retain</at>. With <at>retain</at> 1 and no payload, deletes the retained message of the topic.</description>
+		</method>
+		<method name="publishbytes">
+			<arglist>
+				<arg name="topic" optional="0" type="symbol" />
+				<arg name="bytes" optional="0" type="list" />
+			</arglist>
+			<digest>Publish raw bytes</digest>
+			<description>Publishes the numbers as bytes (0-255).</description>
+		</method>
+		<method name="script">
+			<arglist>
+				<arg name="command" optional="0" type="list" />
+			</arglist>
+			<digest>Control the Node for Max process</digest>
+			<description>Passed to <o>node.script</o>, e.g. <m>script npm install</m> once on a new computer.</description>
+		</method>
+	</methodlist>
+
+	<attributelist>
+		<attribute name="url" get="0" set="1" type="symbol" size="1">
+			<digest>Broker URL</digest>
+			<description>The broker to connect to, e.g. <i>mqtt://localhost:1883</i> or <i>wss://broker.example.com:8884</i>.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="symbol" size="1" value="" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Broker URL" />
+			</attributelist>
+		</attribute>
+		<attribute name="username" get="0" set="1" type="symbol" size="1">
+			<digest>Username</digest>
+			<description>Login name, if the broker requires one.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="symbol" size="1" value="" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Username" />
+			</attributelist>
+		</attribute>
+		<attribute name="password" get="0" set="1" type="symbol" size="1">
+			<digest>Password</digest>
+			<description>Login password, if the broker requires one. Saved in the patch when typed into the object box.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="symbol" size="1" value="" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Password" />
+			</attributelist>
+		</attribute>
+		<attribute name="clientid" get="0" set="1" type="symbol" size="1">
+			<digest>Client identifier</digest>
+			<description>The MQTT client identifier. Empty for a random one.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="symbol" size="1" value="" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Client identifier" />
+			</attributelist>
+		</attribute>
+		<attribute name="keepalive" get="0" set="1" type="int" size="1">
+			<digest>Keepalive (seconds)</digest>
+			<description>Interval of keepalive messages. The broker considers the client gone after 1.5 times this interval without traffic, and publishes its last will.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="int" size="1" value="10" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Keepalive (seconds)" />
+			</attributelist>
+		</attribute>
+		<attribute name="clean" get="0" set="1" type="int" size="1">
+			<digest>Clean session</digest>
+			<description>With 1, the broker discards the session when the client disconnects. With 0, it keeps subscriptions and queued QoS 1 and 2 messages for the same <at>clientid</at>.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Clean session" />
+			</attributelist>
+		</attribute>
+		<attribute name="qos" get="0" set="1" type="int" size="1">
+			<digest>Publish QoS</digest>
+			<description>Quality of service for <m>publish</m> and <m>publishbytes</m>: 0 at most once, 1 at least once, 2 exactly once.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="int" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Publish QoS" />
+			</attributelist>
+		</attribute>
+		<attribute name="retain" get="0" set="1" type="int" size="1">
+			<digest>Retain</digest>
+			<description>With 1, the broker keeps the last message of each topic and sends it to new subscribers.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="int" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Retain" />
+			</attributelist>
+		</attribute>
+		<attribute name="format" get="0" set="1" type="symbol" size="1">
+			<digest>Incoming payload format</digest>
+			<description><i>text</i>: words and numbers. <i>bytes</i>: a list of byte values. <i>json</i>: a JSON object as a dictionary, anything else as text.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="symbol" size="1" value="text" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Incoming payload format" />
+			</attributelist>
+		</attribute>
+	</attributelist>
+
+	<misc name="Output">
+		<entry name="left outlet">
+			<description>Incoming messages: the topic followed by the payload, decoded by <at>format</at>.</description>
+		</entry>
+		<entry name="right outlet">
+			<description>Dumpout: <m>status</m> <i>connected</i>, <i>reconnecting</i> or <i>disconnected</i>; <m>error</m> with a text; <m>ready</m> once the Node process runs; <m>script</m> messages from <o>node.script</o>.</description>
+		</entry>
+	</misc>
+
+	<seealsolist>
+		<seealso name="mqtt.midi" />
+		<seealso name="mqtt.homie.device" />
+		<seealso name="mqtt.homie.controller" />
+		<seealso name="node.script" />
+	</seealsolist>
+
+</c74object>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="mqtt.homie.device" module="max" category="MQTT">
+
+	<digest>
+		Present Max as a Homie device
+	</digest>
+
+	<description>
+		Publishes a Homie 5 device: its state, its description and property values, and receives commands for settable properties.
+	</description>
+
+	<discussion>
+		<p>Homie is a convention for devices on MQTT. A device lives at <i>{domain}/5/{device-id}</i>; its <i>$state</i> is <i>init</i>, <i>ready</i>, <i>disconnected</i>, <i>sleeping</i> or <i>lost</i>, and its <i>$description</i> is a JSON document of nodes and their properties, each with a datatype.</p>
+		<p>Send the description as a dictionary, for example from a <o>dict</o>: <i>{"name": "...", "nodes": {"light": {"properties": {"level": {"datatype": "integer", "format": "0:100", "settable": true}}}}}</i>. The <i>homie</i> and <i>version</i> fields are filled in.</p>
+		<p>On each connection the device publishes <i>init</i>, its description, its retained values and <i>ready</i>, and listens to broadcasts of its domain. If the connection drops, the broker publishes <i>lost</i> (the last will). A client has one Homie device; adding or changing it reconnects the client, since the last will belongs to the connection.</p>
+		<p>Values are checked against the property: datatype, and range from <i>format</i>. Properties are retained (QoS 2) unless <i>"retained": false</i>, which streams them at QoS 0.</p>
+		<p>IDs may only contain a-z, 0-9 and hyphens.</p>
+	</discussion>
+
+	<metadatalist>
+		<metadata name="author">Francesco Di Maggio</metadata>
+		<metadata name="tag">MQTT</metadata>
+		<metadata name="tag">Network</metadata>
+	</metadatalist>
+
+	<objarglist>
+		<objarg name="client" optional="0" type="symbol">
+			<digest>Name of the mqtt.client to use</digest>
+		</objarg>
+		<objarg name="device-id" optional="0" type="symbol">
+			<digest>Homie device ID</digest>
+		</objarg>
+	</objarglist>
+
+	<methodlist>
+		<method name="value">
+			<arglist>
+				<arg name="node" optional="0" type="symbol" />
+				<arg name="property" optional="0" type="symbol" />
+				<arg name="value" optional="0" type="list" />
+			</arglist>
+			<digest>Publish a property value</digest>
+			<description>Integers, floats, 1/0 for booleans, symbols for strings and enums, a color type and its values for colors (e.g. <i>rgb 255 0 0</i>), text for datetime (ISO 8601) and duration (e.g. <i>PT5M</i>), a dictionary for json. Numbers are rounded to the step in the property's format, then checked against its range.</description>
+		</method>
+		<method name="dictionary">
+			<arglist>
+				<arg name="name" optional="0" type="symbol" />
+			</arglist>
+			<digest>Set the description</digest>
+			<description>The <i>$description</i> document. Changing it while ready publishes <i>init</i>, the new description and <i>ready</i>.</description>
+		</method>
+		<method name="state">
+			<arglist>
+				<arg name="state" optional="0" type="symbol" />
+			</arglist>
+			<digest>Set the state</digest>
+			<description><i>sleeping</i> or <i>ready</i>.</description>
+		</method>
+		<method name="alert">
+			<arglist>
+				<arg name="id" optional="0" type="symbol" />
+				<arg name="text" optional="1" type="list" />
+			</arglist>
+			<digest>Publish an alert</digest>
+			<description>A retained alert at <i>$alert/{id}</i>. Without text, removes the alert.</description>
+		</method>
+		<method name="log">
+			<arglist>
+				<arg name="level" optional="0" type="symbol" />
+				<arg name="text" optional="0" type="list" />
+			</arglist>
+			<digest>Publish a log message</digest>
+			<description>Level <i>debug</i>, <i>info</i>, <i>warn</i>, <i>error</i> or <i>fatal</i>, not retained. <o>mqtt.homie.controller</o> reports it on its dumpout.</description>
+		</method>
+	</methodlist>
+
+	<attributelist>
+		<attribute name="domain" get="0" set="1" type="symbol" size="1">
+			<digest>Homie domain</digest>
+			<description>The first topic level, <i>homie</i> by default.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="symbol" size="1" value="homie" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Homie domain" />
+			</attributelist>
+		</attribute>
+	</attributelist>
+
+	<misc name="Output">
+		<entry name="left outlet">
+			<description>Commands from controllers for settable properties: node, property and value. Send the accepted value back with <m>value</m>.</description>
+		</entry>
+		<entry name="right outlet">
+			<description>Dumpout: <m>state</m> with each state the device publishes (<i>init</i>, <i>ready</i>, <i>sleeping</i>, <i>disconnected</i>); <m>broadcast</m> with the subtopic and text of a controller broadcast to the domain; <m>error</m> with a text.</description>
+		</entry>
+	</misc>
+
+	<seealsolist>
+		<seealso name="mqtt.client" />
+		<seealso name="mqtt.homie.controller" />
+		<seealso name="dict" />
+	</seealsolist>
+
+</c74object>
