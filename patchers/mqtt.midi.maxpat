@@ -329,6 +329,28 @@
                     "comment": "dumpout",
                     "index": 1
                 }
+            },
+            {
+                "box": {
+                    "id": "rset",
+                    "maxclass": "newobj",
+                    "numinlets": 2,
+                    "numoutlets": 2,
+                    "outlettype": [ "", "" ],
+                    "patching_rect": [ 200.0, 60.0, 60.0, 22.0 ],
+                    "text": "route set"
+                }
+            },
+            {
+                "box": {
+                    "id": "pset",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 200.0, 90.0, 200.0, 22.0 ],
+                    "text": "prepend midi #0-midi bytes set"
+                }
             }
         ],
         "lines": [
@@ -358,7 +380,7 @@
             },
             {
                 "patchline": {
-                    "destination": [ "pbytes", 0 ],
+                    "destination": [ "rset", 0 ],
                     "source": [ "attr", 3 ]
                 }
             },
@@ -540,6 +562,24 @@
                 "patchline": {
                     "destination": [ "out0", 0 ],
                     "source": [ "iter", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [ "rset", 0 ],
+                    "destination": [ "pset", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [ "rset", 1 ],
+                    "destination": [ "pbytes", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "source": [ "pset", 0 ],
+                    "destination": [ "fwd", 0 ]
                 }
             }
         ],

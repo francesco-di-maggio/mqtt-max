@@ -39,24 +39,25 @@ function roleClient(owner) {
 
 function onConnect() {
   subscriptions.restore();
-  device?.homie.announce();
+  device?.homie?.announce();
 }
 
 function onMessage(topic, payload) {
   if (subscriptions.owns("client", topic)) maxApi.outlet("message", topic, ...decode(payload, settings.format));
   for (const [id, role] of midis) receiveMidi(id, role, topic, payload);
-  if (device?.homie.handle(topic, payload)) return;
-  controller?.homie.handle(topic, payload);
+  if (device?.homie?.handle(topic, payload)) return;
+  controller?.homie?.handle(topic, payload);
 }
 
 function connect() {
   if (!settings.url) return error("connect needs a url, e.g. connect mqtt://localhost:1883");
-  client.connect({ ...settings, will: device?.homie.will() });
+  client.connect({ ...settings, will: device?.homie?.will() });
 }
 
 function disconnect() {
-  const last = device && client.connected ? { topic: `${device.homie.base}/$state`, payload: "disconnected", options: { qos: 2, retain: true } } : null;
-  if (device) device.homie.state = "disconnected";
+  const homie = device?.homie;
+  const last = homie && client.connected ? { topic: `${homie.base}/$state`, payload: "disconnected", options: { qos: 2, retain: true } } : null;
+  if (homie) homie.state = "disconnected";
   return client.disconnect(last);
 }
 
@@ -138,38 +139,52 @@ const midiCommands = {
 
 const roleError = (role, id) => (text) => text && maxApi.outlet(role, id, "dumpout", "error", text);
 
-function startDevice(id, domain, deviceId) {
-  const fail = roleError("device", id);
-  if (device && device.id !== id) return fail("this client already has a Homie device");
-  if (!isId(domain) || !isId(deviceId)) return fail("domain and device ID may only contain a-z, 0-9 and -");
+// The device starts once its ID is known; domain and ID can arrive in any order, like attributes.
+function startDevice() {
+  if (!device.deviceId) return;
+  if (!isId(device.domain) || !isId(device.deviceId)) return roleError("device", device.id)("domain and device ID may only contain a-z, 0-9 and -");
   return withNewConnection(() => {
-    const previous = device?.homie;
     subscriptions.removeOwner("device");
+    const { id } = device;
     const homie = new HomieDevice({
       client: roleClient("device"),
-      domain,
-      id: deviceId,
+      domain: device.domain,
+      id: device.deviceId,
       onSet: (node, prop, atoms) => maxApi.outlet("device", id, "set", node, prop, ...atoms),
     });
-    if (previous) Object.assign(homie, { description: previous.description, values: previous.values });
-    device = { id, homie };
+    if (device.homie) Object.assign(homie, { description: device.homie.description, values: device.homie.values });
+    device.homie = homie;
   });
 }
 
+function needsHomie(command) {
+  return (id, ...args) => (device.homie ? command(id, ...args) : roleError("device", id)("set the device ID first"));
+}
+
 const deviceCommands = {
-  device: (id, domain, deviceId) => startDevice(id, String(domain), String(deviceId)),
-  description: async (id, ...rest) => {
+  register: () => {},
+  domain: (id, domain) => {
+    if (String(domain) === device.domain && device.homie) return;
+    device.domain = String(domain);
+    return startDevice();
+  },
+  id: (id, deviceId) => {
+    if (String(deviceId) === device.deviceId && device.homie) return;
+    device.deviceId = String(deviceId);
+    return startDevice();
+  },
+  description: needsHomie(async (id, ...rest) => {
     const dict = rest[0] === "dictionary" ? await maxApi.getDict(rest[1]).catch(() => null) : rest[0];
     if (!dict || typeof dict !== "object") return roleError("device", id)("description needs a dict");
     device.homie.setDescription(dict);
-  },
-  value: (id, node, prop, ...atoms) => roleError("device", id)(device.homie.setValue(String(node), String(prop), atoms)),
-  state: (id, state) => {
+  }),
+  value: needsHomie((id, node, prop, ...atoms) => roleError("device", id)(device.homie.setValue(String(node), String(prop), atoms))),
+  state: needsHomie((id, state) => {
     if (!["ready", "sleeping"].includes(state)) return roleError("device", id)("state is ready or sleeping");
     device.homie.publishState(state);
-  },
-  alert: (id, alertId, ...text) => roleError("device", id)(device.homie.alert(String(alertId), text.join(" "))),
-  log: (id, level, ...text) => roleError("device", id)(device.homie.log(String(level), text.join(" "))),
+  }),
+  alert: needsHomie((id, alertId, ...text) => roleError("device", id)(device.homie.alert(String(alertId), text.join(" ")))),
+  log: needsHomie((id, level, ...text) => roleError("device", id)(device.homie.log(String(level), text.join(" ")))),
   free: () =>
     withNewConnection(() => {
       subscriptions.removeOwner("device");
@@ -179,13 +194,13 @@ const deviceCommands = {
 
 // --- [mqtt.homie.controller] ---
 
-function startController(id, domain) {
-  const fail = roleError("controller", id);
-  if (controller && controller.id !== id) return fail("this client already has a Homie controller");
-  if (domain !== "+" && !isId(domain)) return fail("domain may only contain a-z, 0-9 and -, or * for all");
-  controller?.homie.stop();
-  const out = (...args) => maxApi.outlet("controller", id, ...args);
-  const homie = new HomieController({
+// Without a domain, a controller discovers devices in all domains, as Homie requires by default.
+function startController(domain) {
+  if (domain !== "+" && !isId(domain)) return roleError("controller", controller.id)("domain may only contain a-z, 0-9 and -, or * for all");
+  controller.homie?.stop();
+  const out = (...args) => maxApi.outlet("controller", controller.id, ...args);
+  controller.domain = domain;
+  controller.homie = new HomieController({
     client: roleClient("controller"),
     domain,
     onDevices: (devices) => out("devices", devices),
@@ -193,27 +208,31 @@ function startController(id, domain) {
     onValue: (key, node, prop, atoms) => out("value", key, node, prop, ...atoms),
     onAlert: (key, alertId, text) => out("alert", key, alertId, text),
   });
-  controller = { id, homie };
-  homie.start();
+  controller.homie.start();
 }
 
 const controllerCommands = {
-  domain: (id, domain) => startController(id, String(domain) === "*" ? "+" : String(domain)),
-  set: (id, key, node, prop, ...atoms) => roleError("controller", id)(controller.homie.set(String(key), String(node), String(prop), atoms)),
-  broadcast: (id, subtopic, ...text) => roleError("controller", id)(controller.homie.broadcast(String(subtopic), text.join(" "))),
+  register: () => controller.homie || startController("+"),
+  domain: (id, domain) => {
+    const value = String(domain) === "*" ? "+" : String(domain);
+    if (value !== controller.domain || !controller.homie) startController(value);
+  },
+  set: (id, key, node, prop, ...atoms) => roleError("controller", id)(controller.homie?.set(String(key), String(node), String(prop), atoms)),
+  broadcast: (id, subtopic, ...text) => roleError("controller", id)(controller.homie?.broadcast(String(subtopic), text.join(" "))),
   free: () => {
-    controller.homie.stop();
+    controller.homie?.stop();
     controller = null;
   },
 };
 
 // --- Max handlers ---
 
-// device <id> device ... and controller <id> domain ... set a role up; other commands need that role.
-function roleHandler(commands, setup, current) {
+// A client has one Homie device and one controller: the first object to register gets the role.
+function roleHandler(role, commands, current, create) {
   return (id, command, ...args) => {
     if (!(command in commands)) return;
-    if (command !== setup && current()?.id !== String(id)) return;
+    if (!current()) create(String(id));
+    if (current().id !== String(id)) return roleError(role, String(id))(`this client already has a Homie ${role}`);
     commands[command](String(id), ...args);
   };
 }
@@ -248,8 +267,8 @@ maxApi.addHandlers({
   midi: (id, command, ...args) => {
     if (command in midiCommands) midiCommands[command](String(id), midiRole(String(id)), ...args);
   },
-  device: roleHandler(deviceCommands, "device", () => device),
-  controller: roleHandler(controllerCommands, "domain", () => controller),
+  device: roleHandler("device", deviceCommands, () => device, (id) => (device = { id, domain: "homie", deviceId: null, homie: null })),
+  controller: roleHandler("controller", controllerCommands, () => controller, (id) => (controller = { id, domain: null, homie: null })),
 });
 
 // Objects created before this script started send their settings again on "ready".
