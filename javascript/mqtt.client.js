@@ -114,6 +114,8 @@ function openPort(id, role, name) {
 }
 
 const midiCommands = {
+  // Sent on load and on "ready", so that an [mqtt.midi] without attributes exists too.
+  register: () => {},
   prefix: (id, role, value) => resubscribeMidi(id, role, () => (role.prefix = String(value))),
   direction: (id, role, value) => {
     if (!mqttMidi.DIRECTIONS.includes(value)) return midiOut(id, "dumpout", "error", "direction is in or out");
