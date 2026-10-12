@@ -66,7 +66,7 @@ Web pages, such as the phone app, can only use WebSockets.
 ### Brokers
 
 - **Public test brokers** (e.g. `public.cloud.shiftr.io`, `test.mosquitto.org`) need no setup, but are shared, readable by anyone and often slow. Use them for trying things out only.
-- **A broker on your own network**, such as Mosquitto on a computer or a Raspberry Pi, adds only a few milliseconds and keeps data private.
+- **A broker on your own network**, such as `[mqtt.broker]` in Max, or Mosquitto on a computer or a Raspberry Pi, adds only a few milliseconds and keeps data private.
 - **A hosted or self-managed server** connects places over the internet, with user names, passwords and TLS.
 
 ## Formats on top of MQTT
@@ -118,11 +118,12 @@ They complement each other: OSC for dense gestures within a room, MQTT for devic
 
 ## mqtt-max
 
-mqtt-max is a Max package with four objects:
+mqtt-max is a Max package with five objects:
 
 | Object | |
 |---|---|
 | `[mqtt.client]` | A connection to a broker: subscribe, publish text, bytes or JSON dictionaries, QoS, retain. Other objects share it by name. |
+| `[mqtt.broker]` | An MQTT broker on this computer: TCP, TLS, WebSocket and secure WebSocket, optional login. |
 | `[mqtt.midi]` | MIDI as raw MIDI bytes, like `[midiin]` and `[midiout]`, optionally on a virtual MIDI port for any patch or application. |
 | `[mqtt.homie.device]` | Max as a Homie device: its description from a dictionary, typed values, commands from controllers. |
 | `[mqtt.homie.controller]` | Discovers Homie devices, reports which are online, outputs their values and commands them. |

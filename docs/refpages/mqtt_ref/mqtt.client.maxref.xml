@@ -170,6 +170,7 @@
 	</misc>
 
 	<seealsolist>
+		<seealso name="mqtt.broker" />
 		<seealso name="mqtt.midi" />
 		<seealso name="mqtt.homie.device" />
 		<seealso name="mqtt.homie.controller" />

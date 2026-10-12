@@ -9,7 +9,7 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 100.0, 100.0, 620.0, 560.0 ],
+        "rect": [ 100.0, 100.0, 620.0, 590.0 ],
         "boxes": [
             {
                 "box": {
@@ -125,7 +125,7 @@
                     "numoutlets": 1,
                     "patching_rect": [ 20.0, 268.0, 150.0, 22.0 ],
                     "outlettype": [ "" ],
-                    "text": "help mqtt.midi"
+                    "text": "help mqtt.broker"
                 }
             },
             {
@@ -135,7 +135,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 180.0, 268.0, 330.0, 20.0 ],
-                    "text": "MIDI over MQTT, with a virtual MIDI port"
+                    "text": "an MQTT broker on this computer"
                 }
             },
             {
@@ -146,7 +146,7 @@
                     "numoutlets": 1,
                     "patching_rect": [ 20.0, 296.0, 150.0, 22.0 ],
                     "outlettype": [ "" ],
-                    "text": "help mqtt.homie.device"
+                    "text": "help mqtt.midi"
                 }
             },
             {
@@ -156,7 +156,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 180.0, 296.0, 330.0, 20.0 ],
-                    "text": "Max as a Homie device"
+                    "text": "MIDI over MQTT, with a virtual MIDI port"
                 }
             },
             {
@@ -167,7 +167,7 @@
                     "numoutlets": 1,
                     "patching_rect": [ 20.0, 324.0, 150.0, 22.0 ],
                     "outlettype": [ "" ],
-                    "text": "help mqtt.homie.controller"
+                    "text": "help mqtt.homie.device"
                 }
             },
             {
@@ -177,6 +177,27 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 180.0, 324.0, 330.0, 20.0 ],
+                    "text": "Max as a Homie device"
+                }
+            },
+            {
+                "box": {
+                    "id": "h4",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "patching_rect": [ 20.0, 352.0, 150.0, 22.0 ],
+                    "outlettype": [ "" ],
+                    "text": "help mqtt.homie.controller"
+                }
+            },
+            {
+                "box": {
+                    "id": "ch4",
+                    "maxclass": "comment",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 180.0, 352.0, 330.0, 20.0 ],
                     "text": "discover and control Homie devices"
                 }
             },
@@ -186,7 +207,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 365.0, 300.0, 20.0 ],
+                    "patching_rect": [ 20.0, 393.0, 300.0, 20.0 ],
                     "text": "3  ·  EXAMPLES  (with the phone app)",
                     "fontface": 1
                 }
@@ -197,7 +218,7 @@
                     "maxclass": "message",
                     "numinlets": 2,
                     "numoutlets": 1,
-                    "patching_rect": [ 20.0, 390.0, 200.0, 22.0 ],
+                    "patching_rect": [ 20.0, 418.0, 200.0, 22.0 ],
                     "outlettype": [ "" ],
                     "text": "loadunique mqtt-phone-midi.maxpat"
                 }
@@ -208,7 +229,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 230.0, 390.0, 200.0, 20.0 ],
+                    "patching_rect": [ 230.0, 418.0, 200.0, 20.0 ],
                     "text": "phone → MIDI port"
                 }
             },
@@ -218,7 +239,7 @@
                     "maxclass": "message",
                     "numinlets": 2,
                     "numoutlets": 1,
-                    "patching_rect": [ 20.0, 418.0, 200.0, 22.0 ],
+                    "patching_rect": [ 20.0, 446.0, 200.0, 22.0 ],
                     "outlettype": [ "" ],
                     "text": "loadunique mqtt-phone-homie.maxpat"
                 }
@@ -229,7 +250,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 230.0, 418.0, 200.0, 20.0 ],
+                    "patching_rect": [ 230.0, 446.0, 200.0, 20.0 ],
                     "text": "phone → Homie values"
                 }
             },
@@ -239,7 +260,7 @@
                     "maxclass": "message",
                     "numinlets": 2,
                     "numoutlets": 1,
-                    "patching_rect": [ 20.0, 446.0, 200.0, 22.0 ],
+                    "patching_rect": [ 20.0, 474.0, 200.0, 22.0 ],
                     "outlettype": [ "" ],
                     "text": "loadunique mqtt-phone-live.maxpat"
                 }
@@ -250,7 +271,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 230.0, 446.0, 200.0, 20.0 ],
+                    "patching_rect": [ 230.0, 474.0, 200.0, 20.0 ],
                     "text": "phone → Ableton Live"
                 }
             },
@@ -260,7 +281,7 @@
                     "maxclass": "message",
                     "numinlets": 2,
                     "numoutlets": 1,
-                    "patching_rect": [ 20.0, 474.0, 200.0, 22.0 ],
+                    "patching_rect": [ 20.0, 502.0, 200.0, 22.0 ],
                     "outlettype": [ "" ],
                     "text": "loadunique mqtt-phone-latency.maxpat"
                 }
@@ -271,7 +292,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 230.0, 474.0, 200.0, 20.0 ],
+                    "patching_rect": [ 230.0, 502.0, 200.0, 20.0 ],
                     "text": "round trips"
                 }
             },
@@ -281,7 +302,7 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 1,
-                    "patching_rect": [ 450.0, 390.0, 60.0, 22.0 ],
+                    "patching_rect": [ 450.0, 418.0, 60.0, 22.0 ],
                     "outlettype": [ "" ],
                     "text": "pcontrol"
                 }
@@ -292,7 +313,7 @@
                     "maxclass": "message",
                     "numinlets": 2,
                     "numoutlets": 1,
-                    "patching_rect": [ 20.0, 515.0, 470.0, 22.0 ],
+                    "patching_rect": [ 20.0, 543.0, 470.0, 22.0 ],
                     "outlettype": [ "" ],
                     "text": ";\rmax launchbrowser https://francesco-di-maggio.github.io/mqtt-max/phone/"
                 }
@@ -303,7 +324,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 500.0, 515.0, 100.0, 20.0 ],
+                    "patching_rect": [ 500.0, 543.0, 100.0, 20.0 ],
                     "text": "the phone app"
                 }
             }
@@ -343,6 +364,12 @@
                 "patchline": {
                     "destination": [ "pcontrol", 0 ],
                     "source": [ "h3", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "pcontrol", 0 ],
+                    "source": [ "h4", 0 ]
                 }
             },
             {

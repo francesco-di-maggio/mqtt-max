@@ -5,6 +5,7 @@ MQTT for Max. Connect patches, phones and devices over any network.
 | Object | |
 |---|---|
 | `[mqtt.client]` | A connection to an MQTT broker: subscribe, publish text, bytes or JSON dictionaries, QoS, retain. |
+| `[mqtt.broker]` | An MQTT broker on this computer, for devices on the local network: TCP, TLS, WebSocket, login. |
 | `[mqtt.midi]` | MIDI over MQTT as raw MIDI bytes, like `[midiin]` and `[midiout]`, optionally on a virtual MIDI port for `[ctlin]`, `[notein]` and other applications. |
 | `[mqtt.homie.device]` | Max as a Homie device: a description, typed values, commands from controllers. |
 | `[mqtt.homie.controller]` | Discovers Homie devices, reports who is online, outputs their values and commands them. |
@@ -14,7 +15,7 @@ New to MQTT? [MQTT for Max](docs/mqtt.md) explains brokers, topics, QoS, retaine
 ## Requirements
 
 - Max 9 on macOS. Node for Max is bundled with Max.
-- An MQTT broker. The help files and examples use the public test broker `public.cloud.shiftr.io`, which is shared and readable by anyone: use it for trying things out only.
+- An MQTT broker: `[mqtt.broker]` on this computer, a broker such as Mosquitto, or a hosted one. The help files and examples use the public test broker `public.cloud.shiftr.io`, which is shared and readable by anyone: use it for trying things out only.
 
 ## Install
 
@@ -47,7 +48,7 @@ See [site/phone](site/phone/README.md) for the phone app's controls and topics.
 
 ## Standards
 
-- `[mqtt.client]` implements MQTT 3.1.1.
+- `[mqtt.client]` and `[mqtt.broker]` implement MQTT 3.1.1.
 - `[mqtt.midi]` carries MIDI messages as defined by the MIDI 1.0 specification: one or more complete messages per MQTT message. The topics are set with `@receive` and `@send`.
 - The Homie objects follow the [Homie 5](https://homieiot.github.io/specification/) convention for devices: `$state`, `$description`, typed properties and `/set` commands.
 
@@ -57,10 +58,13 @@ See [site/phone](site/phone/README.md) for the phone app's controls and topics.
 - **`[ctlin]` does not receive from the port.** MIDI objects look up their port when they are created. Connect the middle outlet of `[mqtt.midi]`, which sends `port <name>` once the port exists, to them.
 - **The port appears as `<name> #2`.** Another object already created a port with that name: give each `[mqtt.midi]` its own.
 - **Messages arrive late or not at all on the public broker.** It is shared, and often slow under load. Use a broker on your own network, such as Mosquitto, for anything beyond a test.
+- **`[mqtt.broker]` reports that the port is already in use.** Another broker, such as Mosquitto, listens on it: stop it, or set another `@port`.
+- **Devices on the network cannot reach `[mqtt.broker]`.** Allow incoming connections when macOS asks, and use one of the addresses it reports, not `localhost`.
 - **Two clients keep disconnecting each other.** They use the same `@clientid`. Leave it empty for a random one.
 
 ## Acknowledgements
 
+- [Aedes](https://github.com/moscajs/aedes), the MQTT broker
 - [MQTT.js](https://github.com/mqttjs/MQTT.js), the MQTT client
 - [@julusian/midi](https://github.com/Julusian/node-midi) (RtMidi), the virtual MIDI ports
 

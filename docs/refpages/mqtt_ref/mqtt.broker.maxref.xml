@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="mqtt.broker" module="max" category="MQTT">
+
+	<digest>
+		An MQTT broker in Max
+	</digest>
+
+	<description>
+		Runs an MQTT broker on this computer. Clients on the network connect to it over TCP, TLS, WebSocket or secure WebSocket.
+	</description>
+
+	<discussion>
+		<p>The broker implements MQTT 3.1.1 with Aedes in a Node for Max process: QoS 0, 1 and 2, retained messages, last wills and keepalive. It keeps its state in memory: retained messages and sessions are lost when it stops.</p>
+		<p>It starts when the object is created and listens on every port that is not 0. Changing an attribute restarts it. Port 1883 is MQTT's registered port; 8883 is the usual port for MQTT over TLS.</p>
+		<p>TLS and secure WebSocket need a private key and a certificate as PEM files. For a test, <i>openssl req -x509 -newkey rsa:2048 -nodes -keyout key.pem -out cert.pem -days 365 -subj /CN=localhost</i> creates both; clients must then accept the self-signed certificate.</p>
+		<p>With <at>username</at>, clients must log in: a wrong user name or password is refused with return code 4 (bad user name or password).</p>
+		<p>The broker is reachable from the local network. From other networks it needs port forwarding, a VPN or a relay. macOS asks once whether to accept incoming connections for the Node for Max process.</p>
+		<p>Clients see the broker's own state under <i>$SYS/</i>, e.g. a heartbeat every minute.</p>
+	</discussion>
+
+	<metadatalist>
+		<metadata name="author">Francesco Di Maggio</metadata>
+		<metadata name="tag">MQTT</metadata>
+		<metadata name="tag">Network</metadata>
+	</metadatalist>
+
+	<objarglist>
+	</objarglist>
+
+	<methodlist>
+		<method name="start">
+			<digest>Start the broker</digest>
+			<description>Starts listening with the current attributes. The broker also starts when the object is created.</description>
+		</method>
+		<method name="stop">
+			<digest>Stop the broker</digest>
+			<description>Disconnects all clients and stops listening.</description>
+		</method>
+		<method name="clients">
+			<digest>Report the connected clients</digest>
+			<description>Sends <m>clients</m> with their number and client identifiers out the dumpout.</description>
+		</method>
+	</methodlist>
+
+	<attributelist>
+		<attribute name="port" get="0" set="1" type="int" size="1">
+			<digest>MQTT port</digest>
+			<description>Port for MQTT over TCP, <i>mqtt://</i>. 0 for off.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="int" size="1" value="1883" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="MQTT port" />
+			</attributelist>
+		</attribute>
+		<attribute name="tlsport" get="0" set="1" type="int" size="1">
+			<digest>MQTT over TLS port</digest>
+			<description>Port for MQTT over TLS, <i>mqtts://</i>. 0 for off. Needs <at>key</at> and <at>cert</at>.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="int" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="MQTT over TLS port" />
+			</attributelist>
+		</attribute>
+		<attribute name="wsport" get="0" set="1" type="int" size="1">
+			<digest>WebSocket port</digest>
+			<description>Port for MQTT over WebSocket, <i>ws://</i>, e.g. for web pages served over HTTP. 0 for off.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="int" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="WebSocket port" />
+			</attributelist>
+		</attribute>
+		<attribute name="wssport" get="0" set="1" type="int" size="1">
+			<digest>Secure WebSocket port</digest>
+			<description>Port for MQTT over secure WebSocket, <i>wss://</i>. 0 for off. Needs <at>key</at> and <at>cert</at>.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="int" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Secure WebSocket port" />
+			</attributelist>
+		</attribute>
+		<attribute name="key" get="0" set="1" type="symbol" size="1">
+			<digest>TLS private key</digest>
+			<description>Path of the private key file (PEM).</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="symbol" size="1" value="" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="TLS private key" />
+			</attributelist>
+		</attribute>
+		<attribute name="cert" get="0" set="1" type="symbol" size="1">
+			<digest>TLS certificate</digest>
+			<description>Path of the certificate file (PEM).</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="symbol" size="1" value="" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="TLS certificate" />
+			</attributelist>
+		</attribute>
+		<attribute name="username" get="0" set="1" type="symbol" size="1">
+			<digest>Username</digest>
+			<description>User name clients must log in with. Empty for no login.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="symbol" size="1" value="" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Username" />
+			</attributelist>
+		</attribute>
+		<attribute name="password" get="0" set="1" type="symbol" size="1">
+			<digest>Password</digest>
+			<description>Password clients must log in with. Saved in the patch when typed into the object box.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="symbol" size="1" value="" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Password" />
+			</attributelist>
+		</attribute>
+	</attributelist>
+
+	<misc name="Output">
+		<entry name="left outlet">
+			<description>Clients: <m>connected</m> and <m>disconnected</m> with the client identifier; <m>subscribe</m> with the identifier, topic filter and QoS; <m>unsubscribe</m> with the identifier and topic filter.</description>
+		</entry>
+		<entry name="right outlet">
+			<description>Dumpout: <m>status</m> <i>listening</i> with each scheme and port, or <i>stopped</i>; <m>address</m> with a URL for each network address of this computer; <m>clients</m> with their number; <m>error</m> with a text.</description>
+		</entry>
+	</misc>
+
+	<seealsolist>
+		<seealso name="mqtt.client" />
+		<seealso name="node.script" />
+	</seealsolist>
+
+</c74object>
