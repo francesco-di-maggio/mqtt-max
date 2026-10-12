@@ -350,7 +350,7 @@
                                     "numinlets": 1,
                                     "numoutlets": 0,
                                     "patching_rect": [ 20.0, 515.0, 560.0, 20.0 ],
-                                    "text": "macOS asks once whether to accept incoming connections: allow it for devices on the network."
+                                    "text": "If the macOS firewall is on, it asks once whether to accept incoming connections: allow it for devices on the network."
                                 }
                             }
                         ],

@@ -59,7 +59,7 @@ See [site/phone](site/phone/README.md) for the phone app's controls and topics.
 - **The port appears as `<name> #2`.** Another object already created a port with that name: give each `[mqtt.midi]` its own.
 - **Messages arrive late or not at all on the public broker.** It is shared, and often slow under load. Use a broker on your own network, such as Mosquitto, for anything beyond a test.
 - **`[mqtt.broker]` reports that the port is already in use.** Another broker, such as Mosquitto, listens on it: stop it, or set another `@port`.
-- **Devices on the network cannot reach `[mqtt.broker]`.** Allow incoming connections when macOS asks, and use one of the addresses it reports, not `localhost`.
+- **Devices on the network cannot reach `[mqtt.broker]`.** If the macOS firewall is on, allow incoming connections when it asks, and use one of the addresses it reports, not `localhost`.
 - **Two clients keep disconnecting each other.** They use the same `@clientid`. Leave it empty for a random one.
 
 ## Acknowledgements

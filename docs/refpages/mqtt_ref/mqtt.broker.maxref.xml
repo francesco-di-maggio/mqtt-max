@@ -16,7 +16,7 @@
 		<p>It starts when the object is created and listens on every port that is not 0. Changing an attribute restarts it. Port 1883 is MQTT's registered port; 8883 is the usual port for MQTT over TLS.</p>
 		<p>TLS and secure WebSocket need a private key and a certificate as PEM files. For a test, <i>openssl req -x509 -newkey rsa:2048 -nodes -keyout key.pem -out cert.pem -days 365 -subj /CN=localhost</i> creates both; clients must then accept the self-signed certificate.</p>
 		<p>With <at>username</at>, clients must log in: a wrong user name or password is refused with return code 4 (bad user name or password).</p>
-		<p>The broker is reachable from the local network. From other networks it needs port forwarding, a VPN or a relay. macOS asks once whether to accept incoming connections for the Node for Max process.</p>
+		<p>The broker is reachable from the local network. From other networks it needs port forwarding, a VPN or a relay. If the macOS firewall is on, macOS asks once whether to accept incoming connections for the Node for Max process.</p>
 		<p>Clients see the broker's own state under <i>$SYS/</i>, e.g. a heartbeat every minute.</p>
 	</discussion>
 
