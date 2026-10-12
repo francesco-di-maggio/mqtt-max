@@ -5,9 +5,9 @@
 const maxApi = require("max-api");
 const { Client } = require("./lib/client");
 const { Subscriptions } = require("./lib/subscriptions");
+const { matches } = require("./lib/topic");
 const { FORMATS, decode, encodeText, encodeBytes, toAtom } = require("./lib/payload");
-const mqttMidi = require("./lib/mqtt-midi");
-const { MidiStream } = require("./lib/midi-stream");
+const { MidiStream, parseMessages } = require("./lib/midi-stream");
 const { MidiPort } = require("./lib/midi-port");
 const { isId, HomieDevice, HomieController } = require("./lib/homie");
 
@@ -73,37 +73,35 @@ async function withNewConnection(change) {
 }
 
 // --- [mqtt.midi] ---
+// MIDI over MQTT: each payload holds complete MIDI messages, as on a MIDI cable.
+// @receive is the topic filter MIDI arrives on, @send the topic MIDI is published to.
 
 const midiOut = (id, ...args) => maxApi.outlet("midi", id, ...args);
-const midiFilter = (role) => `${role.prefix}/${role.direction}/#`;
 
 function publishMidi(role, bytes) {
-  const message = mqttMidi.format(role.prefix, mqttMidi.opposite(role.direction), bytes);
-  if (message) client.publish(message[0], message[1], { qos: 0, retain: false });
+  if (role.send) client.publish(role.send, Buffer.from(bytes), { qos: 0, retain: false });
 }
 
+// A client receives what it publishes itself when it is subscribed to that topic: those messages are skipped.
 function receiveMidi(id, role, topic, payload) {
-  const parsed = mqttMidi.parse(role.prefix, topic, payload);
-  if (!parsed || parsed.direction !== role.direction) return;
-  role.port?.send(parsed.bytes);
-  midiOut(id, "bytes", ...parsed.bytes);
+  if (!role.receive || topic === role.send || !matches(role.receive, topic)) return;
+  const messages = parseMessages(payload);
+  if (!messages) return;
+  for (const bytes of messages) {
+    role.port?.send(bytes);
+    midiOut(id, "bytes", ...bytes);
+  }
 }
 
 // Settings are stored until "register", which the abstraction sends after all its arguments and attributes,
 // so a role starts once, with its final settings.
 function midiRole(id) {
   if (!midis.has(id)) {
-    const role = { prefix: "remote", direction: "in", portName: "", port: null, active: false };
+    const role = { receive: "", send: "", portName: "", port: null, active: false };
     role.stream = new MidiStream((bytes) => publishMidi(role, bytes));
     midis.set(id, role);
   }
   return midis.get(id);
-}
-
-function changeMidi(id, role, change) {
-  if (role.active) subscriptions.remove(`midi ${id}`, midiFilter(role));
-  change();
-  if (role.active) subscriptions.add(`midi ${id}`, midiFilter(role));
 }
 
 // MIDI objects look up their port when created, so the port reports itself once it exists:
@@ -120,17 +118,23 @@ function openPort(id, role) {
   }
 }
 
+const isTopic = (topic) => topic !== "" && !/[+#]/.test(topic);
+
 const midiCommands = {
   register: (id, role) => {
     if (role.active) return;
     role.active = true;
-    subscriptions.add(`midi ${id}`, midiFilter(role));
+    if (role.receive) subscriptions.add(`midi ${id}`, role.receive);
     openPort(id, role);
   },
-  prefix: (id, role, value) => changeMidi(id, role, () => (role.prefix = String(value))),
-  direction: (id, role, value) => {
-    if (!mqttMidi.DIRECTIONS.includes(value)) return midiOut(id, "dumpout", "error", "direction is in or out");
-    changeMidi(id, role, () => (role.direction = value));
+  receive: (id, role, filter = "") => {
+    if (role.active && role.receive) subscriptions.remove(`midi ${id}`, role.receive);
+    role.receive = String(filter);
+    if (role.active && role.receive) subscriptions.add(`midi ${id}`, role.receive);
+  },
+  send: (id, role, topic = "") => {
+    if (String(topic) !== "" && !isTopic(String(topic))) return midiOut(id, "dumpout", "error", "send needs a topic without + or #");
+    role.send = String(topic);
   },
   port: (id, role, name = "") => {
     if (String(name) === role.portName) return;

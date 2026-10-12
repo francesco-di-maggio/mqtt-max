@@ -1,8 +1,12 @@
 {
   "name": "mqtt-max",
+  "version": "0.1.0",
   "description": "Node for Max scripts of the mqtt-max package",
   "private": true,
   "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  },
   "scripts": {
     "test": "node --test ../test/"
   },

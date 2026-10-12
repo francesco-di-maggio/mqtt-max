@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use mqtt-max, please cite it as below."
+title: "mqtt-max: MQTT for Max"
+type: software
+authors:
+  - family-names: "Di Maggio"
+    given-names: "Francesco"
+version: "0.1.0"
+license: MIT
+repository-code: "https://github.com/francesco-di-maggio/mqtt-max"
+url: "https://francesco-di-maggio.github.io/mqtt-max/"
+keywords:
+  - MQTT
+  - Max
+  - MIDI
+  - Homie
+  - IoT

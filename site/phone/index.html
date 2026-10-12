@@ -134,7 +134,7 @@
     <label><span class="label">Password</span><input id="password" type="password" value="public"></label>
     <label><span class="label">Prefix</span><input id="prefix" value="remote"></label>
     <label><span class="label">Name</span><input id="name"></label>
-    <label><span class="label">Mode</span><select id="mode"><option value="midi">MIDI</option><option value="data">Data</option></select></label>
+    <label><span class="label">Send</span><select id="mode"><option value="midi">MIDI</option><option value="homie">Homie</option></select></label>
     <label><span class="label">Channel</span><input id="channel" type="number" min="1" max="16" value="1"></label>
     <label class="switch"><span class="label">Echo notes</span><input id="echo" type="checkbox"></label>
   </div>
@@ -164,7 +164,7 @@
 
 
 <script type="module">
-import { MqttMidi } from "https://esm.sh/@grantler-instruments/mqtt-midi@0.1.0?deps=mqtt@5.16.0";
+import mqtt from "https://esm.sh/mqtt@5.16.0";
 
 const SEND_INTERVAL_MS = 33;
 const FIELDS = ["url", "username", "password", "prefix", "name", "mode", "channel"];
@@ -179,7 +179,7 @@ const STREAM = { qos: 0, retain: false };
 const ID = /^[a-z0-9-]+$/;
 const $ = (id) => document.getElementById(id);
 
-// Data mode: each value is published to {prefix}/5/{name}/{node}/{property}.
+// Send Homie: each value is published to {prefix}/5/{name}/{node}/{property}.
 const NODES = {
   motion: { name: "Motion", properties: {
     pitch: { name: "Pitch", datatype: "float", format: "-180:180", unit: "°", retained: false },
@@ -201,12 +201,13 @@ const NODES = {
 
 const LABELS = {
   midi: { l1: "CC1 Pitch", l2: "CC2 Roll", l3: "CC3 Yaw", l4: "CC4 Network", l5: "CC5/6 XY · Hold for note 60", l7: "CC7 Slider" },
-  data: { l1: "Pitch", l2: "Roll", l3: "Yaw", l4: "Network", l5: "XY · Touch", l7: "Slider" },
+  homie: { l1: "Pitch", l2: "Roll", l3: "Yaw", l4: "Network", l5: "XY · Touch", l7: "Slider" },
 };
-// The Data value each CC readout shows in Data mode.
+// The Homie value each CC readout shows when sending Homie.
 const DATA_KEY = { 1: "motion/pitch", 2: "motion/roll", 3: "motion/yaw", 5: "pad/x", 6: "pad/y", 7: "slider/value" };
 
-let midi = null;
+let client = null;
+const connected = () => Boolean(client?.connected);
 const current = { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null };
 const sent = { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null };
 const data = {};
@@ -222,6 +223,8 @@ function loadSettings() {
       if (v !== null) $(f).value = v;
     } catch {}
   }
+  // Saved by earlier versions, which called sending Homie "Data".
+  if ($("mode").value !== "midi" && $("mode").value !== "homie") $("mode").value = "homie";
   if (!$("name").value) $("name").value = "phone-" + Math.random().toString(16).slice(2, 6);
 }
 
@@ -263,11 +266,11 @@ function hash(text) {
 }
 
 function description() {
-  const doc = { homie: "5.0", name: "mqtt-max phone app", nodes: mode() === "data" ? NODES : {} };
+  const doc = { homie: "5.0", name: "mqtt-max phone app", nodes: mode() === "homie" ? NODES : {} };
   return JSON.stringify({ ...doc, version: hash(JSON.stringify(doc)) });
 }
 
-// Data values stream only after $state ready is delivered: QoS 0 values would overtake the QoS 2 attributes.
+// Homie values stream only after $state ready is delivered: QoS 0 values would overtake the QoS 2 attributes.
 let ready = false;
 
 async function announce(client) {
@@ -289,7 +292,7 @@ function channel() {
 
 function show(cc, value) {
   const label = $("v" + cc);
-  if (label) label.textContent = mode() === "data" && DATA_KEY[cc] ? data[DATA_KEY[cc]] : value;
+  if (label) label.textContent = mode() === "homie" && DATA_KEY[cc] ? data[DATA_KEY[cc]] : value;
   const bar = $("b" + cc);
   if (bar) bar.style.width = (value / 127 * 100) + "%";
 }
@@ -316,17 +319,17 @@ function sendChanged() {
     if (v === null || v === sent[cc]) continue;
     sent[cc] = v;
     show(cc, v);
-    if (mode() === "midi" && midi?.connected) midi.sendControlChange(channel(), cc, v);
+    if (mode() === "midi" && connected()) sendMidi("cc", channel(), cc, v);
   }
-  if (mode() !== "data" || !ready || !midi?.connected) return;
+  if (mode() !== "homie" || !ready || !connected()) return;
   for (const [key, v] of Object.entries(data)) {
     if (v === dataSent[key]) continue;
     dataSent[key] = v;
-    midi.client.publish(`${deviceTopic()}/${key}`, v, STREAM);
+    client.publish(`${deviceTopic()}/${key}`, v, STREAM);
   }
 }
 
-// Round trip phone -> broker -> phone. MIDI: CC 4, 0-500 ms -> 0-127, a ping lost for 1 s -> 127. Data: network/rtt in ms.
+// Round trip phone -> broker -> phone. MIDI: CC 4, 0-500 ms -> 0-127, a ping lost for 1 s -> 127. Homie: network/rtt in ms.
 const pingTopic = () => `${prefix()}/ping/${name()}`;
 
 function showRtt(ms, text) {
@@ -336,12 +339,12 @@ function showRtt(ms, text) {
 }
 
 function ping() {
-  if (!midi?.connected) return;
+  if (!connected()) return;
   const now = performance.now();
   if (pingSent !== null && now - pingSent < PING_TIMEOUT_MS) return;
   if (pingSent !== null) showRtt(RTT_MAX_MS, "lost");
   pingSent = now;
-  midi.client.publish(pingTopic(), String(now));
+  client.publish(pingTopic(), String(now));
 }
 
 function onPong(payload) {
@@ -367,14 +370,39 @@ async function keepAwake() {
   try { await navigator.wakeLock?.request("screen"); } catch {}
 }
 
-// Sends notes arriving on {prefix}/out back to {prefix}/in, so the computer can time the round trip.
-function listenForEcho() {
-  midi.on("noteOn", ({ channel, note, velocity }) => {
-    if (mode() === "midi" && $("echo").checked) midi.sendNoteOn(channel, note, velocity);
-  });
-  midi.on("noteOff", ({ channel, note }) => {
-    if (mode() === "midi" && $("echo").checked) midi.sendNoteOff(channel, note);
-  });
+// MIDI over MQTT: each payload holds complete MIDI messages.
+// The phone publishes to {prefix}/{name}/midi and receives on {prefix}/{name}/midi/in.
+const midiTopic = () => `${prefix()}/${name()}/midi`;
+const STATUS = { cc: 0xb0, noteon: 0x90, noteoff: 0x80 };
+
+function sendMidi(type, ch, number, value) {
+  client.publish(midiTopic(), Uint8Array.of(STATUS[type] | (ch - 1), number, value));
+}
+
+// Complete MIDI channel messages, with running status, or null for anything else.
+function channelMessages(bytes) {
+  const messages = [];
+  let status = null;
+  for (let i = 0; i < bytes.length; ) {
+    if (bytes[i] >= 0x80) status = bytes[i++];
+    if (status === null || status >= 0xf0) return null;
+    const length = (status & 0xe0) === 0xc0 ? 1 : 2;
+    const data = Array.from(bytes.slice(i, i + length));
+    if (data.length < length || data.some((b) => b > 127)) return null;
+    messages.push([status, ...data]);
+    i += length;
+  }
+  return messages;
+}
+
+// Echo notes: note on and note off messages arriving on {prefix}/{name}/midi/in are sent back,
+// so the computer can time the round trip.
+function onMidiIn(payload) {
+  if (mode() !== "midi" || !$("echo").checked) return;
+  for (const message of channelMessages(payload) ?? []) {
+    const type = message[0] & 0xf0;
+    if (type === 0x80 || type === 0x90) client.publish(midiTopic(), Uint8Array.from(message));
+  }
 }
 
 function renderDevices() {
@@ -397,35 +425,34 @@ function onState(topic, payload) {
   renderDevices();
 }
 
-// Uses the underlying MQTT.js client: MqttMidi has no publish options or raw message events,
-// and it drops its client on close while MQTT.js keeps reconnecting it.
-function wireClient(client) {
-  announce(client);
-  client.on("reconnect", () => {
+// MQTT.js reconnects by itself; every connection announces the device again.
+function wireClient(c) {
+  c.on("connect", () => {
+    c.subscribe([`${prefix()}/5/+/$state`, pingTopic(), `${midiTopic()}/in`]);
+    announce(c);
+    setStatus(`${prefix()}/${name()}`, "ok");
+  });
+  c.on("reconnect", () => {
     ready = false;
     setStatus("reconnecting", "busy");
   });
-  client.on("connect", () => {
-    if (!midi) return;
-    midi.client = client;
-    announce(client);
-    setStatus(`${prefix()}/${name()}`, "ok");
-  });
-  client.subscribe(`${prefix()}/5/+/$state`);
-  client.subscribe(pingTopic());
-  client.on("message", (topic, payload) => {
+  c.on("error", (err) => setStatus(err.message, "err"));
+  c.on("message", (topic, payload) => {
     if (topic === pingTopic()) return onPong(payload);
+    if (topic === `${midiTopic()}/in`) return onMidiIn(payload);
     if (topic.startsWith(`${prefix()}/5/`) && topic.endsWith("/$state")) onState(topic, payload);
   });
 }
 
 async function disconnect() {
-  if (!midi) return;
+  if (!client) return;
+  const closing = client;
+  client = null;
   // A QoS 2 publish completes in a handshake, so the client closes once "disconnected" is delivered.
   ready = false;
-  if (midi.connected) await midi.client.publishAsync(stateTopic(), "disconnected", ATTRIBUTE);
-  await midi.disconnect();
-  midi = null;
+  if (closing.connected) await closing.publishAsync(stateTopic(), "disconnected", ATTRIBUTE).catch(() => {});
+  closing.removeAllListeners();
+  await closing.endAsync();
   identity = null;
   lockFields(false);
   online.clear();
@@ -439,7 +466,7 @@ async function disconnect() {
 }
 
 async function connect() {
-  if (midi) return disconnect();
+  if (client) return disconnect();
   if (!ID.test(prefix()) || !ID.test(name())) return setStatus("prefix, name: a-z 0-9 -", "err");
   saveSettings();
   // iOS only grants motion permission when asked directly inside the tap handler, before any other await.
@@ -448,33 +475,23 @@ async function connect() {
   identity = { prefix: prefix(), name: name(), mode: mode() };
   lockFields(true);
   setStatus("connecting", "busy");
-  midi = new MqttMidi({
-    url: $("url").value.trim(),
-    prefix: prefix(),
-    mqttOptions: {
+  try {
+    client = mqtt.connect($("url").value.trim(), {
       username: $("username").value || undefined,
       password: $("password").value || undefined,
       keepalive: 10,
       will: { topic: stateTopic(), payload: "lost", ...ATTRIBUTE },
-    },
-  });
-  midi.on("connect", () => setStatus(`${prefix()}/${name()}`, "ok"));
-  midi.on("disconnect", () => setStatus("offline"));
-  midi.on("error", (err) => setStatus(err.message, "err"));
-  listenForEcho();
-  try {
-    await midi.connect();
-    wireClient(midi.client);
-    $("connect").textContent = "Disconnect";
-    $("connect").classList.add("connected");
-    setSetup(false);
-    keepAwake();
+    });
   } catch (err) {
-    midi = null;
     identity = null;
     lockFields(false);
-    setStatus(err.message, "err");
+    return setStatus(err.message, "err");
   }
+  wireClient(client);
+  $("connect").textContent = "Disconnect";
+  $("connect").classList.add("connected");
+  setSetup(false);
+  keepAwake();
 }
 
 // X -> CC 5 (left 0, right 127), Y -> CC 6 (bottom 0, top 127); values stay after release.
@@ -488,7 +505,7 @@ function setXY(e) {
   data["pad/y"] = (1 - y).toFixed(3);
   $("dot").style.left = x * 100 + "%";
   $("dot").style.top = y * 100 + "%";
-  $("xy").textContent = mode() === "data"
+  $("xy").textContent = mode() === "homie"
     ? `X ${data["pad/x"]} · Y ${data["pad/y"]}`
     : `X ${current[5]} · Y ${current[6]}`;
 }
@@ -500,7 +517,7 @@ function padDown(e) {
   setXY(e);
   navigator.vibrate?.(8);
   data["pad/touch"] = "true";
-  if (mode() === "midi" && midi?.connected) midi.sendNoteOn(channel(), 60, 100);
+  if (mode() === "midi" && connected()) sendMidi("noteon", channel(), 60, 100);
   sendChanged();
 }
 
@@ -513,7 +530,7 @@ function padUp(e) {
   if (!$("pad").classList.contains("on")) return;
   $("pad").classList.remove("on");
   data["pad/touch"] = "false";
-  if (mode() === "midi" && midi?.connected) midi.sendNoteOff(channel(), 60);
+  if (mode() === "midi" && connected()) sendMidi("noteoff", channel(), 60, 0);
   sendChanged();
 }
 

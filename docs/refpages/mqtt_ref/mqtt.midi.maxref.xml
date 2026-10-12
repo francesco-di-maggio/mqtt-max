@@ -8,14 +8,14 @@
 	</digest>
 
 	<description>
-		Sends and receives MIDI with the mqtt-midi topic format, as raw MIDI bytes and through a virtual MIDI port.
+		Sends and receives MIDI over MQTT, as raw MIDI bytes and through a virtual MIDI port.
 	</description>
 
 	<discussion>
-		<p>mqtt-midi (by Grantler Instruments) puts the message type and channel in the topic and the data in compact binary payloads: <i>{prefix}/{in|out}/cc/{channel}/{controller}</i>, <i>.../noteon/{channel}/{note}</i>, <i>.../noteoff/...</i>, <i>.../program/{channel}</i>, <i>.../pitchbend/{channel}</i>, <i>.../{clock|start|continue|stop}</i> and <i>.../sysex</i> (JSON). Channels are 1-16.</p>
-		<p>The two sides of mqtt-midi: an instrument listens to <i>in</i> and publishes <i>out</i>; a controller, like the phone app, publishes <i>in</i> and listens to <i>out</i>. <at>direction</at> sets the topics this object listens to.</p>
-		<p>The inlet and the left outlet carry raw MIDI bytes, like <o>midiout</o> and <o>midiin</o>: use <o>midiformat</o> and <o>midiparse</o>. With <at>port</at>, received messages also play on a virtual MIDI port that Max patches and other applications can open, and what they send to it is published. Virtual ports are available on macOS.</p>
-		<p>MIDI is published at QoS 0 and never retained. Messages mqtt-midi has no topic for, such as aftertouch, are not sent.</p>
+		<p>Each MQTT message carries one or more complete MIDI messages, as defined by the MIDI 1.0 specification: status and data bytes, SysEx from F0 to F7, real-time bytes such as clock (F8). Running status is allowed. Payloads with missing, stray or undefined bytes are ignored.</p>
+		<p><at>receive</at> is the topic filter MIDI arrives on; wildcards are allowed, e.g. <i>studio/+/midi</i> for every device. <at>send</at> is the topic MIDI is published to. Messages on the object's own <at>send</at> topic are not received back.</p>
+		<p>The inlet and the left outlet carry raw MIDI bytes, like <o>midiout</o> and <o>midiin</o>: use <o>midiformat</o> and <o>midiparse</o>. With <at>port</at>, received messages also play on a virtual MIDI port that Max patches and other applications can open, and MIDI sent to the port is published on <at>send</at>. Virtual ports are available on macOS.</p>
+		<p>MIDI is published at QoS 0 and never retained.</p>
 	</discussion>
 
 	<metadatalist>
@@ -36,7 +36,7 @@
 				<arg name="byte" optional="0" type="int" />
 			</arglist>
 			<digest>MIDI byte</digest>
-			<description>Raw MIDI bytes, as <o>midiout</o> takes them, including running status, real-time bytes and SysEx. Complete messages are published.</description>
+			<description>Raw MIDI bytes, as <o>midiout</o> takes them, including running status, real-time bytes and SysEx. Each complete message is published.</description>
 		</method>
 		<method name="list">
 			<arglist>
@@ -48,20 +48,20 @@
 	</methodlist>
 
 	<attributelist>
-		<attribute name="prefix" get="0" set="1" type="symbol" size="1">
-			<digest>Topic prefix</digest>
-			<description>The mqtt-midi prefix. Both sides must use the same one.</description>
+		<attribute name="receive" get="0" set="1" type="symbol" size="1">
+			<digest>Receive topic</digest>
+			<description>The topic filter to receive MIDI from. Empty to receive nothing.</description>
 			<attributelist>
-				<attribute name="default" get="1" set="1" type="symbol" size="1" value="remote" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Topic prefix" />
+				<attribute name="default" get="1" set="1" type="symbol" size="1" value="" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Receive topic" />
 			</attributelist>
 		</attribute>
-		<attribute name="direction" get="0" set="1" type="symbol" size="1">
-			<digest>Direction</digest>
-			<description><i>in</i>: listen to <i>{prefix}/in</i>, publish to <i>{prefix}/out</i> (the instrument side). <i>out</i>: listen to <i>{prefix}/out</i>, publish to <i>{prefix}/in</i> (the controller side).</description>
+		<attribute name="send" get="0" set="1" type="symbol" size="1">
+			<digest>Send topic</digest>
+			<description>The topic to publish MIDI to, without wildcards. Empty to send nothing.</description>
 			<attributelist>
-				<attribute name="default" get="1" set="1" type="symbol" size="1" value="in" />
-				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Direction" />
+				<attribute name="default" get="1" set="1" type="symbol" size="1" value="" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Send topic" />
 			</attributelist>
 		</attribute>
 		<attribute name="port" get="0" set="1" type="symbol" size="1">

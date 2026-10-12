@@ -560,9 +560,9 @@
                                     "id": "junpack",
                                     "maxclass": "newobj",
                                     "numinlets": 1,
-                                    "numoutlets": 1,
+                                    "numoutlets": 2,
                                     "patching_rect": [ 380.0, 445.0, 105.0, 22.0 ],
-                                    "outlettype": [ "" ],
+                                    "outlettype": [ "", "" ],
                                     "text": "dict.unpack temp:"
                                 }
                             },

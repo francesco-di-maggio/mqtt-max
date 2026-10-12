@@ -36,3 +36,24 @@ test("ignores data without status and invalid bytes", () => {
 test("system common messages do not keep running status", () => {
   assert.deepEqual(collect([0xf2, 1, 2, 3]), [[0xf2, 1, 2]]);
 });
+
+const { parseMessages } = require("../javascript/lib/midi-stream");
+
+test("payloads of complete MIDI messages", () => {
+  assert.deepEqual(parseMessages([0xb0, 7, 64]), [[0xb0, 7, 64]]);
+  assert.deepEqual(parseMessages([0x90, 60, 100, 0x80, 60, 0]), [[0x90, 60, 100], [0x80, 60, 0]]);
+  assert.deepEqual(parseMessages([0x90, 60, 100, 62, 100]), [[0x90, 60, 100], [0x90, 62, 100]]);
+  assert.deepEqual(parseMessages([0xf8]), [[0xf8]]);
+  assert.deepEqual(parseMessages([0xf0, 0x7d, 1, 0xf7]), [[0xf0, 0x7d, 1, 0xf7]]);
+});
+
+test("payloads with missing, stray or undefined bytes are rejected", () => {
+  assert.equal(parseMessages([]), null);
+  assert.equal(parseMessages([60, 100]), null);
+  assert.equal(parseMessages([0x90, 60]), null);
+  assert.equal(parseMessages([0xf0, 0x7d, 1]), null);
+  assert.equal(parseMessages([0xf7]), null);
+  assert.equal(parseMessages([0xf4]), null);
+  assert.equal(parseMessages([0xf0, 0x7d, 0x90, 60, 100]), null);
+  assert.equal(parseMessages([0xf2, 1, 2, 3]), null);
+});

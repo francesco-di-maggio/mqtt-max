@@ -82,7 +82,7 @@
                                     "numinlets": 1,
                                     "numoutlets": 0,
                                     "patching_rect": [ 20.0, 120.0, 640.0, 20.0 ],
-                                    "text": "One client, both sides of mqtt-midi: the controller side publishes to {prefix}/in, the instrument side listens there."
+                                    "text": "Each MQTT message carries complete MIDI messages. @send publishes to a topic, @receive listens to a topic filter."
                                 }
                             },
                             {
@@ -157,9 +157,9 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 3,
-                                    "patching_rect": [ 20.0, 380.0, 320.0, 22.0 ],
+                                    "patching_rect": [ 20.0, 380.0, 270.0, 22.0 ],
                                     "outlettype": [ "", "", "" ],
-                                    "text": "mqtt.midi midi-help @prefix mqtt-max-help @direction out"
+                                    "text": "mqtt.midi midi-help @send mqtt-max-help/keys/midi"
                                 }
                             },
                             {
@@ -169,7 +169,7 @@
                                     "numinlets": 1,
                                     "numoutlets": 0,
                                     "patching_rect": [ 20.0, 405.0, 100.0, 20.0 ],
-                                    "text": "controller side"
+                                    "text": "sends"
                                 }
                             },
                             {
@@ -178,9 +178,9 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 3,
-                                    "patching_rect": [ 380.0, 270.0, 240.0, 22.0 ],
+                                    "patching_rect": [ 380.0, 270.0, 290.0, 22.0 ],
                                     "outlettype": [ "", "", "" ],
-                                    "text": "mqtt.midi midi-help @prefix mqtt-max-help"
+                                    "text": "mqtt.midi midi-help @receive mqtt-max-help/keys/midi"
                                 }
                             },
                             {
@@ -190,7 +190,7 @@
                                     "numinlets": 1,
                                     "numoutlets": 0,
                                     "patching_rect": [ 380.0, 245.0, 200.0, 20.0 ],
-                                    "text": "instrument side (@direction in)"
+                                    "text": "receives"
                                 }
                             },
                             {
@@ -328,7 +328,7 @@
                                     "numinlets": 1,
                                     "numoutlets": 0,
                                     "patching_rect": [ 20.0, 120.0, 640.0, 33.0 ],
-                                    "text": "With @port, received MIDI also plays on a virtual MIDI port that other patches and apps can open, and what they send to it is published. The phone app uses the prefix remote."
+                                    "text": "With @port, received MIDI also plays on a virtual MIDI port that other patches and applications can open, and MIDI sent to the port is published on @send. The phone app publishes to remote/<name>/midi."
                                 }
                             },
                             {
@@ -370,9 +370,9 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 3,
-                                    "patching_rect": [ 20.0, 270.0, 335.0, 22.0 ],
+                                    "patching_rect": [ 20.0, 270.0, 340.0, 22.0 ],
                                     "outlettype": [ "", "", "" ],
-                                    "text": "mqtt.midi midi-ports-help @prefix remote @port mqtt-max-help"
+                                    "text": "mqtt.midi midi-ports-help @receive remote/+/midi @send mqtt-max-help/port/midi @port mqtt-max-help"
                                 }
                             },
                             {
@@ -457,8 +457,8 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 380.0, 415.0, 280.0, 20.0 ],
-                                    "text": "CC 7 to the port: published to remote/out/cc/1/7"
+                                    "patching_rect": [ 380.0, 415.0, 300.0, 20.0 ],
+                                    "text": "CC 7 to the port: published on mqtt-max-help/port/midi"
                                 }
                             },
                             {
@@ -696,9 +696,9 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 3,
-                                    "patching_rect": [ 20.0, 400.0, 345.0, 22.0 ],
+                                    "patching_rect": [ 20.0, 400.0, 300.0, 22.0 ],
                                     "outlettype": [ "", "", "" ],
-                                    "text": "mqtt.midi midi-clock-help @prefix mqtt-max-help @direction out"
+                                    "text": "mqtt.midi midi-clock-help @send mqtt-max-help/clock/midi"
                                 }
                             },
                             {
@@ -707,9 +707,9 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 3,
-                                    "patching_rect": [ 390.0, 265.0, 250.0, 22.0 ],
+                                    "patching_rect": [ 390.0, 265.0, 300.0, 22.0 ],
                                     "outlettype": [ "", "", "" ],
-                                    "text": "mqtt.midi midi-clock-help @prefix mqtt-max-help"
+                                    "text": "mqtt.midi midi-clock-help @receive mqtt-max-help/clock/midi"
                                 }
                             },
                             {

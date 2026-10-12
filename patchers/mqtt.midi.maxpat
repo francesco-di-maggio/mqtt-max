@@ -19,7 +19,7 @@
                     "numoutlets": 1,
                     "patching_rect": [ 20.0, 20.0, 30.0, 30.0 ],
                     "outlettype": [ "" ],
-                    "comment": "raw MIDI bytes, as [midiout] takes them; prefix, direction, port",
+                    "comment": "raw MIDI bytes, as [midiout] takes them; receive, send, port",
                     "index": 0
                 }
             },
@@ -29,31 +29,31 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 4,
-                    "patching_rect": [ 20.0, 60.0, 160.0, 22.0 ],
+                    "patching_rect": [ 20.0, 60.0, 140.0, 22.0 ],
                     "outlettype": [ "", "", "", "" ],
-                    "text": "route prefix direction port"
+                    "text": "route receive send port"
                 }
             },
             {
                 "box": {
-                    "id": "pprefix",
+                    "id": "preceive",
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 1,
-                    "patching_rect": [ 20.0, 95.0, 85.0, 22.0 ],
+                    "patching_rect": [ 20.0, 95.0, 90.0, 22.0 ],
                     "outlettype": [ "" ],
-                    "text": "prepend prefix"
+                    "text": "prepend receive"
                 }
             },
             {
                 "box": {
-                    "id": "pdir",
+                    "id": "psend",
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 1,
-                    "patching_rect": [ 20.0, 125.0, 100.0, 22.0 ],
+                    "patching_rect": [ 20.0, 125.0, 80.0, 22.0 ],
                     "outlettype": [ "" ],
-                    "text": "prepend direction"
+                    "text": "prepend send"
                 }
             },
             {
@@ -601,13 +601,13 @@
             },
             {
                 "patchline": {
-                    "destination": [ "pprefix", 0 ],
+                    "destination": [ "preceive", 0 ],
                     "source": [ "attr", 0 ]
                 }
             },
             {
                 "patchline": {
-                    "destination": [ "pdir", 0 ],
+                    "destination": [ "psend", 0 ],
                     "source": [ "attr", 1 ]
                 }
             },
@@ -638,13 +638,13 @@
             {
                 "patchline": {
                     "destination": [ "role", 0 ],
-                    "source": [ "pprefix", 0 ]
+                    "source": [ "preceive", 0 ]
                 }
             },
             {
                 "patchline": {
                     "destination": [ "role", 0 ],
-                    "source": [ "pdir", 0 ]
+                    "source": [ "psend", 0 ]
                 }
             },
             {
