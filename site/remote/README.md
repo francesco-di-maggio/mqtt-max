@@ -23,6 +23,8 @@ Switched on and off in Setup. An input that is off is hidden and sends nothing. 
 | Buttons 1–8 | on | Notes 60 62 64 65 67 69 71 72, velocity 100 | `button/1` … `button/8`, `true` / `false` |
 
 - Yaw: 0 is the direction on Connect. Tap the Yaw row to reset.
+- Mic level: RMS of the input, with the browser's gain control, noise suppression and echo cancellation off.
+- Motion: no reading within 1 s of Connect shows `—` and `no motion sensor`, e.g. on a computer.
 - Latency: pings `{prefix}/ping/{id}` every 500 ms. No reply within 1 s: lost, CC 23 = 127.
 
 ## Setup
@@ -39,7 +41,8 @@ Switched on and off in Setup. An input that is off is hidden and sends nothing. 
 - Prefix and ID: a-z, 0-9, `-`. Capitals are lowercased, accents removed, spaces become `-`, other characters are dropped.
 - Theme: the header button cycles Auto (system), Light, Dark. Saved.
 - Settings are saved in the browser on every change. Tabs in one browser share the ID: connect one at a time.
-- While connected: fields and inputs are locked, the screen stays on, the header shows `{prefix}/{id}`, Online lists ready Homie devices under the prefix.
+- While connected: fields and inputs are locked, the screen stays on, the header shows `{prefix}/{id}`.
+- Online: number of ready Homie devices under the prefix, this one included. Tap for the list.
 
 ### Link parameters
 
