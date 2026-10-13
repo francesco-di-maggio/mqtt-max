@@ -9,18 +9,18 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 100.0, 100.0, 620.0, 420.0 ],
+        "rect": [ 100.0, 100.0, 600.0, 443.0 ],
         "boxes": [
             {
                 "box": {
+                    "comment": "start, stop, clients, attributes",
                     "id": "in",
+                    "index": 1,
                     "maxclass": "inlet",
                     "numinlets": 0,
                     "numoutlets": 1,
-                    "patching_rect": [ 20.0, 20.0, 30.0, 30.0 ],
                     "outlettype": [ "" ],
-                    "comment": "start, stop, clients, attributes",
-                    "index": 0
+                    "patching_rect": [ 20.0, 20.0, 30.0, 30.0 ]
                 }
             },
             {
@@ -29,7 +29,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 300.0, 20.0, 80.0, 20.0 ],
+                    "patching_rect": [ 300.0, 20.0, 50.0, 20.0 ],
                     "text": "settings"
                 }
             },
@@ -39,8 +39,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 1,
-                    "patching_rect": [ 300.0, 45.0, 60.0, 22.0 ],
                     "outlettype": [ "bang" ],
+                    "patching_rect": [ 300.0, 45.0, 58.0, 22.0 ],
                     "text": "loadbang"
                 }
             },
@@ -50,8 +50,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 2,
-                    "patching_rect": [ 300.0, 75.0, 40.0, 22.0 ],
                     "outlettype": [ "bang", "bang" ],
+                    "patching_rect": [ 300.0, 75.0, 32.0, 22.0 ],
                     "text": "t b b"
                 }
             },
@@ -61,8 +61,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 1,
-                    "patching_rect": [ 300.0, 105.0, 55.0, 22.0 ],
                     "outlettype": [ "" ],
+                    "patching_rect": [ 300.0, 105.0, 54.0, 22.0 ],
                     "text": "deferlow"
                 }
             },
@@ -72,8 +72,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 2,
-                    "patching_rect": [ 300.0, 140.0, 75.0, 22.0 ],
                     "outlettype": [ "", "" ],
+                    "patching_rect": [ 300.0, 140.0, 72.0, 22.0 ],
                     "text": "patcherargs"
                 }
             },
@@ -81,10 +81,10 @@
                 "box": {
                     "id": "done",
                     "maxclass": "newobj",
-                    "numinlets": 1,
+                    "numinlets": 2,
                     "numoutlets": 2,
-                    "patching_rect": [ 380.0, 170.0, 70.0, 22.0 ],
                     "outlettype": [ "", "" ],
+                    "patching_rect": [ 380.0, 170.0, 66.0, 22.0 ],
                     "text": "route done"
                 }
             },
@@ -94,7 +94,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 300.0, 200.0, 250.0, 20.0 ],
+                    "patching_rect": [ 300.0, 200.0, 205.0, 20.0 ],
                     "text": "attributes wait until the script is ready"
                 }
             },
@@ -104,8 +104,8 @@
                     "maxclass": "newobj",
                     "numinlets": 2,
                     "numoutlets": 1,
-                    "patching_rect": [ 300.0, 225.0, 50.0, 22.0 ],
                     "outlettype": [ "" ],
+                    "patching_rect": [ 300.0, 225.0, 52.0, 22.0 ],
                     "text": "gate 1 0"
                 }
             },
@@ -115,13 +115,21 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 2,
-                    "patching_rect": [ 20.0, 270.0, 295.0, 22.0 ],
                     "outlettype": [ "", "" ],
-                    "text": "node.script mqtt.broker.js @autostart 1 @watch 0",
+                    "patching_rect": [ 20.0, 270.0, 272.0, 22.0 ],
                     "saved_object_attributes": {
                         "autostart": 1,
                         "defer": 0,
+                        "node_bin_path": "",
+                        "npm_bin_path": "",
                         "watch": 0
+                    },
+                    "text": "node.script mqtt.broker.js @autostart 1 @watch 0",
+                    "textfile": {
+                        "filename": "mqtt.broker.js",
+                        "flags": 0,
+                        "embed": 0,
+                        "autowatch": 1
                     }
                 }
             },
@@ -129,10 +137,10 @@
                 "box": {
                     "id": "route",
                     "maxclass": "newobj",
-                    "numinlets": 1,
+                    "numinlets": 4,
                     "numoutlets": 4,
-                    "patching_rect": [ 20.0, 305.0, 160.0, 22.0 ],
                     "outlettype": [ "", "", "", "" ],
+                    "patching_rect": [ 20.0, 305.0, 151.0, 22.0 ],
                     "text": "route client dumpout ready"
                 }
             },
@@ -142,8 +150,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 1,
-                    "patching_rect": [ 330.0, 305.0, 85.0, 22.0 ],
                     "outlettype": [ "" ],
+                    "patching_rect": [ 330.0, 305.0, 85.0, 22.0 ],
                     "text": "prepend script"
                 }
             },
@@ -153,8 +161,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 3,
-                    "patching_rect": [ 180.0, 335.0, 55.0, 22.0 ],
                     "outlettype": [ "bang", "bang", "bang" ],
+                    "patching_rect": [ 180.0, 335.0, 42.0, 22.0 ],
                     "text": "t b b b"
                 }
             },
@@ -164,8 +172,8 @@
                     "maxclass": "message",
                     "numinlets": 2,
                     "numoutlets": 1,
-                    "patching_rect": [ 300.0, 335.0, 29.0, 22.0 ],
                     "outlettype": [ "" ],
+                    "patching_rect": [ 300.0, 335.0, 29.5, 22.0 ],
                     "text": "1"
                 }
             },
@@ -175,69 +183,45 @@
                     "maxclass": "message",
                     "numinlets": 2,
                     "numoutlets": 1,
-                    "patching_rect": [ 180.0, 365.0, 40.0, 22.0 ],
                     "outlettype": [ "" ],
+                    "patching_rect": [ 180.0, 365.0, 32.0, 22.0 ],
                     "text": "start"
                 }
             },
             {
                 "box": {
+                    "comment": "clients: connected, disconnected, subscribe, unsubscribe",
                     "id": "out0",
+                    "index": 1,
                     "maxclass": "outlet",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 390.0, 30.0, 30.0 ],
-                    "comment": "clients: connected, disconnected, subscribe, unsubscribe",
-                    "index": 0
+                    "patching_rect": [ 20.0, 390.0, 30.0, 30.0 ]
                 }
             },
             {
                 "box": {
+                    "comment": "dumpout: status, address, clients, error, script",
                     "id": "out1",
+                    "index": 2,
                     "maxclass": "outlet",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 330.0, 390.0, 30.0, 30.0 ],
-                    "comment": "dumpout: status, address, clients, error, script",
-                    "index": 1
+                    "patching_rect": [ 330.0, 390.0, 30.0, 30.0 ]
                 }
             }
         ],
         "lines": [
             {
                 "patchline": {
-                    "destination": [ "node", 0 ],
-                    "source": [ "in", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "tload", 0 ],
-                    "source": [ "load", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "args", 0 ],
-                    "source": [ "tload", 1 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "defer", 0 ],
-                    "source": [ "tload", 0 ]
+                    "destination": [ "done", 0 ],
+                    "source": [ "args", 1 ]
                 }
             },
             {
                 "patchline": {
                     "destination": [ "args", 0 ],
                     "source": [ "defer", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "done", 0 ],
-                    "source": [ "args", 1 ]
                 }
             },
             {
@@ -254,6 +238,18 @@
             },
             {
                 "patchline": {
+                    "destination": [ "node", 0 ],
+                    "source": [ "in", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "tload", 0 ],
+                    "source": [ "load", 0 ]
+                }
+            },
+            {
+                "patchline": {
                     "destination": [ "route", 0 ],
                     "source": [ "node", 0 ]
                 }
@@ -266,8 +262,8 @@
             },
             {
                 "patchline": {
-                    "destination": [ "out1", 0 ],
-                    "source": [ "script", 0 ]
+                    "destination": [ "gate", 0 ],
+                    "source": [ "open", 0 ]
                 }
             },
             {
@@ -290,14 +286,26 @@
             },
             {
                 "patchline": {
-                    "destination": [ "open", 0 ],
-                    "source": [ "tready", 2 ]
+                    "destination": [ "out1", 0 ],
+                    "source": [ "script", 0 ]
                 }
             },
             {
                 "patchline": {
-                    "destination": [ "gate", 0 ],
-                    "source": [ "open", 0 ]
+                    "destination": [ "node", 0 ],
+                    "source": [ "start", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "args", 0 ],
+                    "source": [ "tload", 1 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "defer", 0 ],
+                    "source": [ "tload", 0 ]
                 }
             },
             {
@@ -308,17 +316,16 @@
             },
             {
                 "patchline": {
-                    "destination": [ "start", 0 ],
-                    "source": [ "tready", 0 ]
+                    "destination": [ "open", 0 ],
+                    "source": [ "tready", 2 ]
                 }
             },
             {
                 "patchline": {
-                    "destination": [ "node", 0 ],
-                    "source": [ "start", 0 ]
+                    "destination": [ "start", 0 ],
+                    "source": [ "tready", 0 ]
                 }
             }
-        ],
-        "autosave": 0
+        ]
     }
 }

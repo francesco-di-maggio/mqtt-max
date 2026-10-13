@@ -1,66 +1,66 @@
 # mqtt-max
 
-MQTT for Max. Connect patches, phones and devices over any network.
+MQTT for Max. Connects patches, phones and devices over any network.
 
 | Object | |
 |---|---|
-| `[mqtt.client]` | A connection to an MQTT broker: subscribe, publish text, bytes or JSON dictionaries, QoS, retain. |
-| `[mqtt.broker]` | An MQTT broker on this computer, for devices on the local network: TCP, TLS, WebSocket, login. |
-| `[mqtt.midi]` | MIDI over MQTT as raw MIDI bytes, like `[midiin]` and `[midiout]`, optionally on a virtual MIDI port for `[ctlin]`, `[notein]` and other applications. |
-| `[mqtt.homie.device]` | Max as a Homie device: a description, typed values, commands from controllers. |
-| `[mqtt.homie.controller]` | Discovers Homie devices, reports who is online, outputs their values and commands them. |
+| `[mqtt.client]` | Connection to a broker. Subscribe, publish text, bytes or JSON dictionaries. QoS, retain. |
+| `[mqtt.broker]` | Broker on this computer. TCP, TLS, WebSocket, login. |
+| `[mqtt.midi]` | MIDI over MQTT as raw bytes, like `[midiin]` and `[midiout]`. Optional virtual MIDI port. |
+| `[mqtt.homie.device]` | Max as a Homie device. Description, typed values, commands. |
+| `[mqtt.homie.controller]` | Discovers Homie devices. Online state, values, commands. |
 
-New to MQTT? [MQTT for Max](docs/mqtt.md) explains brokers, topics, QoS, retained messages and the last will, and what they make possible.
+MQTT basics: [docs/mqtt.md](docs/mqtt.md).
 
 ## Requirements
 
-- Max 9 on macOS. Node for Max is bundled with Max.
-- An MQTT broker: `[mqtt.broker]` on this computer, a broker such as Mosquitto, or a hosted one. The help files and examples use the public test broker `public.cloud.shiftr.io`, which is shared and readable by anyone: use it for trying things out only.
+- Max 9, macOS. Node for Max is included in Max.
+- A broker: `[mqtt.broker]`, Mosquitto, or a hosted one. Help files and examples use `public.cloud.shiftr.io`, a public test broker: shared, readable by anyone.
 
 ## Install
 
 1. Download or clone this repository into `~/Documents/Max 9/Packages/mqtt-max`.
 2. Restart Max and open **Extras → mqtt-max**.
-3. Click `script npm install` once. The Max Console reports when it is done.
+3. Click `script npm install` once. The Max Console reports when done.
 
 ## Getting started
 
-Open the help of any object (right-click → Open Help). Each help file has tabs, from basic use to the details, and a reference tab.
+Right-click an object → Open Help. Tabs go from basic use to reference.
 
 ```
 [connect mqtt://public.cloud.shiftr.io public public(
 |
-[mqtt.client home]        ← other objects use this connection by name: [mqtt.midi home], [mqtt.homie.device home lamp]
+[mqtt.client home]        ← shared by name: [mqtt.midi home], [mqtt.homie.device home lamp]
 ```
 
 ## Examples
 
-The examples work with the phone app at [francesco-di-maggio.github.io/mqtt-max/phone/](https://francesco-di-maggio.github.io/mqtt-max/phone/): its motion, network round trip, XY pad, sliders, buttons and sound level, sent as MIDI or as Homie values. They open from the landing patch.
+The examples use the [remote](https://francesco-di-maggio.github.io/mqtt-max/remote/), a web app for phones, tablets and computers. They open from the landing patch.
 
 | Example | |
 |---|---|
-| `mqtt-phone-midi` | Phone → MIDI port `mqtt-max` → `[ctlin]` and `[notein]` |
-| `mqtt-phone-homie` | Phone → Homie values by device, node and property |
-| `mqtt-phone-live` | Phone → smoothing → Ableton Live |
-| `mqtt-phone-latency` | Round trips: Max → broker → Max, and Max → phone → Max |
+| `mqtt-remote-midi` | Remote → MIDI port `mqtt-max` → `[ctlin]` and `[notein]` |
+| `mqtt-remote-homie` | Remote → Homie values by device, node and property |
+| `mqtt-remote-live` | Remote → smoothing → Ableton Live |
+| `mqtt-remote-latency` | Round trips: Max → broker → Max, remote → broker → remote, sum |
 
-See [site/phone](site/phone/README.md) for the phone app's controls and topics.
+Inputs and topics: [site/remote](site/remote/README.md).
 
 ## Standards
 
 - `[mqtt.client]` and `[mqtt.broker]` implement MQTT 3.1.1.
-- `[mqtt.midi]` carries MIDI messages as defined by the MIDI 1.0 specification: one or more complete messages per MQTT message. The topics are set with `@receive` and `@send`.
-- The Homie objects follow the [Homie 5](https://homieiot.github.io/specification/) convention for devices: `$state`, `$description`, typed properties and `/set` commands.
+- `[mqtt.midi]`: MIDI 1.0 messages, one or more complete messages per MQTT message. Topics set with `@receive` and `@send`.
+- Homie objects: [Homie 5](https://homieiot.github.io/specification/). `$state`, `$description`, typed properties, `/set` commands.
 
 ## Troubleshooting
 
 - **`Cannot find module` in the Max Console.** Run `script npm install` from the landing patch.
-- **`[ctlin]` does not receive from the port.** MIDI objects look up their port when they are created. Connect the middle outlet of `[mqtt.midi]`, which sends `port <name>` once the port exists, to them.
-- **The port appears as `<name> #2`.** Another object already created a port with that name: give each `[mqtt.midi]` its own.
-- **Messages arrive late or not at all on the public broker.** It is shared, and often slow under load. Use a broker on your own network, such as Mosquitto, for anything beyond a test.
-- **`[mqtt.broker]` reports that the port is already in use.** Another broker, such as Mosquitto, listens on it: stop it, or set another `@port`.
-- **Devices on the network cannot reach `[mqtt.broker]`.** If the macOS firewall is on, allow incoming connections when it asks, and use one of the addresses it reports, not `localhost`.
-- **Two clients keep disconnecting each other.** They use the same `@clientid`. Leave it empty for a random one.
+- **`[ctlin]` does not receive from the port.** MIDI objects look up their port when created. Connect the middle outlet of `[mqtt.midi]` (`port <name>`, sent once the port exists) to them.
+- **The port appears as `<name> #2`.** Another object uses that name. Give each `[mqtt.midi]` its own.
+- **Messages arrive late or not at all on the public broker.** It is shared and often slow. Use a broker on your network.
+- **`[mqtt.broker]`: port already in use.** Another broker listens on it. Stop it, or set another `@port`.
+- **Devices cannot reach `[mqtt.broker]`.** With the macOS firewall on, allow incoming connections when asked. Use an address it reports, not `localhost`.
+- **Two clients keep disconnecting each other.** Same `@clientid`. Leave it empty for a random one.
 
 ## Acknowledgements
 

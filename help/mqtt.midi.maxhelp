@@ -9,17 +9,18 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 100.0, 100.0, 720.0, 626.0 ],
-        "autosave": 0,
+        "rect": [ 100.0, 100.0, 795.0, 591.0 ],
         "showrootpatcherontab": 0,
         "showontab": 0,
         "boxes": [
             {
                 "box": {
-                    "id": "helpname",
-                    "maxclass": "jsui",
+                    "border": 0,
                     "filename": "helpname.js",
+                    "id": "helpname",
+                    "ignoreclick": 1,
                     "jsarguments": [ "mqtt.midi" ],
+                    "maxclass": "jsui",
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
@@ -58,21 +59,22 @@
                             "modernui": 1
                         },
                         "classnamespace": "box",
-                        "rect": [ 0.0, 26.0, 720.0, 600.0 ],
-                        "autosave": 0,
+                        "rect": [ 0.0, 26.0, 795.0, 565.0 ],
                         "showontab": 1,
                         "boxes": [
                             {
                                 "box": {
+                                    "border": 0,
+                                    "filename": "helpdetails.js",
                                     "id": "details",
+                                    "ignoreclick": 1,
+                                    "jsarguments": [ "mqtt.midi" ],
                                     "maxclass": "jsui",
                                     "numinlets": 1,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 10.0, 10.0, 640.0, 100.0 ],
                                     "outlettype": [ "" ],
-                                    "filename": "helpdetails.js",
-                                    "jsarguments": [ "mqtt.midi" ],
-                                    "parameter_enable": 0
+                                    "parameter_enable": 0,
+                                    "patching_rect": [ 10.0, 10.0, 640.0, 100.0 ]
                                 }
                             },
                             {
@@ -81,8 +83,8 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 120.0, 640.0, 20.0 ],
-                                    "text": "Each MQTT message carries complete MIDI messages. @send publishes to a topic, @receive listens to a topic filter."
+                                    "patching_rect": [ 20.0, 120.0, 630.0, 20.0 ],
+                                    "text": "One or more complete MIDI messages per MQTT message. @send: topic. @receive: topic filter."
                                 }
                             },
                             {
@@ -91,8 +93,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 2,
-                                    "patching_rect": [ 20.0, 220.0, 156.0, 22.0 ],
                                     "outlettype": [ "", "" ],
+                                    "patching_rect": [ 20.0, 220.0, 115.0, 22.0 ],
                                     "text": "mqtt.client midi-help"
                                 }
                             },
@@ -102,8 +104,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 20.0, 150.0, 261.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 20.0, 150.0, 261.0, 22.0 ],
                                     "text": "connect mqtt://public.cloud.shiftr.io public public"
                                 }
                             },
@@ -113,8 +115,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 300.0, 150.0, 66.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 300.0, 150.0, 66.0, 22.0 ],
                                     "text": "disconnect"
                                 }
                             },
@@ -124,9 +126,9 @@
                                     "maxclass": "kslider",
                                     "numinlets": 2,
                                     "numoutlets": 2,
-                                    "patching_rect": [ 20.0, 270.0, 200.0, 40.0 ],
                                     "outlettype": [ "int", "int" ],
-                                    "parameter_enable": 0
+                                    "parameter_enable": 0,
+                                    "patching_rect": [ 20.0, 270.0, 196.0, 34.0 ]
                                 }
                             },
                             {
@@ -135,8 +137,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 20.0, 320.0, 55.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 20.0, 320.0, 54.0, 22.0 ],
                                     "text": "pack 0 0"
                                 }
                             },
@@ -146,8 +148,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 7,
                                     "numoutlets": 2,
-                                    "patching_rect": [ 20.0, 350.0, 65.0, 22.0 ],
-                                    "outlettype": [ "", "" ],
+                                    "outlettype": [ "int", "" ],
+                                    "patching_rect": [ 20.0, 350.0, 82.0, 22.0 ],
                                     "text": "midiformat"
                                 }
                             },
@@ -157,8 +159,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 3,
-                                    "patching_rect": [ 20.0, 380.0, 270.0, 22.0 ],
                                     "outlettype": [ "", "", "" ],
+                                    "patching_rect": [ 20.0, 380.0, 284.0, 22.0 ],
                                     "text": "mqtt.midi midi-help @send mqtt-max-help/keys/midi"
                                 }
                             },
@@ -168,7 +170,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 405.0, 100.0, 20.0 ],
+                                    "patching_rect": [ 20.0, 405.0, 41.0, 20.0 ],
                                     "text": "sends"
                                 }
                             },
@@ -178,8 +180,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 3,
-                                    "patching_rect": [ 380.0, 270.0, 290.0, 22.0 ],
                                     "outlettype": [ "", "", "" ],
+                                    "patching_rect": [ 380.0, 270.0, 297.0, 22.0 ],
                                     "text": "mqtt.midi midi-help @receive mqtt-max-help/keys/midi"
                                 }
                             },
@@ -189,7 +191,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 380.0, 245.0, 200.0, 20.0 ],
+                                    "patching_rect": [ 380.0, 245.0, 53.0, 20.0 ],
                                     "text": "receives"
                                 }
                             },
@@ -199,8 +201,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 8,
-                                    "patching_rect": [ 380.0, 300.0, 65.0, 22.0 ],
-                                    "outlettype": [ "", "", "", "", "", "", "", "" ],
+                                    "outlettype": [ "", "", "", "int", "int", "", "int", "" ],
+                                    "patching_rect": [ 380.0, 300.0, 92.5, 22.0 ],
                                     "text": "midiparse"
                                 }
                             },
@@ -210,9 +212,9 @@
                                     "maxclass": "kslider",
                                     "numinlets": 2,
                                     "numoutlets": 2,
-                                    "patching_rect": [ 380.0, 330.0, 200.0, 40.0 ],
                                     "outlettype": [ "int", "int" ],
-                                    "parameter_enable": 0
+                                    "parameter_enable": 0,
+                                    "patching_rect": [ 380.0, 330.0, 196.0, 34.0 ]
                                 }
                             },
                             {
@@ -221,8 +223,8 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 440.0, 450.0, 20.0 ],
-                                    "text": "In and out: raw MIDI bytes, as [midiout] takes and [midiin] outputs them."
+                                    "patching_rect": [ 20.0, 440.0, 389.0, 20.0 ],
+                                    "text": "In and out: raw MIDI bytes, as [midiin] and [midiout]."
                                 }
                             }
                         ],
@@ -241,24 +243,6 @@
                             },
                             {
                                 "patchline": {
-                                    "destination": [ "pack", 0 ],
-                                    "source": [ "ks", 0 ]
-                                }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "pack", 1 ],
-                                    "source": [ "ks", 1 ]
-                                }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "fmt", 0 ],
-                                    "source": [ "pack", 0 ]
-                                }
-                            },
-                            {
-                                "patchline": {
                                     "destination": [ "ctl", 0 ],
                                     "source": [ "fmt", 0 ]
                                 }
@@ -271,6 +255,24 @@
                             },
                             {
                                 "patchline": {
+                                    "destination": [ "pack", 1 ],
+                                    "source": [ "ks", 1 ]
+                                }
+                            },
+                            {
+                                "patchline": {
+                                    "destination": [ "pack", 0 ],
+                                    "source": [ "ks", 0 ]
+                                }
+                            },
+                            {
+                                "patchline": {
+                                    "destination": [ "fmt", 0 ],
+                                    "source": [ "pack", 0 ]
+                                }
+                            },
+                            {
+                                "patchline": {
                                     "destination": [ "ks2", 0 ],
                                     "source": [ "parse", 0 ]
                                 }
@@ -278,12 +280,6 @@
                         ]
                     },
                     "patching_rect": [ 10.0, 110.0, 120.0, 22.0 ],
-                    "saved_object_attributes": {
-                        "description": "",
-                        "digest": "",
-                        "globalpatchername": "",
-                        "tags": ""
-                    },
                     "text": "p basic",
                     "varname": "basic_tab"
                 }
@@ -304,31 +300,33 @@
                             "modernui": 1
                         },
                         "classnamespace": "box",
-                        "rect": [ 0.0, 26.0, 720.0, 600.0 ],
-                        "autosave": 0,
+                        "rect": [ 0.0, 26.0, 795.0, 565.0 ],
                         "showontab": 1,
                         "boxes": [
                             {
                                 "box": {
+                                    "border": 0,
+                                    "filename": "helpdetails.js",
                                     "id": "details",
+                                    "ignoreclick": 1,
+                                    "jsarguments": [ "mqtt.midi" ],
                                     "maxclass": "jsui",
                                     "numinlets": 1,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 10.0, 10.0, 640.0, 100.0 ],
                                     "outlettype": [ "" ],
-                                    "filename": "helpdetails.js",
-                                    "jsarguments": [ "mqtt.midi" ],
-                                    "parameter_enable": 0
+                                    "parameter_enable": 0,
+                                    "patching_rect": [ 10.0, 10.0, 640.0, 100.0 ]
                                 }
                             },
                             {
                                 "box": {
                                     "id": "c0",
+                                    "linecount": 2,
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 120.0, 640.0, 33.0 ],
-                                    "text": "With @port, received MIDI also plays on a virtual MIDI port that other patches and applications can open, and MIDI sent to the port is published on @send. The phone app publishes to remote/<name>/midi."
+                                    "patching_rect": [ 20.0, 120.0, 681.0, 33.0 ],
+                                    "text": "@port: a virtual MIDI port. Received MIDI goes to the port; MIDI sent to the port is published on @send. The remote publishes to remote/<id>/midi."
                                 }
                             },
                             {
@@ -337,8 +335,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 2,
-                                    "patching_rect": [ 20.0, 230.0, 198.0, 22.0 ],
                                     "outlettype": [ "", "" ],
+                                    "patching_rect": [ 20.0, 230.0, 146.0, 22.0 ],
                                     "text": "mqtt.client midi-ports-help"
                                 }
                             },
@@ -348,8 +346,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 20.0, 160.0, 261.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 20.0, 160.0, 261.0, 22.0 ],
                                     "text": "connect mqtt://public.cloud.shiftr.io public public"
                                 }
                             },
@@ -359,8 +357,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 300.0, 160.0, 66.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 300.0, 160.0, 66.0, 22.0 ],
                                     "text": "disconnect"
                                 }
                             },
@@ -370,19 +368,20 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 3,
-                                    "patching_rect": [ 20.0, 270.0, 340.0, 22.0 ],
                                     "outlettype": [ "", "", "" ],
+                                    "patching_rect": [ 20.0, 270.0, 558.0, 22.0 ],
                                     "text": "mqtt.midi midi-ports-help @receive remote/+/midi @send mqtt-max-help/port/midi @port mqtt-max-help"
                                 }
                             },
                             {
                                 "box": {
                                     "id": "cport",
+                                    "linecount": 3,
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 300.0, 330.0, 48.0 ],
-                                    "text": "MIDI objects look up their port when they are created. The middle outlet sends port <name> once Max lists the new port: connect it to them."
+                                    "patching_rect": [ 20.0, 300.0, 329.0, 47.0 ],
+                                    "text": "MIDI objects look up their port when created. Middle outlet: port <name>, once the port exists. Connect it to them."
                                 }
                             },
                             {
@@ -391,8 +390,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 3,
-                                    "patching_rect": [ 380.0, 270.0, 115.0, 22.0 ],
-                                    "outlettype": [ "", "", "" ],
+                                    "outlettype": [ "int", "int", "int" ],
+                                    "patching_rect": [ 361.0, 341.0, 110.0, 22.0 ],
                                     "text": "ctlin mqtt-max-help"
                                 }
                             },
@@ -402,9 +401,9 @@
                                     "maxclass": "number",
                                     "numinlets": 1,
                                     "numoutlets": 2,
-                                    "patching_rect": [ 380.0, 300.0, 50.0, 22.0 ],
                                     "outlettype": [ "", "bang" ],
-                                    "parameter_enable": 0
+                                    "parameter_enable": 0,
+                                    "patching_rect": [ 361.0, 371.0, 50.0, 22.0 ]
                                 }
                             },
                             {
@@ -413,9 +412,9 @@
                                     "maxclass": "number",
                                     "numinlets": 1,
                                     "numoutlets": 2,
-                                    "patching_rect": [ 440.0, 300.0, 50.0, 22.0 ],
                                     "outlettype": [ "", "bang" ],
-                                    "parameter_enable": 0
+                                    "parameter_enable": 0,
+                                    "patching_rect": [ 421.0, 371.0, 50.0, 22.0 ]
                                 }
                             },
                             {
@@ -424,7 +423,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 380.0, 325.0, 120.0, 20.0 ],
+                                    "patching_rect": [ 361.0, 396.0, 93.0, 20.0 ],
                                     "text": "value  controller"
                                 }
                             },
@@ -434,11 +433,10 @@
                                     "maxclass": "slider",
                                     "numinlets": 1,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 380.0, 360.0, 140.0, 22.0 ],
+                                    "orientation": 1,
                                     "outlettype": [ "" ],
                                     "parameter_enable": 0,
-                                    "orientation": 1,
-                                    "size": 128.0
+                                    "patching_rect": [ 361.0, 431.0, 140.0, 22.0 ]
                                 }
                             },
                             {
@@ -447,7 +445,7 @@
                                     "maxclass": "newobj",
                                     "numinlets": 3,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 380.0, 390.0, 140.0, 22.0 ],
+                                    "patching_rect": [ 361.0, 461.0, 137.0, 22.0 ],
                                     "text": "ctlout mqtt-max-help 7 1"
                                 }
                             },
@@ -457,7 +455,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 380.0, 415.0, 300.0, 20.0 ],
+                                    "patching_rect": [ 361.0, 486.0, 297.0, 20.0 ],
                                     "text": "CC 7 to the port: published on mqtt-max-help/port/midi"
                                 }
                             },
@@ -467,8 +465,8 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 460.0, 420.0, 20.0 ],
-                                    "text": "Port names: a second port with the same name appears as \"<name> #2\"."
+                                    "patching_rect": [ 20.0, 520.0, 399.0, 20.0 ],
+                                    "text": "Same name twice: the second port is \"<name> #2\"."
                                 }
                             }
                         ],
@@ -477,24 +475,6 @@
                                 "patchline": {
                                     "destination": [ "client", 0 ],
                                     "source": [ "conn", 0 ]
-                                }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "client", 0 ],
-                                    "source": [ "disc", 0 ]
-                                }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "ctlin", 0 ],
-                                    "source": [ "m", 1 ]
-                                }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "ctlout", 0 ],
-                                    "source": [ "m", 1 ]
                                 }
                             },
                             {
@@ -511,6 +491,26 @@
                             },
                             {
                                 "patchline": {
+                                    "destination": [ "client", 0 ],
+                                    "source": [ "disc", 0 ]
+                                }
+                            },
+                            {
+                                "patchline": {
+                                    "destination": [ "ctlin", 0 ],
+                                    "order": 1,
+                                    "source": [ "m", 1 ]
+                                }
+                            },
+                            {
+                                "patchline": {
+                                    "destination": [ "ctlout", 0 ],
+                                    "order": 0,
+                                    "source": [ "m", 1 ]
+                                }
+                            },
+                            {
+                                "patchline": {
                                     "destination": [ "ctlout", 0 ],
                                     "source": [ "sl", 0 ]
                                 }
@@ -518,12 +518,6 @@
                         ]
                     },
                     "patching_rect": [ 10.0, 140.0, 120.0, 22.0 ],
-                    "saved_object_attributes": {
-                        "description": "",
-                        "digest": "",
-                        "globalpatchername": "",
-                        "tags": ""
-                    },
                     "text": "p ports",
                     "varname": "basic_tab[1]"
                 }
@@ -544,21 +538,22 @@
                             "modernui": 1
                         },
                         "classnamespace": "box",
-                        "rect": [ 0.0, 26.0, 720.0, 600.0 ],
-                        "autosave": 0,
+                        "rect": [ 100.0, 126.0, 795.0, 565.0 ],
                         "showontab": 1,
                         "boxes": [
                             {
                                 "box": {
+                                    "border": 0,
+                                    "filename": "helpdetails.js",
                                     "id": "details",
+                                    "ignoreclick": 1,
+                                    "jsarguments": [ "mqtt.midi" ],
                                     "maxclass": "jsui",
                                     "numinlets": 1,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 10.0, 10.0, 640.0, 100.0 ],
                                     "outlettype": [ "" ],
-                                    "filename": "helpdetails.js",
-                                    "jsarguments": [ "mqtt.midi" ],
-                                    "parameter_enable": 0
+                                    "parameter_enable": 0,
+                                    "patching_rect": [ 10.0, 10.0, 640.0, 100.0 ]
                                 }
                             },
                             {
@@ -567,8 +562,8 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 120.0, 600.0, 20.0 ],
-                                    "text": "Clock, start, continue, stop and SysEx pass through like any MIDI message."
+                                    "patching_rect": [ 20.0, 120.0, 411.0, 20.0 ],
+                                    "text": "Clock, start, continue, stop and SysEx pass through."
                                 }
                             },
                             {
@@ -577,8 +572,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 2,
-                                    "patching_rect": [ 20.0, 220.0, 198.0, 22.0 ],
                                     "outlettype": [ "", "" ],
+                                    "patching_rect": [ 20.0, 220.0, 147.0, 22.0 ],
                                     "text": "mqtt.client midi-clock-help"
                                 }
                             },
@@ -588,8 +583,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 20.0, 150.0, 261.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 20.0, 150.0, 261.0, 22.0 ],
                                     "text": "connect mqtt://public.cloud.shiftr.io public public"
                                 }
                             },
@@ -599,8 +594,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 300.0, 150.0, 66.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 300.0, 150.0, 66.0, 22.0 ],
                                     "text": "disconnect"
                                 }
                             },
@@ -610,9 +605,9 @@
                                     "maxclass": "toggle",
                                     "numinlets": 1,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 20.0, 265.0, 24.0, 24.0 ],
                                     "outlettype": [ "int" ],
-                                    "parameter_enable": 0
+                                    "parameter_enable": 0,
+                                    "patching_rect": [ 20.0, 265.0, 24.0, 24.0 ]
                                 }
                             },
                             {
@@ -621,8 +616,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 20.0, 295.0, 55.0, 22.0 ],
                                     "outlettype": [ "bang" ],
+                                    "patching_rect": [ 20.0, 295.0, 56.0, 22.0 ],
                                     "text": "metro 20"
                                 }
                             },
@@ -632,8 +627,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 20.0, 325.0, 35.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 20.0, 325.0, 29.5, 22.0 ],
                                     "text": "248"
                                 }
                             },
@@ -643,8 +638,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 85.0, 325.0, 35.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 85.0, 325.0, 29.5, 22.0 ],
                                     "text": "250"
                                 }
                             },
@@ -654,8 +649,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 130.0, 325.0, 35.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 130.0, 325.0, 29.5, 22.0 ],
                                     "text": "252"
                                 }
                             },
@@ -665,7 +660,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 175.0, 325.0, 180.0, 20.0 ],
+                                    "patching_rect": [ 175.0, 325.0, 165.0, 20.0 ],
                                     "text": "clock 248, start 250, stop 252"
                                 }
                             },
@@ -675,8 +670,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 20.0, 360.0, 115.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 20.0, 360.0, 105.0, 22.0 ],
                                     "text": "240 125 1 2 3 247"
                                 }
                             },
@@ -686,7 +681,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 145.0, 360.0, 120.0, 20.0 ],
+                                    "patching_rect": [ 145.0, 360.0, 94.0, 20.0 ],
                                     "text": "SysEx, F0 ... F7"
                                 }
                             },
@@ -696,8 +691,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 3,
-                                    "patching_rect": [ 20.0, 400.0, 300.0, 22.0 ],
                                     "outlettype": [ "", "", "" ],
+                                    "patching_rect": [ 20.0, 400.0, 318.0, 22.0 ],
                                     "text": "mqtt.midi midi-clock-help @send mqtt-max-help/clock/midi"
                                 }
                             },
@@ -707,8 +702,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 3,
-                                    "patching_rect": [ 390.0, 265.0, 300.0, 22.0 ],
                                     "outlettype": [ "", "", "" ],
+                                    "patching_rect": [ 390.0, 265.0, 331.0, 22.0 ],
                                     "text": "mqtt.midi midi-clock-help @receive mqtt-max-help/clock/midi"
                                 }
                             },
@@ -716,10 +711,10 @@
                                 "box": {
                                     "id": "sel",
                                     "maxclass": "newobj",
-                                    "numinlets": 1,
+                                    "numinlets": 4,
                                     "numoutlets": 4,
-                                    "patching_rect": [ 390.0, 295.0, 95.0, 22.0 ],
                                     "outlettype": [ "bang", "bang", "bang", "" ],
+                                    "patching_rect": [ 390.0, 295.0, 94.0, 22.0 ],
                                     "text": "sel 248 250 252"
                                 }
                             },
@@ -727,10 +722,10 @@
                                 "box": {
                                     "id": "count",
                                     "maxclass": "newobj",
-                                    "numinlets": 3,
+                                    "numinlets": 5,
                                     "numoutlets": 4,
-                                    "patching_rect": [ 390.0, 325.0, 55.0, 22.0 ],
-                                    "outlettype": [ "", "", "", "" ],
+                                    "outlettype": [ "int", "", "", "int" ],
+                                    "patching_rect": [ 390.0, 325.0, 61.0, 22.0 ],
                                     "text": "counter"
                                 }
                             },
@@ -740,9 +735,9 @@
                                     "maxclass": "number",
                                     "numinlets": 1,
                                     "numoutlets": 2,
-                                    "patching_rect": [ 390.0, 355.0, 50.0, 22.0 ],
                                     "outlettype": [ "", "bang" ],
-                                    "parameter_enable": 0
+                                    "parameter_enable": 0,
+                                    "patching_rect": [ 390.0, 355.0, 50.0, 22.0 ]
                                 }
                             },
                             {
@@ -751,8 +746,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 455.0, 355.0, 40.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 455.0, 355.0, 32.0, 22.0 ],
                                     "text": "start"
                                 }
                             },
@@ -762,8 +757,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 505.0, 355.0, 35.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 505.0, 355.0, 31.0, 22.0 ],
                                     "text": "stop"
                                 }
                             },
@@ -773,7 +768,7 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 560.0, 325.0, 95.0, 22.0 ],
+                                    "patching_rect": [ 560.0, 325.0, 93.0, 22.0 ],
                                     "text": "print sysex-byte"
                                 }
                             },
@@ -783,12 +778,18 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 390.0, 380.0, 130.0, 20.0 ],
+                                    "patching_rect": [ 390.0, 380.0, 112.0, 20.0 ],
                                     "text": "clock ticks received"
                                 }
                             }
                         ],
                         "lines": [
+                            {
+                                "patchline": {
+                                    "destination": [ "out", 0 ],
+                                    "source": [ "clock", 0 ]
+                                }
+                            },
                             {
                                 "patchline": {
                                     "destination": [ "client", 0 ],
@@ -797,8 +798,20 @@
                             },
                             {
                                 "patchline": {
+                                    "destination": [ "cn", 0 ],
+                                    "source": [ "count", 0 ]
+                                }
+                            },
+                            {
+                                "patchline": {
                                     "destination": [ "client", 0 ],
                                     "source": [ "disc", 0 ]
+                                }
+                            },
+                            {
+                                "patchline": {
+                                    "destination": [ "sel", 0 ],
+                                    "source": [ "inst", 0 ]
                                 }
                             },
                             {
@@ -821,38 +834,14 @@
                             },
                             {
                                 "patchline": {
-                                    "destination": [ "metro", 0 ],
-                                    "source": [ "tog", 0 ]
-                                }
-                            },
-                            {
-                                "patchline": {
                                     "destination": [ "clock", 0 ],
                                     "source": [ "metro", 0 ]
                                 }
                             },
                             {
                                 "patchline": {
-                                    "destination": [ "out", 0 ],
-                                    "source": [ "clock", 0 ]
-                                }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "sel", 0 ],
-                                    "source": [ "inst", 0 ]
-                                }
-                            },
-                            {
-                                "patchline": {
                                     "destination": [ "count", 0 ],
                                     "source": [ "sel", 0 ]
-                                }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "cn", 0 ],
-                                    "source": [ "count", 0 ]
                                 }
                             },
                             {
@@ -872,16 +861,16 @@
                                     "destination": [ "psx", 0 ],
                                     "source": [ "sel", 3 ]
                                 }
+                            },
+                            {
+                                "patchline": {
+                                    "destination": [ "metro", 0 ],
+                                    "source": [ "tog", 0 ]
+                                }
                             }
                         ]
                     },
                     "patching_rect": [ 10.0, 170.0, 120.0, 22.0 ],
-                    "saved_object_attributes": {
-                        "description": "",
-                        "digest": "",
-                        "globalpatchername": "",
-                        "tags": ""
-                    },
                     "text": "p clock & sysex",
                     "varname": "basic_tab[2]"
                 }
@@ -902,24 +891,18 @@
                             "modernui": 1
                         },
                         "classnamespace": "box",
-                        "rect": [ 0.0, 26.0, 720.0, 600.0 ],
-                        "autosave": 0,
+                        "rect": [ 0.0, 26.0, 795.0, 565.0 ],
                         "showontab": 1,
                         "boxes": [],
                         "lines": []
                     },
                     "patching_rect": [ 10.0, 200.0, 120.0, 22.0 ],
-                    "saved_object_attributes": {
-                        "description": "",
-                        "digest": "",
-                        "globalpatchername": "",
-                        "tags": ""
-                    },
                     "text": "p ?",
                     "varname": "q_tab"
                 }
             }
         ],
-        "lines": []
+        "lines": [],
+        "autosave": 0
     }
 }

@@ -159,6 +159,9 @@ function freeMidi(id) {
 
 const roleError = (role, id) => (text) => text && maxApi.outlet(role, id, "dumpout", "error", text);
 
+// Node and property IDs made of digits reach Max as numbers, so that [route 1 2] matches them.
+const idAtom = (id) => (/^(0|[1-9][0-9]*)$/.test(id) ? Number(id) : id);
+
 // The device starts on "register", once domain and ID are known; later changes restart it.
 // A description and values sent before that are kept and applied at start.
 function startDevice() {
@@ -173,7 +176,7 @@ function startDevice() {
       client: roleClient("device"),
       domain: device.domain,
       id: device.deviceId,
-      onSet: (node, prop, atoms) => out("set", node, prop, ...atoms),
+      onSet: (node, prop, atoms) => out("set", idAtom(node), idAtom(prop), ...atoms),
       onState: (state) => out("dumpout", "state", state),
       onBroadcast: (subtopic, text) => out("dumpout", "broadcast", subtopic, ...text.split(" ").filter(Boolean).map(toAtom)),
     });
@@ -240,7 +243,7 @@ function startController(domain) {
     domain,
     onDevices: (devices) => out("devices", devices),
     onDescription: (key, description) => out("description", key, description),
-    onValue: (key, node, prop, atoms) => out("value", key, node, prop, ...atoms),
+    onValue: (key, node, prop, atoms) => out("value", key, idAtom(node), idAtom(prop), ...atoms),
     onAlert: (key, alertId, text) => out("alert", key, alertId, text),
     onLog: (key, level, text) => out("log", key, level, text),
   });

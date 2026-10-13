@@ -15,6 +15,7 @@
 		<p>A Homie controller discovers devices through their <i>$state</i> and <i>$description</i>. Without a <at>domain</at> it discovers devices in all domains, as Homie requires by default; devices are then named <i>{domain}/{device-id}</i>, otherwise just <i>{device-id}</i>.</p>
 		<p>A device is online when its state is <i>ready</i>. A child device is <i>lost</i> when its root device is.</p>
 		<p>Values are converted by the property datatype: integers and floats to numbers, booleans to 1/0, colors to their type and values (e.g. <i>rgb 255 0 0</i>), json to a dictionary. Values of <m>set</m> take the same form.</p>
+		<p>Node and property IDs made only of digits, such as <i>slider 1</i>, are output as numbers, so that <o>route</o> matches them.</p>
 	</discussion>
 
 	<metadatalist>

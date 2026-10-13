@@ -10,5 +10,5 @@ First release as a Max package.
 - `[mqtt.broker]`: an MQTT 3.1.1 broker (Aedes) on TCP, TLS, WebSocket and secure WebSocket, with optional login; reports client connections and subscriptions.
 - `[mqtt.midi]`: MIDI messages over MQTT, including SysEx and clock, as raw MIDI bytes, on topics set with `@receive` and `@send`; optional virtual MIDI port on macOS.
 - `[mqtt.homie.device]` and `[mqtt.homie.controller]`: Homie 5 devices and controllers: state and last will, descriptions, typed values with ranges and steps, commands, broadcasts, alerts and logs.
-- Help files with tabs and reference pages for every object; four examples with the phone app; a landing patch.
-- Phone app: motion, network round trip, XY pad, sliders, buttons and sound level, each switched on or off, sent as MIDI or as Homie values.
+- Help files with tabs and reference pages for every object; four examples with the remote; a landing patch.
+- Remote: web app for phones, tablets and computers. Motion, latency, XY pad, 4 sliders, 8 buttons, mic level; as MIDI or Homie values.

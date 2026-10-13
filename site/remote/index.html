@@ -5,23 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#f2f2f0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0b0b0c" media="(prefers-color-scheme: dark)">
-<title>mqtt-max phone app</title>
-<meta name="description" content="Send a phone's controls, motion and sound level as MIDI or Homie over MQTT.">
+<title>mqtt-max remote</title>
+<meta name="description" content="Control Max from a phone, tablet or computer: touch, motion and mic level as MIDI or Homie over MQTT.">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../assets/favicon.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
-<meta property="og:title" content="mqtt-max phone app">
-<meta property="og:description" content="Send a phone's controls, motion and sound level as MIDI or Homie over MQTT.">
-<meta property="og:url" content="https://francesco-di-maggio.github.io/mqtt-max/phone/">
+<meta property="og:title" content="mqtt-max remote">
+<meta property="og:description" content="Control Max from a phone, tablet or computer: touch, motion and mic level as MIDI or Homie over MQTT.">
+<meta property="og:url" content="https://francesco-di-maggio.github.io/mqtt-max/remote/">
 <meta property="og:image" content="https://francesco-di-maggio.github.io/mqtt-max/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="modulepreload" href="https://esm.sh/mqtt@5.16.0">
 <style>
   :root {
     --bg: #f2f2f0; --surface: #ffffff; --ink: #111111; --dim: #8b8b88; --line: #e3e3df;
     --accent: #ff5a1f; --ok: #22b35e; --err: #e5484d;
     --mono: ui-monospace, "SF Mono", Menlo, monospace;
-    --radius: 16px; --radius-inner: 10px;
+    --radius: 16px; --radius-inner: 10px; --row: 44px;
     color-scheme: light dark;
   }
   @media (prefers-color-scheme: dark) {
@@ -30,6 +31,7 @@
   * { box-sizing: border-box; }
   [hidden] { display: none !important; }
   html, body { height: 100%; background: var(--bg); }
+  html { touch-action: manipulation; }
   body {
     max-width: 592px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px;
     padding: calc(12px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));
@@ -41,7 +43,8 @@
   .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; }
 
   header { display: flex; align-items: center; justify-content: space-between; height: 28px; }
-  .mark { font: 600 13px var(--mono); letter-spacing: 0.04em; }
+  .mark { font: 600 13px var(--mono); letter-spacing: 0.04em; color: var(--ink); text-decoration: none; }
+  .mark span { margin-left: 6px; font-weight: 500; color: var(--dim); }
   .mark i { color: var(--accent); font-style: normal; }
   #status { display: flex; align-items: center; gap: 7px; min-width: 0; max-width: 70%; }
   #status span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -53,19 +56,37 @@
   #status.err::before { background: var(--err); }
   @keyframes blink { 50% { opacity: 0.2; } }
 
+  #setup-bar, #connect { height: var(--row); padding-top: 0; padding-bottom: 0; }
   #setup-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; color: var(--ink);
                font: inherit; text-align: left; cursor: pointer; transition: background-color 150ms, border-color 150ms; }
   #setup-bar span { line-height: 20px; }
   #setup-bar .icon { font: 400 18px/20px var(--mono); color: var(--dim); transition: transform 150ms; }
-  body:not(.setup) #setup-bar { background: var(--ink); border-color: var(--ink); }
-  body:not(.setup) #setup-bar span { color: var(--bg); }
   body.setup #setup-bar .icon { transform: rotate(45deg); }
+  /* Not connected and Setup closed: opening Setup is the next action. */
+  body:not(.setup):not(:has(#connect.connected)) #setup-bar { background: var(--ink); border-color: var(--ink); }
+  body:not(.setup):not(:has(#connect.connected)) #setup-bar span { color: var(--bg); }
   body.setup .meters, body.setup #padbox, body:not(.setup) #settings, body:not(.setup) #connect { display: none; }
   .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .fields .wide { grid-column: 1 / -1; }
-  .inputs { margin-top: 14px; }
+  .section { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .secret { position: relative; display: block; }
+  .secret input { padding-right: 40px; }
+  #reveal { position: absolute; top: 0; right: 0; height: 100%; width: 40px; display: flex; align-items: center; justify-content: center;
+            padding: 0; border: 0; background: none; color: var(--dim); cursor: pointer; }
+  #reveal[aria-pressed="false"] .slash { display: none; }
+  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 8px; }
+  .tile { position: relative; display: flex; align-items: center; justify-content: space-between; height: var(--row); padding: 0 10px;
+          border: 1px solid var(--line); border-radius: var(--radius-inner); background: var(--bg); cursor: pointer;
+          font: 500 11px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim);
+          transition: background-color 150ms, border-color 150ms, color 150ms; }
+  .tile input { position: absolute; width: 0; height: 0; margin: 0; opacity: 0; appearance: none; -webkit-appearance: none; pointer-events: none; }
+  .tile::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
+  .tile:has(input:checked) { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+  .tile:has(input:checked)::after { background: var(--accent); }
+  .tile:has(input:disabled) { opacity: 0.5; cursor: default; }
+  .tile:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
   .fields label { display: flex; flex-direction: column; gap: 6px; }
-  input:not([type]), input[type=password], input[type=number], select {
+  input:not([type]), input[type=password], input[type=text], input[type=number], select {
     width: 100%; padding: 11px 12px; font: 16px var(--mono); color: var(--ink);
     background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-inner); outline: none;
     -webkit-user-select: text; user-select: text;
@@ -74,20 +95,13 @@
            background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%238b8b88' stroke-width='1.5'/%3E%3C/svg%3E") right 12px center no-repeat; }
   input:focus, select:focus { border-color: var(--ink); }
   input:disabled, select:disabled { color: var(--dim); -webkit-text-fill-color: var(--dim); opacity: 1; }
-  .switch input { align-self: flex-start; margin-top: 9px !important; }
-  .switch input { appearance: none; -webkit-appearance: none; margin: 0; width: 42px; height: 26px; border-radius: 13px;
-                  background: var(--line); position: relative; transition: background 150ms; }
-  .switch input::after { content: ""; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%;
-                         background: var(--surface); box-shadow: 0 1px 2px rgb(0 0 0 / 0.25); transition: transform 150ms; }
-  .switch input:checked { background: var(--accent); }
-  .switch input:checked::after { transform: translateX(16px); }
   #connect { display: flex; align-items: center; width: 100%; text-align: left; cursor: pointer;
              background: var(--ink); border-color: var(--ink); color: var(--bg);
              font: 500 11px/20px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; }
   #connect.connected { background: var(--accent); border-color: var(--accent); color: #fff; }
-  #connect:active, #setup-bar:active { opacity: 0.8; }
+  #connect:active, #setup-bar:active { opacity: 0.7; }
 
-  .meters { display: grid; gap: 12px; }
+  .meters { display: grid; gap: 10px; }
   .meter { display: grid; grid-template-columns: 96px 1fr 52px; align-items: center; gap: 12px; }
   .meter b { font: 500 13px var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
   .bar { height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
@@ -96,7 +110,7 @@
   #yaw { cursor: pointer; }
 
   #padbox { flex: 1; display: flex; flex-direction: column; gap: 10px; }
-  #pad { position: relative; flex: 1; min-height: 160px;
+  #pad { position: relative; flex: 1; min-height: 120px;
          display: flex; flex-direction: column; justify-content: space-between; padding: 14px;
          border-radius: var(--radius); border: 1px solid var(--line); touch-action: none; overflow: hidden;
          background: linear-gradient(var(--dim), var(--dim)) center / 1px 14px no-repeat,
@@ -106,21 +120,22 @@
          border-radius: 50%; border: 2px solid var(--ink); opacity: 0; pointer-events: none; }
   #pad.touched #dot { opacity: 1; }
   #pad.on #dot { background: var(--accent); border-color: var(--accent); }
-  .sliders { display: grid; gap: 8px; }
-  .slider { height: 44px; display: flex; justify-content: space-between; align-items: center; padding: 0 14px;
+  .sliders { display: grid; gap: 10px; }
+  .slider { height: var(--row); display: flex; justify-content: space-between; align-items: center; padding: 0 14px;
             border-radius: var(--radius); border: 1px solid var(--line); touch-action: none; cursor: pointer; --p: 0%;
             background: linear-gradient(to right, var(--accent) var(--p), var(--surface) var(--p)); }
   .slider .label { color: var(--ink); }
   .slider b { font: 500 13px var(--mono); font-variant-numeric: tabular-nums; }
 
-  .keys { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-  .key { height: 64px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius);
+  .keys { display: grid; grid-template-columns: repeat(8, 1fr); gap: 6px; }
+  .key { height: var(--row); display: flex; align-items: center; justify-content: center; border-radius: var(--radius);
          border: 1px solid var(--line); background: var(--surface); touch-action: none; cursor: pointer; }
   .key .label { color: var(--ink); }
   .key.on { background: var(--accent); border-color: var(--accent); }
   .key.on .label { color: #fff; }
 
-  .devices { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 26px; margin-top: 14px; }
+  .devices { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 26px; }
+  .devices .label { margin-right: 4px; }
   .chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px; border-radius: 999px;
           border: 1px solid var(--line); font: 500 11px var(--mono); }
   .chip::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ok); }
@@ -129,7 +144,7 @@
 </head>
 <body class="setup">
 <header>
-  <span class="mark">mqtt<i>·</i>max</span>
+  <a class="mark" href="https://francesco-di-maggio.github.io/mqtt-max/" target="_blank" rel="noopener">mqtt<i>·</i>max<span>0.1.0</span></a>
   <span id="status" class="label"><span id="status-text">offline</span></span>
 </header>
 
@@ -141,37 +156,41 @@
   <div class="fields">
     <label class="wide"><span class="label">Broker</span><input id="url" value="wss://public.cloud.shiftr.io"></label>
     <label><span class="label">User</span><input id="username" value="public"></label>
-    <label><span class="label">Password</span><input id="password" type="password" value="public"></label>
+    <label><span class="label">Password</span><span class="secret"><input id="password" type="password" value="public"><button id="reveal" type="button" aria-label="Show password" aria-pressed="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path class="slash" d="M4 4l16 16"/></svg></button></span></label>
+  </div>
+  <div class="fields section">
     <label><span class="label">Prefix</span><input id="prefix" value="remote" autocapitalize="off" autocorrect="off" spellcheck="false"></label>
     <label><span class="label">ID</span><input id="name" autocapitalize="off" autocorrect="off" spellcheck="false"></label>
     <label><span class="label">Send</span><select id="mode"><option value="midi">MIDI</option><option value="homie">Homie</option></select></label>
     <label><span class="label">Channel</span><input id="channel" type="number" min="1" max="16" value="1"></label>
-    <label class="switch"><span class="label">Echo notes</span><input id="echo" type="checkbox"></label>
   </div>
-  <div class="fields inputs">
-    <label class="switch"><span class="label">Motion</span><input id="in-motion" type="checkbox"></label>
-    <label class="switch"><span class="label">Network</span><input id="in-network" type="checkbox"></label>
-    <label class="switch"><span class="label">XY pad</span><input id="in-pad" type="checkbox"></label>
-    <label class="switch"><span class="label">Sliders</span><input id="in-slider" type="checkbox"></label>
-    <label class="switch"><span class="label">Buttons</span><input id="in-button" type="checkbox"></label>
-    <label class="switch"><span class="label">Sound level</span><input id="in-sound" type="checkbox"></label>
+  <div class="section">
+    <span class="label">Inputs</span>
+    <div class="tiles">
+      <label class="tile"><input id="in-motion" type="checkbox">Motion</label>
+      <label class="tile"><input id="in-latency" type="checkbox">Latency</label>
+      <label class="tile"><input id="in-pad" type="checkbox">XY pad</label>
+      <label class="tile"><input id="in-slider" type="checkbox">Sliders</label>
+      <label class="tile"><input id="in-button" type="checkbox">Buttons</label>
+      <label class="tile"><input id="in-mic" type="checkbox">Mic level</label>
+    </div>
   </div>
-  <div class="devices" id="devices"><span class="label">Online</span></div>
+  <div class="devices section" id="devices"><span class="label">Online</span></div>
 </div>
 
 <button id="connect" class="panel">Connect</button>
 
-<div class="panel meters" data-input="motion network sound">
+<div class="panel meters" data-input="motion latency mic">
   <div class="meter" data-input="motion"><span class="label" id="l1">CC1 Pitch</span><div class="bar"><i id="b1"></i></div><b id="v1">–</b></div>
   <div class="meter" data-input="motion"><span class="label" id="l2">CC2 Roll</span><div class="bar"><i id="b2"></i></div><b id="v2">–</b></div>
   <div class="meter" data-input="motion" id="yaw" title="Tap to center"><span class="label" id="l3">CC3 Yaw</span><div class="bar"><i id="b3"></i></div><b id="v3">–</b></div>
-  <div class="meter" data-input="network"><span class="label" id="l4">CC4 Network</span><div class="bar"><i id="bnet"></i></div><b id="vnet">–</b></div>
-  <div class="meter" data-input="sound"><span class="label" id="l11">CC11 Sound</span><div class="bar"><i id="b11"></i></div><b id="v11">–</b></div>
+  <div class="meter" data-input="latency"><span class="label" id="l4">CC4 Latency</span><div class="bar"><i id="bnet"></i></div><b id="vnet">–</b></div>
+  <div class="meter" data-input="mic"><span class="label" id="l11">CC11 Mic</span><div class="bar"><i id="b11"></i></div><b id="v11">–</b></div>
 </div>
 
 <div id="padbox">
-  <div id="pad" data-input="pad" role="application" aria-label="XY pad: X CC 5, Y CC 6, hold for note 60">
-    <span class="label" id="l5">CC5/6 XY · Hold for note 60</span>
+  <div id="pad" data-input="pad" role="application" aria-label="XY pad: X CC 5, Y CC 6, touch CC 12">
+    <span class="label" id="l5">CC5/6 XY · CC12 Touch</span>
     <span class="xy" id="xy">X – · Y –</span>
     <i id="dot"></i>
   </div>
@@ -182,26 +201,33 @@
     <div class="slider" data-n="4" role="slider" aria-label="CC 10" aria-valuemin="0" aria-valuemax="127" aria-valuenow="0"><span class="label" id="l10">CC10</span><b id="v10">–</b></div>
   </div>
   <div class="keys" data-input="button">
-    <div class="key" data-n="1" role="button" aria-label="Note 36"><span class="label" id="k1">Note 36</span></div>
-    <div class="key" data-n="2" role="button" aria-label="Note 37"><span class="label" id="k2">Note 37</span></div>
-    <div class="key" data-n="3" role="button" aria-label="Note 38"><span class="label" id="k3">Note 38</span></div>
-    <div class="key" data-n="4" role="button" aria-label="Note 39"><span class="label" id="k4">Note 39</span></div>
+    <div class="key" data-n="1" role="button" aria-label="Note 60"><span class="label" id="k1">60</span></div>
+    <div class="key" data-n="2" role="button" aria-label="Note 62"><span class="label" id="k2">62</span></div>
+    <div class="key" data-n="3" role="button" aria-label="Note 64"><span class="label" id="k3">64</span></div>
+    <div class="key" data-n="4" role="button" aria-label="Note 65"><span class="label" id="k4">65</span></div>
+    <div class="key" data-n="5" role="button" aria-label="Note 67"><span class="label" id="k5">67</span></div>
+    <div class="key" data-n="6" role="button" aria-label="Note 69"><span class="label" id="k6">69</span></div>
+    <div class="key" data-n="7" role="button" aria-label="Note 71"><span class="label" id="k7">71</span></div>
+    <div class="key" data-n="8" role="button" aria-label="Note 72"><span class="label" id="k8">72</span></div>
   </div>
 </div>
 
 
-<script type="module">
-import mqtt from "https://esm.sh/mqtt@5.16.0";
+<script>
+// A classic script runs before the first paint, so stored settings show without a flicker.
+// MQTT.js loads on Connect; the modulepreload link fetches it early.
+const MQTT_URL = "https://esm.sh/mqtt@5.16.0";
 
 const SEND_INTERVAL_MS = 33;
 const FIELDS = ["url", "username", "password", "prefix", "name", "mode", "channel"];
-const CCS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+const CCS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 // Inputs, named as their Homie nodes, and whether each is on by default: the ones that need a permission are off.
-const INPUTS = { motion: false, network: true, pad: true, slider: true, button: true, sound: false };
-const CC_INPUT = { 1: "motion", 2: "motion", 3: "motion", 4: "network", 5: "pad", 6: "pad",
-                   7: "slider", 8: "slider", 9: "slider", 10: "slider", 11: "sound" };
-const BUTTON_NOTE = 36;
-const SOUND_MIN_DB = -60;
+const INPUTS = { motion: false, latency: true, pad: true, slider: true, button: true, mic: false };
+const CC_INPUT = { 1: "motion", 2: "motion", 3: "motion", 4: "latency", 5: "pad", 6: "pad",
+                   7: "slider", 8: "slider", 9: "slider", 10: "slider", 11: "mic", 12: "pad" };
+// Buttons 1-8: the C major scale from middle C.
+const BUTTON_NOTES = [60, 62, 64, 65, 67, 69, 71, 72];
+const MIC_MIN_DB = -60;
 const PING_INTERVAL_MS = 500;
 const PING_TIMEOUT_MS = 1000;
 const RTT_MAX_MS = 500;
@@ -220,7 +246,7 @@ const NODES = {
     roll: { name: "Roll", datatype: "float", format: "-90:90", unit: "°", retained: false },
     yaw: { name: "Yaw", datatype: "float", format: "-180:180", unit: "°", retained: false },
   } },
-  network: { name: "Network", properties: {
+  latency: { name: "Latency", properties: {
     rtt: { name: "Round trip", datatype: "integer", format: "0:", unit: "ms", retained: false },
   } },
   pad: { name: "XY pad", properties: {
@@ -239,23 +265,27 @@ const NODES = {
     2: { name: "Button 2", datatype: "boolean", retained: false },
     3: { name: "Button 3", datatype: "boolean", retained: false },
     4: { name: "Button 4", datatype: "boolean", retained: false },
+    5: { name: "Button 5", datatype: "boolean", retained: false },
+    6: { name: "Button 6", datatype: "boolean", retained: false },
+    7: { name: "Button 7", datatype: "boolean", retained: false },
+    8: { name: "Button 8", datatype: "boolean", retained: false },
   } },
-  sound: { name: "Sound", properties: {
+  mic: { name: "Mic", properties: {
     level: { name: "Level", datatype: "float", format: "-60:0", unit: "dBFS", retained: false },
   } },
 };
 
 const LABELS = {
-  midi: { l1: "CC1 Pitch", l2: "CC2 Roll", l3: "CC3 Yaw", l4: "CC4 Network", l5: "CC5/6 XY · Hold for note 60",
-          l7: "CC7", l8: "CC8", l9: "CC9", l10: "CC10", l11: "CC11 Sound",
-          k1: "Note 36", k2: "Note 37", k3: "Note 38", k4: "Note 39" },
-  homie: { l1: "Pitch", l2: "Roll", l3: "Yaw", l4: "Network", l5: "XY · Touch",
-           l7: "Slider 1", l8: "Slider 2", l9: "Slider 3", l10: "Slider 4", l11: "Sound dBFS",
-           k1: "Button 1", k2: "Button 2", k3: "Button 3", k4: "Button 4" },
+  midi: { l1: "CC1 Pitch", l2: "CC2 Roll", l3: "CC3 Yaw", l4: "CC4 Latency", l5: "CC5/6 XY · CC12 Touch",
+          l7: "CC7", l8: "CC8", l9: "CC9", l10: "CC10", l11: "CC11 Mic",
+          k1: "60", k2: "62", k3: "64", k4: "65", k5: "67", k6: "69", k7: "71", k8: "72" },
+  homie: { l1: "Pitch", l2: "Roll", l3: "Yaw", l4: "Latency", l5: "XY · Touch",
+           l7: "Slider 1", l8: "Slider 2", l9: "Slider 3", l10: "Slider 4", l11: "Mic dBFS",
+           k1: "1", k2: "2", k3: "3", k4: "4", k5: "5", k6: "6", k7: "7", k8: "8" },
 };
 // The Homie value each CC readout shows when sending Homie.
 const DATA_KEY = { 1: "motion/pitch", 2: "motion/roll", 3: "motion/yaw", 5: "pad/x", 6: "pad/y",
-                   7: "slider/1", 8: "slider/2", 9: "slider/3", 10: "slider/4", 11: "sound/level" };
+                   7: "slider/1", 8: "slider/2", 9: "slider/3", 10: "slider/4", 11: "mic/level" };
 
 let client = null;
 const connected = () => Boolean(client?.connected);
@@ -265,33 +295,65 @@ const data = {};
 const dataSent = {};
 let yawOrigin = null;
 let pingSent = null;
-let sound = null;
+let mic = null;
+// A permission that failed on Connect, shown next to the topic while connected.
+let warning = null;
 const online = new Set();
 const enabled = (input) => $("in-" + input).checked;
 
 function loadSettings() {
   for (const f of FIELDS) {
     try {
-      const v = localStorage.getItem("phone-midi-" + f);
+      const v = localStorage.getItem("remote-" + f);
       if (v !== null) $(f).value = v;
     } catch {}
   }
   // Saved by earlier versions, which called sending Homie "Data".
   if ($("mode").value !== "midi" && $("mode").value !== "homie") $("mode").value = "homie";
-  if (!$("name").value) $("name").value = "phone-" + Math.random().toString(16).slice(2, 6);
+  // A new random ID is stored at once, so that it stays the same across reloads.
+  if (!$("name").value) {
+    $("name").value = deviceKind() + "-" + Math.random().toString(16).slice(2, 6);
+    try { localStorage.setItem("remote-name", $("name").value); } catch {}
+  }
   for (const [input, on] of Object.entries(INPUTS)) {
     let v = null;
-    try { v = localStorage.getItem("phone-midi-input-" + input); } catch {}
+    try { v = localStorage.getItem("remote-input-" + input); } catch {}
     $("in-" + input).checked = v === null ? on : v === "1";
   }
 }
 
+// A guess for the default ID only: iPads, for example, may report themselves as Macs.
+function deviceKind() {
+  if (navigator.maxTouchPoints === 0) return "computer";
+  return Math.min(screen.width, screen.height) < 600 ? "phone" : "tablet";
+}
+
+// Settings from the link, e.g. ?broker=wss://example.com&prefix=studio&inputs=pad,slider:
+// applied over the stored ones, saved, then removed from the address bar.
+const LINK_FIELDS = { broker: "url", user: "username", password: "password", prefix: "prefix", id: "name", channel: "channel" };
+
+function applyLink() {
+  const params = new URLSearchParams(location.search);
+  if (![...params.keys()].length) return;
+  for (const [key, field] of Object.entries(LINK_FIELDS)) {
+    if (params.get(key)) $(field).value = params.get(key);
+  }
+  for (const id of ["prefix", "name"]) $(id).value = toId($(id).value);
+  if (["midi", "homie"].includes(params.get("send"))) $("mode").value = params.get("send");
+  if (params.has("inputs")) {
+    const on = params.get("inputs").split(",");
+    for (const input in INPUTS) $("in-" + input).checked = on.includes(input);
+  }
+  saveSettings();
+  history.replaceState(null, "", location.pathname);
+}
+
 function saveSettings() {
   for (const f of FIELDS) {
-    try { localStorage.setItem("phone-midi-" + f, $(f).value); } catch {}
+    try { localStorage.setItem("remote-" + f, $(f).value); } catch {}
   }
   for (const input in INPUTS) {
-    try { localStorage.setItem("phone-midi-input-" + input, enabled(input) ? "1" : "0"); } catch {}
+    try { localStorage.setItem("remote-input-" + input, enabled(input) ? "1" : "0"); } catch {}
   }
 }
 
@@ -319,6 +381,8 @@ function lockFields(locked) {
 
 function applyLabels() {
   for (const [id, text] of Object.entries(LABELS[mode()])) $(id).textContent = text;
+  // Sliders start at 0 until touched.
+  for (const cc of [7, 8, 9, 10]) if (current[cc] === null) $("v" + cc).textContent = mode() === "homie" ? "0.000" : "0";
 }
 
 // Homie device: the prefix is the Homie domain, the name the device ID.
@@ -382,7 +446,7 @@ function onOrientation(e) {
 }
 
 function sendChanged() {
-  readSound();
+  readMic();
   for (const cc of CCS) {
     const v = current[cc];
     if (v === null || v === sent[cc] || !enabled(CC_INPUT[cc])) continue;
@@ -398,7 +462,7 @@ function sendChanged() {
   }
 }
 
-// Round trip phone -> broker -> phone. MIDI: CC 4, 0-500 ms -> 0-127, a ping lost for 1 s -> 127. Homie: network/rtt in ms.
+// Round trip remote -> broker -> remote. MIDI: CC 4, 0-500 ms -> 0-127, a ping lost for 1 s -> 127. Homie: latency/rtt in ms.
 const pingTopic = () => `${prefix()}/ping/${name()}`;
 
 function showRtt(ms, text) {
@@ -408,7 +472,7 @@ function showRtt(ms, text) {
 }
 
 function ping() {
-  if (!connected() || !enabled("network")) return;
+  if (!connected() || !enabled("latency")) return;
   const now = performance.now();
   if (pingSent !== null && now - pingSent < PING_TIMEOUT_MS) return;
   if (pingSent !== null) showRtt(RTT_MAX_MS, "lost");
@@ -421,88 +485,74 @@ function onPong(payload) {
   if (sentAt !== pingSent) return;
   pingSent = null;
   const ms = performance.now() - sentAt;
-  data["network/rtt"] = String(Math.round(ms));
+  data["latency/rtt"] = String(Math.round(ms));
   showRtt(ms, Math.round(ms) + " ms");
 }
 
 async function requestMotion() {
   const DOE = window.DeviceOrientationEvent;
-  if (!DOE) return setStatus("no motion sensor", "err");
+  if (!DOE) return (warning = "no motion sensor");
   if (typeof DOE.requestPermission === "function") {
-    const result = await DOE.requestPermission();
-    if (result !== "granted") return setStatus("motion denied", "err");
+    const result = await DOE.requestPermission().catch(() => "denied");
+    if (result !== "granted") return (warning = "motion blocked");
   }
   window.addEventListener("deviceorientation", onOrientation);
 }
 
-// Sound level: the RMS of the microphone signal in dBFS, from SOUND_MIN_DB to 0. MIDI: CC 11. Homie: sound/level.
-async function startSound(context) {
+// Mic level: the RMS of the microphone signal in dBFS, from MIC_MIN_DB to 0. MIDI: CC 11. Homie: mic/level.
+// A blocked permission is not asked again by the browser: it is changed in the site settings.
+const MIC_ERRORS = { NotAllowedError: "mic blocked", NotFoundError: "no microphone" };
+
+async function startMic(context) {
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const analyser = context.createAnalyser();
     analyser.fftSize = 1024;
     context.createMediaStreamSource(stream).connect(analyser);
-    sound = { context, stream, analyser, samples: new Float32Array(analyser.fftSize) };
-  } catch {
+    mic = { context, stream, analyser, samples: new Float32Array(analyser.fftSize) };
+  } catch (err) {
     context.close();
-    setStatus("microphone unavailable", "err");
+    warning = MIC_ERRORS[err.name] ?? "mic unavailable";
   }
 }
 
-function stopSound() {
-  if (!sound) return;
-  for (const track of sound.stream.getTracks()) track.stop();
-  sound.context.close();
-  sound = null;
+function stopMic() {
+  if (!mic) return;
+  for (const track of mic.stream.getTracks()) track.stop();
+  mic.context.close();
+  mic = null;
 }
 
-function readSound() {
-  if (!sound) return;
-  sound.analyser.getFloatTimeDomainData(sound.samples);
+function readMic() {
+  if (!mic) return;
+  mic.analyser.getFloatTimeDomainData(mic.samples);
   let sum = 0;
-  for (const s of sound.samples) sum += s * s;
-  const db = Math.max(20 * Math.log10(Math.sqrt(sum / sound.samples.length)), SOUND_MIN_DB);
-  current[11] = toCC(db, SOUND_MIN_DB, 0);
-  data["sound/level"] = db.toFixed(1);
+  for (const s of mic.samples) sum += s * s;
+  const db = Math.max(20 * Math.log10(Math.sqrt(sum / mic.samples.length)), MIC_MIN_DB);
+  current[11] = toCC(db, MIC_MIN_DB, 0);
+  data["mic/level"] = db.toFixed(1);
 }
+
+// The screen stays on while connected. Browsers release the lock when the page is hidden,
+// so it is requested again when the page is shown.
+let wakeLock = null;
 
 async function keepAwake() {
-  try { await navigator.wakeLock?.request("screen"); } catch {}
+  try { wakeLock = await navigator.wakeLock?.request("screen"); } catch {}
+}
+
+function letSleep() {
+  wakeLock?.release().catch(() => {});
+  wakeLock = null;
 }
 
 // MIDI over MQTT: each payload holds complete MIDI messages.
-// The phone publishes to {prefix}/{name}/midi and receives on {prefix}/{name}/midi/in.
+// The remote publishes to {prefix}/{name}/midi.
 const midiTopic = () => `${prefix()}/${name()}/midi`;
 const STATUS = { cc: 0xb0, noteon: 0x90, noteoff: 0x80 };
 
 function sendMidi(type, ch, number, value) {
   client.publish(midiTopic(), Uint8Array.of(STATUS[type] | (ch - 1), number, value));
-}
-
-// Complete MIDI channel messages, with running status, or null for anything else.
-function channelMessages(bytes) {
-  const messages = [];
-  let status = null;
-  for (let i = 0; i < bytes.length; ) {
-    if (bytes[i] >= 0x80) status = bytes[i++];
-    if (status === null || status >= 0xf0) return null;
-    const length = (status & 0xe0) === 0xc0 ? 1 : 2;
-    const data = Array.from(bytes.slice(i, i + length));
-    if (data.length < length || data.some((b) => b > 127)) return null;
-    messages.push([status, ...data]);
-    i += length;
-  }
-  return messages;
-}
-
-// Echo notes: note on and note off messages arriving on {prefix}/{name}/midi/in are sent back,
-// so the computer can time the round trip.
-function onMidiIn(payload) {
-  if (mode() !== "midi" || !$("echo").checked) return;
-  for (const message of channelMessages(payload) ?? []) {
-    const type = message[0] & 0xf0;
-    if (type === 0x80 || type === 0x90) client.publish(midiTopic(), Uint8Array.from(message));
-  }
 }
 
 function renderDevices() {
@@ -528,9 +578,9 @@ function onState(topic, payload) {
 // MQTT.js reconnects by itself; every connection announces the device again.
 function wireClient(c) {
   c.on("connect", () => {
-    c.subscribe([`${prefix()}/5/+/$state`, pingTopic(), `${midiTopic()}/in`]);
+    c.subscribe([`${prefix()}/5/+/$state`, pingTopic()]);
     announce(c);
-    setStatus(`${prefix()}/${name()}`, "ok");
+    setStatus(`${prefix()}/${name()}` + (warning ? ` · ${warning}` : ""), warning ? "err" : "ok");
   });
   c.on("reconnect", () => {
     ready = false;
@@ -539,7 +589,6 @@ function wireClient(c) {
   c.on("error", (err) => setStatus(err.message, "err"));
   c.on("message", (topic, payload) => {
     if (topic === pingTopic()) return onPong(payload);
-    if (topic === `${midiTopic()}/in`) return onMidiIn(payload);
     if (topic.startsWith(`${prefix()}/5/`) && topic.endsWith("/$state")) onState(topic, payload);
   });
 }
@@ -554,7 +603,8 @@ async function disconnect() {
   closing.removeAllListeners();
   await closing.endAsync();
   window.removeEventListener("deviceorientation", onOrientation);
-  stopSound();
+  stopMic();
+  letSleep();
   identity = null;
   lockFields(false);
   online.clear();
@@ -569,17 +619,20 @@ async function disconnect() {
 
 async function connect() {
   if (client) return disconnect();
+  if (identity) return;
   if (!ID.test(prefix()) || !ID.test(name())) return setStatus("prefix, id: a-z 0-9 -", "err");
   saveSettings();
   // iOS only grants motion permission, and starts audio, when asked directly inside the tap handler, before any other await.
-  const context = enabled("sound") ? new AudioContext() : null;
+  warning = null;
+  const context = enabled("mic") ? new AudioContext() : null;
   if (enabled("motion")) await requestMotion();
-  if (context) await startSound(context);
+  if (context) await startMic(context);
   yawOrigin = null;
   identity = { prefix: prefix(), name: name(), mode: mode() };
   lockFields(true);
   setStatus("connecting", "busy");
   try {
+    const { default: mqtt } = await import(MQTT_URL);
     client = mqtt.connect($("url").value.trim(), {
       username: $("username").value || undefined,
       password: $("password").value || undefined,
@@ -599,6 +652,7 @@ async function connect() {
 }
 
 // X -> CC 5 (left 0, right 127), Y -> CC 6 (bottom 0, top 127); values stay after release.
+// Touch -> CC 12: 127 while touched, 0 on release.
 function setXY(e) {
   const rect = $("pad").getBoundingClientRect();
   const x = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
@@ -621,7 +675,7 @@ function padDown(e) {
   setXY(e);
   navigator.vibrate?.(8);
   data["pad/touch"] = "true";
-  if (mode() === "midi" && connected()) sendMidi("noteon", channel(), 60, 100);
+  current[12] = 127;
   sendChanged();
 }
 
@@ -634,14 +688,14 @@ function padUp(e) {
   if (!$("pad").classList.contains("on")) return;
   $("pad").classList.remove("on");
   data["pad/touch"] = "false";
-  if (mode() === "midi" && connected()) sendMidi("noteoff", channel(), 60, 0);
+  current[12] = 0;
   sendChanged();
 }
 
-// Buttons: notes 36-39 while pressed. Homie: button/1-4, true while pressed.
+// Buttons: BUTTON_NOTES while pressed. Homie: button/1-8, true while pressed.
 function press(n, down) {
   data[`button/${n}`] = String(down);
-  if (mode() === "midi" && connected()) sendMidi(down ? "noteon" : "noteoff", channel(), BUTTON_NOTE + n - 1, down ? 100 : 0);
+  if (mode() === "midi" && connected()) sendMidi(down ? "noteon" : "noteoff", channel(), BUTTON_NOTES[n - 1], down ? 100 : 0);
   sendChanged();
 }
 
@@ -668,9 +722,15 @@ function setSetup(open) {
 }
 
 loadSettings();
+applyLink();
 showInputs();
 applyLabels();
 for (const input in INPUTS) $("in-" + input).addEventListener("change", showInputs);
+document.addEventListener("visibilitychange", () => {
+  if (client && document.visibilityState === "visible") keepAwake();
+});
+// Every change is saved at once, so a reload keeps what was set.
+$("settings").addEventListener("input", saveSettings);
 $("mode").addEventListener("change", applyLabels);
 for (const id of ["prefix", "name"]) {
   $(id).addEventListener("input", (e) => {
@@ -682,6 +742,14 @@ for (const id of ["prefix", "name"]) {
     el.setSelectionRange(caret, caret);
   });
 }
+$("reveal").addEventListener("click", () => {
+  const show = $("password").type === "password";
+  $("password").type = show ? "text" : "password";
+  $("reveal").setAttribute("aria-pressed", show);
+  $("reveal").setAttribute("aria-label", show ? "Hide password" : "Show password");
+});
+// iOS Safari applies :active only on pages that listen for touchstart.
+document.addEventListener("touchstart", () => {}, { passive: true });
 $("setup-bar").addEventListener("click", () => setSetup(!document.body.classList.contains("setup")));
 $("connect").addEventListener("click", connect);
 $("pad").addEventListener("pointerdown", padDown);

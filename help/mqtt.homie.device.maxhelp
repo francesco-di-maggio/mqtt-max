@@ -9,17 +9,18 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 100.0, 100.0, 720.0, 626.0 ],
-        "autosave": 0,
+        "rect": [ 100.0, 100.0, 825.0, 626.0 ],
         "showrootpatcherontab": 0,
         "showontab": 0,
         "boxes": [
             {
                 "box": {
-                    "id": "helpname",
-                    "maxclass": "jsui",
+                    "border": 0,
                     "filename": "helpname.js",
+                    "id": "helpname",
+                    "ignoreclick": 1,
                     "jsarguments": [ "mqtt.homie.device" ],
+                    "maxclass": "jsui",
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
@@ -34,7 +35,7 @@
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 10.0, 75.0, 180.0, 22.0 ],
+                    "patching_rect": [ 10.0, 75.0, 189.0, 22.0 ],
                     "saved_object_attributes": {
                         "filename": "helpstarter.js",
                         "parameter_enable": 0
@@ -58,21 +59,22 @@
                             "modernui": 1
                         },
                         "classnamespace": "box",
-                        "rect": [ 0.0, 26.0, 720.0, 600.0 ],
-                        "autosave": 0,
+                        "rect": [ 0.0, 26.0, 825.0, 600.0 ],
                         "showontab": 1,
                         "boxes": [
                             {
                                 "box": {
+                                    "border": 0,
+                                    "filename": "helpdetails.js",
                                     "id": "details",
+                                    "ignoreclick": 1,
+                                    "jsarguments": [ "mqtt.homie.device" ],
                                     "maxclass": "jsui",
                                     "numinlets": 1,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 10.0, 10.0, 640.0, 100.0 ],
                                     "outlettype": [ "" ],
-                                    "filename": "helpdetails.js",
-                                    "jsarguments": [ "mqtt.homie.device" ],
-                                    "parameter_enable": 0
+                                    "parameter_enable": 0,
+                                    "patching_rect": [ 10.0, 10.0, 726.0, 100.0 ]
                                 }
                             },
                             {
@@ -81,8 +83,8 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 120.0, 640.0, 33.0 ],
-                                    "text": "Max as the Homie device mqtt-max-help/5/lamp. Send the description (bang the dict), then values. A controller on the same client commands it."
+                                    "patching_rect": [ 20.0, 120.0, 768.0, 20.0 ],
+                                    "text": "Max as the Homie device mqtt-max-help/5/lamp. Description first (bang the dict), then values. A controller on the same client commands it."
                                 }
                             },
                             {
@@ -91,8 +93,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 2,
-                                    "patching_rect": [ 20.0, 230.0, 170.0, 22.0 ],
                                     "outlettype": [ "", "" ],
+                                    "patching_rect": [ 20.0, 230.0, 128.0, 22.0 ],
                                     "text": "mqtt.client device-help"
                                 }
                             },
@@ -102,8 +104,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 20.0, 160.0, 261.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 20.0, 160.0, 261.0, 22.0 ],
                                     "text": "connect mqtt://public.cloud.shiftr.io public public"
                                 }
                             },
@@ -113,8 +115,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 300.0, 160.0, 66.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 300.0, 160.0, 66.0, 22.0 ],
                                     "text": "disconnect"
                                 }
                             },
@@ -124,25 +126,13 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 20.0, 270.0, 35.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 20.0, 270.0, 35.0, 22.0 ],
                                     "text": "bang"
                                 }
                             },
                             {
                                 "box": {
-                                    "id": "dict",
-                                    "maxclass": "newobj",
-                                    "numinlets": 2,
-                                    "numoutlets": 5,
-                                    "patching_rect": [ 20.0, 300.0, 150.0, 22.0 ],
-                                    "outlettype": [ "dictionary", "", "", "", "" ],
-                                    "text": "dict lamp-description @embed 1",
-                                    "saved_object_attributes": {
-                                        "embed": 1,
-                                        "parameter_enable": 0,
-                                        "parameter_mappable": 0
-                                    },
                                     "data": {
                                         "name": "Lamp",
                                         "nodes": {
@@ -153,17 +143,30 @@
                                                         "name": "Level",
                                                         "datatype": "integer",
                                                         "format": "0:100",
-                                                        "settable": true
+                                                        "settable": 1
                                                     },
                                                     "on": {
                                                         "name": "On",
                                                         "datatype": "boolean",
-                                                        "settable": true
+                                                        "settable": 1
                                                     }
                                                 }
                                             }
                                         }
-                                    }
+                                    },
+                                    "id": "dict",
+                                    "maxclass": "newobj",
+                                    "numinlets": 2,
+                                    "numoutlets": 5,
+                                    "outlettype": [ "dictionary", "", "", "", "" ],
+                                    "patching_rect": [ 20.0, 300.0, 181.0, 22.0 ],
+                                    "saved_object_attributes": {
+                                        "embed": 1,
+                                        "legacy": 1,
+                                        "parameter_enable": 0,
+                                        "parameter_mappable": 0
+                                    },
+                                    "text": "dict lamp-description @embed 1"
                                 }
                             },
                             {
@@ -172,8 +175,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 2,
-                                    "patching_rect": [ 20.0, 340.0, 330.0, 22.0 ],
                                     "outlettype": [ "", "" ],
+                                    "patching_rect": [ 20.0, 340.0, 335.0, 22.0 ],
                                     "text": "mqtt.homie.device device-help lamp @domain mqtt-max-help"
                                 }
                             },
@@ -183,9 +186,9 @@
                                     "maxclass": "number",
                                     "numinlets": 1,
                                     "numoutlets": 2,
-                                    "patching_rect": [ 380.0, 270.0, 50.0, 22.0 ],
                                     "outlettype": [ "", "bang" ],
-                                    "parameter_enable": 0
+                                    "parameter_enable": 0,
+                                    "patching_rect": [ 380.0, 270.0, 50.0, 22.0 ]
                                 }
                             },
                             {
@@ -194,8 +197,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 380.0, 300.0, 150.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 380.0, 300.0, 138.0, 22.0 ],
                                     "text": "prepend value light level"
                                 }
                             },
@@ -205,9 +208,9 @@
                                     "maxclass": "toggle",
                                     "numinlets": 1,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 545.0, 270.0, 24.0, 24.0 ],
                                     "outlettype": [ "int" ],
-                                    "parameter_enable": 0
+                                    "parameter_enable": 0,
+                                    "patching_rect": [ 545.0, 270.0, 24.0, 24.0 ]
                                 }
                             },
                             {
@@ -216,8 +219,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 545.0, 300.0, 135.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 545.0, 300.0, 127.0, 22.0 ],
                                     "text": "prepend value light on"
                                 }
                             },
@@ -227,7 +230,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 375.0, 340.0, 20.0 ],
+                                    "patching_rect": [ 20.0, 375.0, 323.0, 20.0 ],
                                     "text": "commands from a controller: send the accepted value back"
                                 }
                             },
@@ -235,10 +238,10 @@
                                 "box": {
                                     "id": "rlight",
                                     "maxclass": "newobj",
-                                    "numinlets": 1,
+                                    "numinlets": 2,
                                     "numoutlets": 2,
-                                    "patching_rect": [ 20.0, 400.0, 65.0, 22.0 ],
                                     "outlettype": [ "", "" ],
+                                    "patching_rect": [ 20.0, 400.0, 61.0, 22.0 ],
                                     "text": "route light"
                                 }
                             },
@@ -246,10 +249,10 @@
                                 "box": {
                                     "id": "rprop",
                                     "maxclass": "newobj",
-                                    "numinlets": 1,
+                                    "numinlets": 3,
                                     "numoutlets": 3,
-                                    "patching_rect": [ 20.0, 430.0, 85.0, 22.0 ],
                                     "outlettype": [ "", "", "" ],
+                                    "patching_rect": [ 20.0, 430.0, 81.0, 22.0 ],
                                     "text": "route level on"
                                 }
                             },
@@ -257,10 +260,10 @@
                                 "box": {
                                     "id": "rdump",
                                     "maxclass": "newobj",
-                                    "numinlets": 1,
+                                    "numinlets": 3,
                                     "numoutlets": 3,
-                                    "patching_rect": [ 380.0, 360.0, 130.0, 22.0 ],
                                     "outlettype": [ "", "", "" ],
+                                    "patching_rect": [ 380.0, 360.0, 121.0, 22.0 ],
                                     "text": "route state broadcast"
                                 }
                             },
@@ -270,8 +273,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 380.0, 390.0, 72.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 380.0, 390.0, 72.0, 22.0 ],
                                     "text": "prepend set"
                                 }
                             },
@@ -281,9 +284,9 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 380.0, 420.0, 80.0, 22.0 ],
                                     "outlettype": [ "" ],
-                                    "text": ""
+                                    "patching_rect": [ 380.0, 420.0, 80.0, 22.0 ],
+                                    "text": "ready"
                                 }
                             },
                             {
@@ -292,8 +295,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 480.0, 390.0, 72.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 480.0, 390.0, 72.0, 22.0 ],
                                     "text": "prepend set"
                                 }
                             },
@@ -303,9 +306,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 480.0, 420.0, 150.0, 22.0 ],
                                     "outlettype": [ "" ],
-                                    "text": ""
+                                    "patching_rect": [ 480.0, 420.0, 150.0, 22.0 ]
                                 }
                             },
                             {
@@ -314,7 +316,7 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 540.0, 360.0, 105.0, 22.0 ],
+                                    "patching_rect": [ 540.0, 360.0, 99.0, 22.0 ],
                                     "text": "print device-error"
                                 }
                             },
@@ -324,7 +326,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 380.0, 445.0, 200.0, 20.0 ],
+                                    "patching_rect": [ 380.0, 445.0, 164.0, 20.0 ],
                                     "text": "state                       broadcast"
                                 }
                             },
@@ -334,8 +336,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 3,
-                                    "patching_rect": [ 380.0, 530.0, 310.0, 22.0 ],
                                     "outlettype": [ "", "", "" ],
+                                    "patching_rect": [ 380.0, 530.0, 320.0, 22.0 ],
                                     "text": "mqtt.homie.controller device-help @domain mqtt-max-help"
                                 }
                             },
@@ -345,7 +347,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 490.0, 300.0, 20.0 ],
+                                    "patching_rect": [ 20.0, 490.0, 248.0, 20.0 ],
                                     "text": "what a controller sees: move the number box"
                                 }
                             },
@@ -355,8 +357,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 20.0, 515.0, 72.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 20.0, 515.0, 72.0, 22.0 ],
                                     "text": "prepend set"
                                 }
                             },
@@ -366,9 +368,9 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 20.0, 545.0, 220.0, 22.0 ],
                                     "outlettype": [ "" ],
-                                    "text": ""
+                                    "patching_rect": [ 20.0, 545.0, 220.0, 22.0 ],
+                                    "text": "lamp light on 1"
                                 }
                             },
                             {
@@ -377,8 +379,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 380.0, 495.0, 140.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 380.0, 495.0, 124.0, 22.0 ],
                                     "text": "set lamp light level 25"
                                 }
                             },
@@ -388,13 +390,19 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 530.0, 495.0, 115.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 530.0, 495.0, 106.0, 22.0 ],
                                     "text": "set lamp light on 1"
                                 }
                             }
                         ],
                         "lines": [
+                            {
+                                "patchline": {
+                                    "destination": [ "dict", 0 ],
+                                    "source": [ "bang", 0 ]
+                                }
+                            },
                             {
                                 "patchline": {
                                     "destination": [ "client", 0 ],
@@ -403,14 +411,20 @@
                             },
                             {
                                 "patchline": {
-                                    "destination": [ "client", 0 ],
-                                    "source": [ "disc", 0 ]
+                                    "destination": [ "pre1", 0 ],
+                                    "source": [ "ctl", 0 ]
                                 }
                             },
                             {
                                 "patchline": {
-                                    "destination": [ "dict", 0 ],
-                                    "source": [ "bang", 0 ]
+                                    "destination": [ "rdump", 0 ],
+                                    "source": [ "device", 1 ]
+                                }
+                            },
+                            {
+                                "patchline": {
+                                    "destination": [ "rlight", 0 ],
+                                    "source": [ "device", 0 ]
                                 }
                             },
                             {
@@ -421,14 +435,26 @@
                             },
                             {
                                 "patchline": {
+                                    "destination": [ "client", 0 ],
+                                    "source": [ "disc", 0 ]
+                                }
+                            },
+                            {
+                                "patchline": {
                                     "destination": [ "plvl", 0 ],
                                     "source": [ "lvl", 0 ]
                                 }
                             },
                             {
                                 "patchline": {
-                                    "destination": [ "device", 0 ],
-                                    "source": [ "plvl", 0 ]
+                                    "destination": [ "ctl", 0 ],
+                                    "source": [ "m3", 0 ]
+                                }
+                            },
+                            {
+                                "patchline": {
+                                    "destination": [ "ctl", 0 ],
+                                    "source": [ "m4", 0 ]
                                 }
                             },
                             {
@@ -439,14 +465,50 @@
                             },
                             {
                                 "patchline": {
+                                    "destination": [ "bc", 0 ],
+                                    "source": [ "pbc", 0 ]
+                                }
+                            },
+                            {
+                                "patchline": {
+                                    "destination": [ "device", 0 ],
+                                    "source": [ "plvl", 0 ]
+                                }
+                            },
+                            {
+                                "patchline": {
                                     "destination": [ "device", 0 ],
                                     "source": [ "pon", 0 ]
                                 }
                             },
                             {
                                 "patchline": {
-                                    "destination": [ "rlight", 0 ],
-                                    "source": [ "device", 0 ]
+                                    "destination": [ "disp2", 0 ],
+                                    "source": [ "pre1", 0 ]
+                                }
+                            },
+                            {
+                                "patchline": {
+                                    "destination": [ "state", 0 ],
+                                    "source": [ "pstate", 0 ]
+                                }
+                            },
+                            {
+                                "patchline": {
+                                    "destination": [ "pbc", 0 ],
+                                    "source": [ "rdump", 1 ]
+                                }
+                            },
+                            {
+                                "patchline": {
+                                    "destination": [ "pderr", 0 ],
+                                    "source": [ "rdump", 2 ]
+                                }
+                            },
+                            {
+                                "patchline": {
+                                    "destination": [ "pstate", 0 ],
+                                    "source": [ "rdump", 0 ]
                                 }
                             },
                             {
@@ -466,76 +528,10 @@
                                     "destination": [ "on", 0 ],
                                     "source": [ "rprop", 1 ]
                                 }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "rdump", 0 ],
-                                    "source": [ "device", 1 ]
-                                }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "pstate", 0 ],
-                                    "source": [ "rdump", 0 ]
-                                }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "state", 0 ],
-                                    "source": [ "pstate", 0 ]
-                                }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "pbc", 0 ],
-                                    "source": [ "rdump", 1 ]
-                                }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "bc", 0 ],
-                                    "source": [ "pbc", 0 ]
-                                }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "pderr", 0 ],
-                                    "source": [ "rdump", 2 ]
-                                }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "pre1", 0 ],
-                                    "source": [ "ctl", 0 ]
-                                }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "disp2", 0 ],
-                                    "source": [ "pre1", 0 ]
-                                }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "ctl", 0 ],
-                                    "source": [ "m3", 0 ]
-                                }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "ctl", 0 ],
-                                    "source": [ "m4", 0 ]
-                                }
                             }
                         ]
                     },
                     "patching_rect": [ 10.0, 110.0, 120.0, 22.0 ],
-                    "saved_object_attributes": {
-                        "description": "",
-                        "digest": "",
-                        "globalpatchername": "",
-                        "tags": ""
-                    },
                     "text": "p basic",
                     "varname": "basic_tab"
                 }
@@ -556,21 +552,22 @@
                             "modernui": 1
                         },
                         "classnamespace": "box",
-                        "rect": [ 0.0, 26.0, 720.0, 600.0 ],
-                        "autosave": 0,
+                        "rect": [ 100.0, 126.0, 825.0, 600.0 ],
                         "showontab": 1,
                         "boxes": [
                             {
                                 "box": {
+                                    "border": 0,
+                                    "filename": "helpdetails.js",
                                     "id": "details",
+                                    "ignoreclick": 1,
+                                    "jsarguments": [ "mqtt.homie.device" ],
                                     "maxclass": "jsui",
                                     "numinlets": 1,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 10.0, 10.0, 640.0, 100.0 ],
                                     "outlettype": [ "" ],
-                                    "filename": "helpdetails.js",
-                                    "jsarguments": [ "mqtt.homie.device" ],
-                                    "parameter_enable": 0
+                                    "parameter_enable": 0,
+                                    "patching_rect": [ 10.0, 10.0, 726.0, 100.0 ]
                                 }
                             },
                             {
@@ -579,8 +576,8 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 120.0, 640.0, 20.0 ],
-                                    "text": "The description is Homie's $description: nodes, each with properties. homie and version are filled in."
+                                    "patching_rect": [ 20.0, 120.0, 540.0, 20.0 ],
+                                    "text": "$description: nodes with properties. homie and version are added."
                                 }
                             },
                             {
@@ -589,25 +586,13 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 20.0, 150.0, 35.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 20.0, 150.0, 35.0, 22.0 ],
                                     "text": "bang"
                                 }
                             },
                             {
                                 "box": {
-                                    "id": "dict",
-                                    "maxclass": "newobj",
-                                    "numinlets": 2,
-                                    "numoutlets": 5,
-                                    "patching_rect": [ 20.0, 180.0, 150.0, 22.0 ],
-                                    "outlettype": [ "dictionary", "", "", "", "" ],
-                                    "text": "dict lamp-example @embed 1",
-                                    "saved_object_attributes": {
-                                        "embed": 1,
-                                        "parameter_enable": 0,
-                                        "parameter_mappable": 0
-                                    },
                                     "data": {
                                         "name": "Lamp",
                                         "nodes": {
@@ -618,17 +603,30 @@
                                                         "name": "Level",
                                                         "datatype": "integer",
                                                         "format": "0:100",
-                                                        "settable": true
+                                                        "settable": 1
                                                     },
                                                     "on": {
                                                         "name": "On",
                                                         "datatype": "boolean",
-                                                        "settable": true
+                                                        "settable": 1
                                                     }
                                                 }
                                             }
                                         }
-                                    }
+                                    },
+                                    "id": "dict",
+                                    "maxclass": "newobj",
+                                    "numinlets": 2,
+                                    "numoutlets": 5,
+                                    "outlettype": [ "dictionary", "", "", "", "" ],
+                                    "patching_rect": [ 20.0, 180.0, 168.0, 22.0 ],
+                                    "saved_object_attributes": {
+                                        "embed": 1,
+                                        "legacy": 1,
+                                        "parameter_enable": 0,
+                                        "parameter_mappable": 0
+                                    },
+                                    "text": "dict lamp-example @embed 1"
                                 }
                             },
                             {
@@ -637,16 +635,17 @@
                                     "maxclass": "dict.view",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 215.0, 300.0, 230.0 ]
+                                    "patching_rect": [ 20.0, 215.0, 297.0, 296.0 ]
                                 }
                             },
                             {
                                 "box": {
                                     "id": "ctypes",
+                                    "linecount": 12,
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 340.0, 150.0, 340.0, 230.0 ],
+                                    "patching_rect": [ 340.0, 150.0, 343.0, 167.0 ],
                                     "text": "datatype (Max value): integer, float (numbers) · boolean (1/0) · string, enum (symbol) · color (type and values: rgb 255 0 0, hsv, xyz) · json (dictionary) · datetime, duration (text)\n\nformat: \"min:max[:step]\" for numbers, \"a,b,c\" for enum, \"rgb,hsv\" for color\nsettable: true lets controllers send commands\nretained: false streams values at QoS 0 (sensors), otherwise retained\nunit: e.g. \"°\", \"%\", \"ms\"\n\nIDs: a-z, 0-9 and hyphens"
                                 }
                             }
@@ -667,12 +666,6 @@
                         ]
                     },
                     "patching_rect": [ 10.0, 140.0, 120.0, 22.0 ],
-                    "saved_object_attributes": {
-                        "description": "",
-                        "digest": "",
-                        "globalpatchername": "",
-                        "tags": ""
-                    },
                     "text": "p description",
                     "varname": "basic_tab[1]"
                 }
@@ -693,21 +686,22 @@
                             "modernui": 1
                         },
                         "classnamespace": "box",
-                        "rect": [ 0.0, 26.0, 720.0, 600.0 ],
-                        "autosave": 0,
+                        "rect": [ 0.0, 26.0, 825.0, 600.0 ],
                         "showontab": 1,
                         "boxes": [
                             {
                                 "box": {
+                                    "border": 0,
+                                    "filename": "helpdetails.js",
                                     "id": "details",
+                                    "ignoreclick": 1,
+                                    "jsarguments": [ "mqtt.homie.device" ],
                                     "maxclass": "jsui",
                                     "numinlets": 1,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 10.0, 10.0, 640.0, 100.0 ],
                                     "outlettype": [ "" ],
-                                    "filename": "helpdetails.js",
-                                    "jsarguments": [ "mqtt.homie.device" ],
-                                    "parameter_enable": 0
+                                    "parameter_enable": 0,
+                                    "patching_rect": [ 10.0, 10.0, 726.0, 100.0 ]
                                 }
                             },
                             {
@@ -716,8 +710,8 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 120.0, 640.0, 20.0 ],
-                                    "text": "On connect: init, description, values, ready. A dropped connection: lost (the last will). Clean disconnect: disconnected."
+                                    "patching_rect": [ 20.0, 120.0, 631.0, 20.0 ],
+                                    "text": "Connect: init, description, values, ready. Dropped: lost (last will). Disconnect: disconnected."
                                 }
                             },
                             {
@@ -726,8 +720,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 2,
-                                    "patching_rect": [ 20.0, 220.0, 212.0, 22.0 ],
                                     "outlettype": [ "", "" ],
+                                    "patching_rect": [ 20.0, 220.0, 158.0, 22.0 ],
                                     "text": "mqtt.client device-state-help"
                                 }
                             },
@@ -737,8 +731,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 20.0, 150.0, 261.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 20.0, 150.0, 261.0, 22.0 ],
                                     "text": "connect mqtt://public.cloud.shiftr.io public public"
                                 }
                             },
@@ -748,8 +742,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 300.0, 150.0, 66.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 300.0, 150.0, 66.0, 22.0 ],
                                     "text": "disconnect"
                                 }
                             },
@@ -759,25 +753,13 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 20.0, 260.0, 35.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 20.0, 260.0, 35.0, 22.0 ],
                                     "text": "bang"
                                 }
                             },
                             {
                                 "box": {
-                                    "id": "dict",
-                                    "maxclass": "newobj",
-                                    "numinlets": 2,
-                                    "numoutlets": 5,
-                                    "patching_rect": [ 20.0, 290.0, 150.0, 22.0 ],
-                                    "outlettype": [ "dictionary", "", "", "", "" ],
-                                    "text": "dict lamp-state-description @embed 1",
-                                    "saved_object_attributes": {
-                                        "embed": 1,
-                                        "parameter_enable": 0,
-                                        "parameter_mappable": 0
-                                    },
                                     "data": {
                                         "name": "Lamp",
                                         "nodes": {
@@ -788,17 +770,30 @@
                                                         "name": "Level",
                                                         "datatype": "integer",
                                                         "format": "0:100",
-                                                        "settable": true
+                                                        "settable": 1
                                                     },
                                                     "on": {
                                                         "name": "On",
                                                         "datatype": "boolean",
-                                                        "settable": true
+                                                        "settable": 1
                                                     }
                                                 }
                                             }
                                         }
-                                    }
+                                    },
+                                    "id": "dict",
+                                    "maxclass": "newobj",
+                                    "numinlets": 2,
+                                    "numoutlets": 5,
+                                    "outlettype": [ "dictionary", "", "", "", "" ],
+                                    "patching_rect": [ 20.0, 290.0, 211.0, 22.0 ],
+                                    "saved_object_attributes": {
+                                        "embed": 1,
+                                        "legacy": 1,
+                                        "parameter_enable": 0,
+                                        "parameter_mappable": 0
+                                    },
+                                    "text": "dict lamp-state-description @embed 1"
                                 }
                             },
                             {
@@ -807,8 +802,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 2,
-                                    "patching_rect": [ 20.0, 330.0, 330.0, 22.0 ],
                                     "outlettype": [ "", "" ],
+                                    "patching_rect": [ 20.0, 330.0, 395.0, 22.0 ],
                                     "text": "mqtt.homie.device device-state-help lamp-state @domain mqtt-max-help"
                                 }
                             },
@@ -818,8 +813,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 380.0, 260.0, 90.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 380.0, 260.0, 83.0, 22.0 ],
                                     "text": "state sleeping"
                                 }
                             },
@@ -829,8 +824,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 480.0, 260.0, 70.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 480.0, 260.0, 68.0, 22.0 ],
                                     "text": "state ready"
                                 }
                             },
@@ -840,8 +835,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 380.0, 295.0, 145.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 380.0, 295.0, 133.0, 22.0 ],
                                     "text": "alert battery low battery"
                                 }
                             },
@@ -851,8 +846,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 535.0, 295.0, 80.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 535.0, 295.0, 72.0, 22.0 ],
                                     "text": "alert battery"
                                 }
                             },
@@ -862,7 +857,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 535.0, 320.0, 170.0, 20.0 ],
+                                    "patching_rect": [ 535.0, 320.0, 158.0, 20.0 ],
                                     "text": "alert without text: removes it"
                                 }
                             },
@@ -872,8 +867,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 380.0, 340.0, 85.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 380.0, 340.0, 76.0, 22.0 ],
                                     "text": "log info hello"
                                 }
                             },
@@ -881,10 +876,10 @@
                                 "box": {
                                     "id": "rdump",
                                     "maxclass": "newobj",
-                                    "numinlets": 1,
+                                    "numinlets": 3,
                                     "numoutlets": 3,
-                                    "patching_rect": [ 380.0, 380.0, 130.0, 22.0 ],
                                     "outlettype": [ "", "", "" ],
+                                    "patching_rect": [ 380.0, 380.0, 121.0, 22.0 ],
                                     "text": "route state broadcast"
                                 }
                             },
@@ -894,8 +889,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 380.0, 410.0, 72.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 380.0, 410.0, 72.0, 22.0 ],
                                     "text": "prepend set"
                                 }
                             },
@@ -905,9 +900,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 380.0, 440.0, 80.0, 22.0 ],
                                     "outlettype": [ "" ],
-                                    "text": ""
+                                    "patching_rect": [ 380.0, 440.0, 80.0, 22.0 ]
                                 }
                             },
                             {
@@ -916,8 +910,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 480.0, 410.0, 72.0, 22.0 ],
                                     "outlettype": [ "" ],
+                                    "patching_rect": [ 480.0, 410.0, 72.0, 22.0 ],
                                     "text": "prepend set"
                                 }
                             },
@@ -927,9 +921,8 @@
                                     "maxclass": "message",
                                     "numinlets": 2,
                                     "numoutlets": 1,
-                                    "patching_rect": [ 480.0, 440.0, 150.0, 22.0 ],
                                     "outlettype": [ "" ],
-                                    "text": ""
+                                    "patching_rect": [ 480.0, 440.0, 150.0, 22.0 ]
                                 }
                             },
                             {
@@ -938,7 +931,7 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 540.0, 380.0, 105.0, 22.0 ],
+                                    "patching_rect": [ 540.0, 380.0, 99.0, 22.0 ],
                                     "text": "print device-error"
                                 }
                             },
@@ -948,7 +941,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 380.0, 465.0, 200.0, 20.0 ],
+                                    "patching_rect": [ 380.0, 465.0, 164.0, 20.0 ],
                                     "text": "state                       broadcast"
                                 }
                             },
@@ -958,8 +951,8 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 3,
-                                    "patching_rect": [ 20.0, 400.0, 345.0, 22.0 ],
                                     "outlettype": [ "", "", "" ],
+                                    "patching_rect": [ 20.0, 400.0, 350.0, 22.0 ],
                                     "text": "mqtt.homie.controller device-state-help @domain mqtt-max-help"
                                 }
                             },
@@ -978,24 +971,12 @@
                                     "maxclass": "newobj",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 560.0, 95.0, 22.0 ],
+                                    "patching_rect": [ 20.0, 560.0, 85.0, 22.0 ],
                                     "text": "print controller"
                                 }
                             }
                         ],
                         "lines": [
-                            {
-                                "patchline": {
-                                    "destination": [ "client", 0 ],
-                                    "source": [ "conn", 0 ]
-                                }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "client", 0 ],
-                                    "source": [ "disc", 0 ]
-                                }
-                            },
                             {
                                 "patchline": {
                                     "destination": [ "dict", 0 ],
@@ -1004,8 +985,38 @@
                             },
                             {
                                 "patchline": {
+                                    "destination": [ "client", 0 ],
+                                    "source": [ "conn", 0 ]
+                                }
+                            },
+                            {
+                                "patchline": {
+                                    "destination": [ "palert", 0 ],
+                                    "source": [ "ctl", 2 ]
+                                }
+                            },
+                            {
+                                "patchline": {
+                                    "destination": [ "view", 0 ],
+                                    "source": [ "ctl", 1 ]
+                                }
+                            },
+                            {
+                                "patchline": {
+                                    "destination": [ "rdump", 0 ],
+                                    "source": [ "device", 1 ]
+                                }
+                            },
+                            {
+                                "patchline": {
                                     "destination": [ "device", 0 ],
                                     "source": [ "dict", 0 ]
+                                }
+                            },
+                            {
+                                "patchline": {
+                                    "destination": [ "client", 0 ],
+                                    "source": [ "disc", 0 ]
                                 }
                             },
                             {
@@ -1040,14 +1051,8 @@
                             },
                             {
                                 "patchline": {
-                                    "destination": [ "rdump", 0 ],
-                                    "source": [ "device", 1 ]
-                                }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "pstate", 0 ],
-                                    "source": [ "rdump", 0 ]
+                                    "destination": [ "bc", 0 ],
+                                    "source": [ "pbc", 0 ]
                                 }
                             },
                             {
@@ -1064,37 +1069,19 @@
                             },
                             {
                                 "patchline": {
-                                    "destination": [ "bc", 0 ],
-                                    "source": [ "pbc", 0 ]
-                                }
-                            },
-                            {
-                                "patchline": {
                                     "destination": [ "pderr", 0 ],
                                     "source": [ "rdump", 2 ]
                                 }
                             },
                             {
                                 "patchline": {
-                                    "destination": [ "view", 0 ],
-                                    "source": [ "ctl", 1 ]
-                                }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "palert", 0 ],
-                                    "source": [ "ctl", 2 ]
+                                    "destination": [ "pstate", 0 ],
+                                    "source": [ "rdump", 0 ]
                                 }
                             }
                         ]
                     },
                     "patching_rect": [ 10.0, 170.0, 120.0, 22.0 ],
-                    "saved_object_attributes": {
-                        "description": "",
-                        "digest": "",
-                        "globalpatchername": "",
-                        "tags": ""
-                    },
                     "text": "p state & alerts",
                     "varname": "basic_tab[2]"
                 }
@@ -1115,24 +1102,18 @@
                             "modernui": 1
                         },
                         "classnamespace": "box",
-                        "rect": [ 0.0, 26.0, 720.0, 600.0 ],
-                        "autosave": 0,
+                        "rect": [ 0.0, 26.0, 825.0, 600.0 ],
                         "showontab": 1,
                         "boxes": [],
                         "lines": []
                     },
                     "patching_rect": [ 10.0, 200.0, 120.0, 22.0 ],
-                    "saved_object_attributes": {
-                        "description": "",
-                        "digest": "",
-                        "globalpatchername": "",
-                        "tags": ""
-                    },
                     "text": "p ?",
                     "varname": "q_tab"
                 }
             }
         ],
-        "lines": []
+        "lines": [],
+        "autosave": 0
     }
 }

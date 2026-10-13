@@ -16,7 +16,7 @@
 		<p>Send the description as a dictionary, for example from a <o>dict</o>: <i>{"name": "...", "nodes": {"light": {"properties": {"level": {"datatype": "integer", "format": "0:100", "settable": true}}}}}</i>. The <i>homie</i> and <i>version</i> fields are filled in.</p>
 		<p>On each connection the device publishes <i>init</i>, its description, its retained values and <i>ready</i>, and listens to broadcasts of its domain. If the connection drops, the broker publishes <i>lost</i> (the last will). A client has one Homie device; adding or changing it reconnects the client, since the last will belongs to the connection.</p>
 		<p>Values are checked against the property: datatype, and range from <i>format</i>. Properties are retained (QoS 2) unless <i>"retained": false</i>, which streams them at QoS 0.</p>
-		<p>IDs may only contain a-z, 0-9 and hyphens.</p>
+		<p>IDs may only contain a-z, 0-9 and hyphens. Node and property IDs made only of digits are output as numbers, so that <o>route</o> matches them.</p>
 	</discussion>
 
 	<metadatalist>

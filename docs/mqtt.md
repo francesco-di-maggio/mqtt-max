@@ -1,12 +1,10 @@
 # MQTT for Max
 
-This page explains MQTT, the formats mqtt-max uses on top of it, and the package itself.
-
 ## MQTT
 
-MQTT is a publish/subscribe messaging protocol, standardised by OASIS. Version 3.1.1 (2014) is also the international standard ISO/IEC 20922. Version 5.0 (2019) adds features such as message expiry and request/response. mqtt-max uses 3.1.1, which every broker supports.
+Publish/subscribe messaging protocol, standardised by OASIS. 3.1.1 (2014) is also ISO/IEC 20922. 5.0 (2019) adds message expiry, request/response and more. mqtt-max uses 3.1.1.
 
-Clients never talk to each other directly. They connect to a **broker**, a server that passes messages on:
+Clients connect to a **broker**, a server that passes messages on. They never talk directly:
 
 ```
 phone ──publish──▶ broker ──deliver──▶ Max
@@ -14,11 +12,11 @@ phone ──publish──▶ broker ──deliver──▶ Max
 ESP32 ──publish──────┘
 ```
 
-Because every client connects *out* to the broker, devices behind home routers, phone networks and firewalls can reach each other without port forwarding. That is what makes MQTT work over any network.
+Every client connects out to the broker, so devices behind routers, mobile networks and firewalls reach each other without port forwarding.
 
 ### Topics
 
-A message is published to a **topic**, a path such as `studio/sensor/1`. Clients **subscribe** to topic filters:
+Messages are published to a **topic**, a path such as `studio/sensor/1`. Clients **subscribe** to filters:
 
 | Filter | Matches |
 |---|---|
@@ -26,15 +24,15 @@ A message is published to a **topic**, a path such as `studio/sensor/1`. Clients
 | `studio/+/1` | one level: `studio/sensor/1`, `studio/light/1` |
 | `studio/#` | everything below `studio` |
 
-Topics are created by publishing; nothing has to be declared first.
+Topics exist once published to. Nothing is declared.
 
 ### Payloads
 
-A payload is a sequence of bytes. MQTT says nothing about what they mean: text, numbers, JSON or raw binary are all choices of the application.
+Bytes. Their meaning is up to the application: text, numbers, JSON, binary.
 
 ### Quality of service
 
-Each message is sent with a QoS level:
+Per message:
 
 | QoS | Delivery | Use |
 |---|---|---|
@@ -46,11 +44,11 @@ Higher levels cost more round trips. Messages from one client on one topic arriv
 
 ### Retained messages
 
-A message published with **retain** is stored by the broker, one per topic, and sent to every client that subscribes later. It is how a new subscriber learns the current state, e.g. a device's settings, without waiting for the next update. Publishing an empty retained message deletes it.
+The broker stores the last **retained** message per topic and sends it to every new subscriber, who gets the current state at once. An empty retained message deletes it.
 
 ### Last will and keepalive
 
-When connecting, a client can leave a **last will**: a message the broker publishes for it if the connection drops without a clean disconnect. Clients send a **keepalive** at a set interval; the broker considers a client gone after 1.5 times that interval without traffic. Together they let others know, within seconds, that a device has disappeared.
+**Last will**: a message the broker publishes for a client whose connection drops without a clean disconnect. **Keepalive**: the client's ping interval; after 1.5 times that without traffic, the broker considers the client gone. Together they report a lost device within seconds.
 
 ### Connections
 
@@ -61,21 +59,23 @@ When connecting, a client can leave a **last will**: a message the broker publis
 | `ws://` | WebSocket | depends on the broker |
 | `wss://` | WebSocket with TLS | depends on the broker |
 
-Web pages, such as the phone app, can only use WebSockets.
+Web pages, such as the remote, use WebSockets only.
 
 ### Brokers
 
-- **Public test brokers** (e.g. `public.cloud.shiftr.io`, `test.mosquitto.org`) need no setup, but are shared, readable by anyone and often slow. Use them for trying things out only.
-- **A broker on your own network**, such as `[mqtt.broker]` in Max, or Mosquitto on a computer or a Raspberry Pi, adds only a few milliseconds and keeps data private.
-- **A hosted or self-managed server** connects places over the internet, with user names, passwords and TLS.
+| Broker | |
+|---|---|
+| Public test broker: `public.cloud.shiftr.io`, `test.mosquitto.org` | No setup. Shared, readable by anyone, often slow. For tests. |
+| Local: `[mqtt.broker]`, Mosquitto on a computer or Raspberry Pi | A few ms. Private. |
+| Hosted or own server | Across the internet. Login, TLS. |
 
 ## Formats on top of MQTT
 
-MQTT leaves topic names and payloads open. mqtt-max uses two formats on top of it.
+MQTT leaves topics and payloads open. mqtt-max uses two formats.
 
 ### MIDI
 
-`[mqtt.midi]` publishes MIDI messages as the MIDI 1.0 specification defines them, as raw bytes: one or more complete messages per MQTT message. The topic is set per object. One topic per device keeps the senders apart:
+`[mqtt.midi]` publishes MIDI 1.0 messages as raw bytes, one or more complete messages per MQTT message. One topic per device:
 
 ```
 studio/phone-a1b2/midi    B0 07 40       control change 7, value 64, channel 1
@@ -84,7 +84,7 @@ studio/phone-a1b2/midi    F0 7D 01 F7    SysEx
 studio/phone-a1b2/midi    F8             clock
 ```
 
-A subscription to `studio/+/midi` receives the MIDI of every device. MIDI keeps its limits: 7-bit values and 16 channels per topic.
+`studio/+/midi` receives every device. MIDI limits apply: 7-bit values, 16 channels per topic.
 
 ### Homie
 
@@ -99,9 +99,9 @@ homie/5/lamp/light/level    80
 - **`$state`** is `init`, `ready`, `disconnected`, `sleeping` or `lost`; the last will sets `lost`.
 - **`$description`** lists the device's nodes and their properties, each with a datatype, range and unit.
 - **Values** are text, typed by the description: numbers, booleans, colours, JSON.
-- **Commands** go to `…/light/level/set`; the device confirms by publishing the new value.
+- **Commands** go to `…/light/level/set`. The device confirms by publishing the new value.
 
-Controllers discover devices from their `$state`, read the description, and know what each value means without any prior agreement. `homie` is the default domain; another single word, such as `remote`, keeps a group of devices apart.
+Controllers discover devices by `$state` and read each value's type from the description. Default domain: `homie`. Another domain, such as `remote`, keeps a group apart.
 
 ## OSC and MQTT
 
@@ -114,28 +114,18 @@ Controllers discover devices from their `$state`, read the description, and know
 | State and presence | none built in | retained messages, last will |
 | Browsers | no | yes, over WebSocket |
 
-They complement each other: OSC for dense gestures within a room, MQTT for devices, state and presence across networks.
+OSC: dense gestures in one room. MQTT: devices, state and presence across networks.
 
 ## mqtt-max
 
-mqtt-max is a Max package with five objects:
+Objects: see the [README](../README.md). Uses:
 
-| Object | |
-|---|---|
-| `[mqtt.client]` | A connection to a broker: subscribe, publish text, bytes or JSON dictionaries, QoS, retain. Other objects share it by name. |
-| `[mqtt.broker]` | An MQTT broker on this computer: TCP, TLS, WebSocket and secure WebSocket, optional login. |
-| `[mqtt.midi]` | MIDI as raw MIDI bytes, like `[midiin]` and `[midiout]`, optionally on a virtual MIDI port for any patch or application. |
-| `[mqtt.homie.device]` | Max as a Homie device: its description from a dictionary, typed values, commands from controllers. |
-| `[mqtt.homie.controller]` | Discovers Homie devices, reports which are online, outputs their values and commands them. |
-
-Typical uses:
-
-- Phones and browsers sending to Max over WebSocket, with nothing to install.
-- Microcontrollers such as the ESP32 publishing sensor values with an MQTT library.
-- Devices on different networks reaching Max through a broker on the internet.
-- Knowing which devices are connected: retained states and the last will report joins, clean disconnects and dropped connections.
-- MIDI from the network on a virtual MIDI port, for Max patches and other applications.
-- Exchanging messages with other MQTT software, such as Node-RED, Home Assistant or openHAB.
+- Phones and browsers → Max over WebSocket, nothing to install.
+- Microcontrollers (e.g. ESP32) publishing sensor values.
+- Devices on different networks, through a broker on the internet.
+- Presence: retained states and the last will report joins, disconnects and dropped connections.
+- MIDI from the network on a virtual MIDI port.
+- Other MQTT software: Node-RED, Home Assistant, openHAB.
 
 ## Further reading
 
