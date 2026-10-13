@@ -267,15 +267,34 @@
                     "comment": "dumpout: status, error, ready, script",
                     "index": 1
                 }
+            },
+            {
+                "box": {
+                    "id": "queue",
+                    "maxclass": "newobj",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 20.0, 340.0, 110.0, 22.0 ],
+                    "saved_object_attributes": {
+                        "filename": "mqtt.queue.js",
+                        "parameter_enable": 0
+                    },
+                    "text": "js mqtt.queue.js"
+                }
+            },
+            {
+                "box": {
+                    "id": "cqueue",
+                    "maxclass": "comment",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 20.0, 60.0, 250.0, 20.0 ],
+                    "text": "messages wait until the script is ready"
+                }
             }
         ],
         "lines": [
-            {
-                "patchline": {
-                    "destination": [ "node", 0 ],
-                    "source": [ "in", 0 ]
-                }
-            },
             {
                 "patchline": {
                     "destination": [ "tload", 0 ],
@@ -441,6 +460,24 @@
             {
                 "patchline": {
                     "destination": [ "out1", 0 ],
+                    "source": [ "ready", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "queue", 0 ],
+                    "source": [ "in", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "node", 0 ],
+                    "source": [ "queue", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "queue", 1 ],
                     "source": [ "ready", 0 ]
                 }
             }

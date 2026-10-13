@@ -6,7 +6,7 @@ All notable changes are listed here. Versions follow [Semantic Versioning](https
 
 First release as a Max package.
 
-- `[mqtt.client]`: MQTT 3.1.1 over TCP, TLS and WebSocket; subscribe, publish text, bytes or JSON dictionaries; QoS, retain, last will, keepalive, clean session; one connection shared by name.
+- `[mqtt.client]`: MQTT 3.1.1 over TCP, TLS and WebSocket; subscribe, publish text, bytes or JSON dictionaries; QoS, retain, last will, keepalive, clean session; one connection shared by name; messages sent before the script is ready are held.
 - `[mqtt.broker]`: an MQTT 3.1.1 broker (Aedes) on TCP, TLS, WebSocket and secure WebSocket, with optional login; reports client connections and subscriptions.
 - `[mqtt.midi]`: MIDI messages over MQTT, including SysEx and clock, as raw MIDI bytes, on topics set with `@receive` and `@send`; optional virtual MIDI port on macOS.
 - `[mqtt.homie.device]` and `[mqtt.homie.controller]`: Homie 5 devices and controllers: state and last will, descriptions, typed values with ranges and steps, commands, broadcasts, alerts and logs.

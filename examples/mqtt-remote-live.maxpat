@@ -30,7 +30,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 20.0, 40.0, 682.0, 33.0 ],
-                    "text": "Remote: Send MIDI, prefix remote, Motion on, Connect. Choose the output port below (e.g. \"from Max 1\")\nand enable it as a MIDI input in Live. CC 1-4 → smoothed → CC 20-23 (CC 1 is the mod wheel in many instruments)."
+                    "text": "Remote: Send MIDI, prefix remote, Motion on, Connect. Choose the output port below (e.g. \"from Max 1\")\nand enable it as a MIDI input in Live. CC 20-23 (motion, latency) are smoothed."
                 }
             },
             {
@@ -127,8 +127,8 @@
                     "numinlets": 5,
                     "numoutlets": 5,
                     "outlettype": [ "", "", "", "", "" ],
-                    "patching_rect": [ 120.0, 270.0, 76.0, 22.0 ],
-                    "text": "route 1 2 3 4"
+                    "patching_rect": [ 120.0, 270.0, 105.0, 22.0 ],
+                    "text": "route 20 21 22 23"
                 }
             },
             {
@@ -279,7 +279,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 20.0, 465.0, 82.0, 20.0 ],
-                    "text": "CC1 → CC20"
+                    "text": "CC20 pitch"
                 }
             },
             {
@@ -321,7 +321,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 110.0, 465.0, 82.0, 20.0 ],
-                    "text": "CC2 → CC21"
+                    "text": "CC21 roll"
                 }
             },
             {
@@ -363,7 +363,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 200.0, 465.0, 82.0, 20.0 ],
-                    "text": "CC3 → CC22"
+                    "text": "CC22 yaw"
                 }
             },
             {
@@ -405,7 +405,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 290.0, 465.0, 82.0, 20.0 ],
-                    "text": "CC4 → CC23"
+                    "text": "CC23 latency"
                 }
             },
             {
