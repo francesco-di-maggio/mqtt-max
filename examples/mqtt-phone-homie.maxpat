@@ -29,7 +29,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 20.0, 40.0, 600.0, 40.0 ],
-                    "text": "Phone app: Send Homie, prefix remote, then Connect.\nValues arrive typed, by device, node and property. [route phone-xxxx] after zl.slice picks one phone."
+                    "text": "Phone app: Send Homie, prefix remote, Motion on, then Connect.\nValues arrive typed, by device, node and property. [route phone-xxxx] after zl.slice picks one phone."
                 }
             },
             {
@@ -279,7 +279,7 @@
                     "numoutlets": 2,
                     "patching_rect": [ 400.0, 335.0, 70.0, 22.0 ],
                     "outlettype": [ "", "" ],
-                    "text": "route value"
+                    "text": "route 1"
                 }
             },
             {
@@ -300,7 +300,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 400.0, 390.0, 90.0, 20.0 ],
-                    "text": "slider (0-1)"
+                    "text": "slider 1 (0-1)"
                 }
             },
             {

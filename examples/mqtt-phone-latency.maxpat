@@ -592,7 +592,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 270.0, 665.0, 240.0, 20.0 ],
-                    "text": "use the name in the phone app, then click"
+                    "text": "use the ID in the phone app, then click"
                 }
             },
             {

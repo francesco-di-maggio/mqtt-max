@@ -29,7 +29,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 20.0, 40.0, 600.0, 40.0 ],
-                    "text": "Phone app: Send MIDI, prefix remote, then Connect. Choose the output port below (e.g. \"from Max 1\")\nand enable it as a MIDI input in Live. CC 1-4 are smoothed and sent as CC 20-23: CC 1 is the mod wheel in many instruments."
+                    "text": "Phone app: Send MIDI, prefix remote, Motion on, then Connect. Choose the output port below (e.g. \"from Max 1\")\nand enable it as a MIDI input in Live. CC 1-4 are smoothed and sent as CC 20-23: CC 1 is the mod wheel in many instruments."
                 }
             },
             {

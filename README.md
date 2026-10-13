@@ -35,7 +35,7 @@ Open the help of any object (right-click → Open Help). Each help file has tabs
 
 ## Examples
 
-The examples work with the phone app at [francesco-di-maggio.github.io/mqtt-max/phone/](https://francesco-di-maggio.github.io/mqtt-max/phone/): its tilt, XY pad and slider, sent as MIDI or as Homie values. They open from the landing patch.
+The examples work with the phone app at [francesco-di-maggio.github.io/mqtt-max/phone/](https://francesco-di-maggio.github.io/mqtt-max/phone/): its motion, network round trip, XY pad, sliders, buttons and sound level, sent as MIDI or as Homie values. They open from the landing patch.
 
 | Example | |
 |---|---|

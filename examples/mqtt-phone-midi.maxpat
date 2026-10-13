@@ -29,7 +29,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 20.0, 40.0, 600.0, 40.0 ],
-                    "text": "Phone app: Send MIDI, prefix remote, then Connect. Every phone publishes to remote/<name>/midi.\nCC 1-7 and the pad note arrive on the MIDI port mqtt-max: plain ctlin and notein, in any patch or application."
+                    "text": "Phone app: Send MIDI, prefix remote, Motion on, then Connect. Every phone publishes to remote/<id>/midi.\nIts CCs and notes arrive on the MIDI port mqtt-max: plain ctlin and notein, in any patch or application."
                 }
             },
             {

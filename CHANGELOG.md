@@ -11,4 +11,4 @@ First release as a Max package.
 - `[mqtt.midi]`: MIDI messages over MQTT, including SysEx and clock, as raw MIDI bytes, on topics set with `@receive` and `@send`; optional virtual MIDI port on macOS.
 - `[mqtt.homie.device]` and `[mqtt.homie.controller]`: Homie 5 devices and controllers: state and last will, descriptions, typed values with ranges and steps, commands, broadcasts, alerts and logs.
 - Help files with tabs and reference pages for every object; four examples with the phone app; a landing patch.
-- Phone app: tilt, XY pad and slider, sent as MIDI or as Homie values.
+- Phone app: motion, network round trip, XY pad, sliders, buttons and sound level, each switched on or off, sent as MIDI or as Homie values.
