@@ -46,6 +46,7 @@ Starting points for real setups, one per setup. They open from the landing patch
 | `mqtt-synth-device` | A Max synth as a Homie device that anyone on the network can play |
 | `mqtt-local-network` | No internet: `[mqtt.broker]` in Max, phones and microcontrollers join on the local network |
 | `mqtt-round-trips` | How fast the connection is: Max → broker → Max, Remote → broker → Remote |
+| `mqtt-midge-bridge` | MIDI with midge and mqtt-midi: Max → DAW and DAW → Max, one topic per value |
 
 ## With mqtt-midi and midge
 
@@ -56,7 +57,7 @@ Starting points for real setups, one per setup. They open from the landing patch
 | To midge, e.g. a DAW | `[mqtt.send <client> remote/in/cc/1/7 @format bytes]`, values 0-127 |
 | From midge | `[mqtt.receive <client> remote/out/# @format bytes]`: the topic, then the value bytes |
 
-The Remote sends Homie values. To reach midge, map them in Max to these topics, as `mqtt-remote-midi` maps them to MIDI. Not yet tested together.
+Example: `mqtt-midge-bridge`. The Remote sends Homie values: to reach midge, map them in Max to these topics. Not yet tested together.
 
 ## Standards
 

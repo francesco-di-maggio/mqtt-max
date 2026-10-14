@@ -59,7 +59,7 @@
                             "modernui": 1
                         },
                         "classnamespace": "box",
-                        "rect": [ 100.0, 126.0, 827.0, 550.0 ],
+                        "rect": [ 0.0, 26.0, 827.0, 550.0 ],
                         "showontab": 1,
                         "boxes": [
                             {
@@ -71,7 +71,7 @@
                                     "numoutlets": 2,
                                     "outlettype": [ "", "bang" ],
                                     "parameter_enable": 0,
-                                    "patching_rect": [ 559.0, 195.0, 50.0, 22.0 ]
+                                    "patching_rect": [ 589.0, 195.0, 50.0, 22.0 ]
                                 }
                             },
                             {
@@ -95,7 +95,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 120.0, 769.0, 20.0 ],
+                                    "patching_rect": [ 20.0, 120.0, 508.0, 20.0 ],
                                     "text": "Broker on this computer, port 1883. Devices connect to one of its addresses, Max to localhost."
                                 }
                             },
@@ -129,8 +129,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20.0, 260.0, 354, 22.0 ],
-                                    "text": "subscribe mqttjs_54e489a0 mqtt-max-help/broker/# 0"
+                                    "patching_rect": [ 20.0, 260.0, 354.0, 22.0 ]
                                 }
                             },
                             {
@@ -174,7 +173,7 @@
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
                                     "patching_rect": [ 20.0, 355.0, 109.0, 22.0 ],
-                                    "text": "listening mqtt 1883"
+                                    "text": ""
                                 }
                             },
                             {
@@ -206,8 +205,8 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20.0, 410.0, 155.0, 22.0 ],
-                                    "text": "mqtt://192.168.178.71:1883"
+                                    "patching_rect": [ 20.0, 410.0, 149.0, 22.0 ],
+                                    "text": ""
                                 }
                             },
                             {
@@ -240,7 +239,7 @@
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
                                     "patching_rect": [ 20.0, 465.0, 29.5, 22.0 ],
-                                    "text": "1"
+                                    "text": ""
                                 }
                             },
                             {
@@ -292,7 +291,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 380.0, 225.0, 232, 22.0 ],
+                                    "patching_rect": [ 380.0, 225.0, 187.0, 22.0 ],
                                     "text": "subscribe mqtt-max-help/broker/#"
                                 }
                             },
@@ -303,7 +302,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 559.0, 225.0, 266, 22.0 ],
+                                    "patching_rect": [ 589.0, 225.0, 209.0, 22.0 ],
                                     "text": "publish mqtt-max-help/broker/hello $1"
                                 }
                             },
@@ -326,8 +325,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 380.0, 330.0, 232, 22.0 ],
-                                    "text": "mqtt-max-help/broker/hello 0.053"
+                                    "patching_rect": [ 380.0, 330.0, 232.0, 22.0 ]
                                 }
                             },
                             {
@@ -368,7 +366,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 515.0, 625.0, 20.0 ],
+                                    "patching_rect": [ 20.0, 515.0, 329.0, 20.0 ],
                                     "text": "macOS firewall on: allow incoming connections when asked."
                                 }
                             }
@@ -529,7 +527,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 120.0, 705.0, 20.0 ],
+                                    "patching_rect": [ 20.0, 120.0, 514.0, 20.0 ],
                                     "text": "One port per listener, 0 = off. ws:// for web pages. mqtts:// and wss:// need a key and certificate."
                                 }
                             },
@@ -575,7 +573,7 @@
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
                                     "patching_rect": [ 20.0, 255.0, 101.0, 22.0 ],
-                                    "text": "listening ws 9001"
+                                    "text": ""
                                 }
                             },
                             {
@@ -607,8 +605,8 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20.0, 310.0, 147.0, 22.0 ],
-                                    "text": "ws://192.168.178.71:9001"
+                                    "patching_rect": [ 20.0, 310.0, 140.0, 22.0 ],
+                                    "text": ""
                                 }
                             },
                             {
@@ -641,7 +639,7 @@
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
                                     "patching_rect": [ 20.0, 365.0, 29.5, 22.0 ],
-                                    "text": "0"
+                                    "text": ""
                                 }
                             },
                             {
@@ -670,7 +668,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 380.0, 165.0, 366.0, 20.0 ],
+                                    "patching_rect": [ 380.0, 165.0, 221.0, 20.0 ],
                                     "text": "TLS test key and certificate, in Terminal:"
                                 }
                             },
@@ -732,11 +730,10 @@
                             {
                                 "box": {
                                     "id": "cself",
-                                    "linecount": 2,
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 380.0, 345.0, 434.0, 33.0 ],
+                                    "patching_rect": [ 380.0, 345.0, 410.0, 20.0 ],
                                     "text": "Self-signed: clients must accept it. Browsers accept trusted certificates only."
                                 }
                             }
@@ -837,7 +834,7 @@
                             "modernui": 1
                         },
                         "classnamespace": "box",
-                        "rect": [ 0.0, 26.0, 827.0, 550.0 ],
+                        "rect": [ 100.0, 126.0, 827.0, 550.0 ],
                         "showontab": 1,
                         "boxes": [
                             {
@@ -861,7 +858,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 120.0, 537.0, 20.0 ],
+                                    "patching_rect": [ 20.0, 120.0, 352.0, 20.0 ],
                                     "text": "With a username, clients must log in. Wrong login: return code 4."
                                 }
                             },
@@ -939,7 +936,7 @@
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
                                     "patching_rect": [ 20.0, 340.0, 109.0, 22.0 ],
-                                    "text": "listening mqtt 1884"
+                                    "text": ""
                                 }
                             },
                             {
@@ -971,8 +968,8 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20.0, 395.0, 155.0, 22.0 ],
-                                    "text": "mqtt://192.168.178.71:1884"
+                                    "patching_rect": [ 20.0, 395.0, 149.0, 22.0 ],
+                                    "text": ""
                                 }
                             },
                             {
@@ -1004,7 +1001,7 @@
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
                                     "patching_rect": [ 20.0, 450.0, 29.5, 22.0 ],
-                                    "text": "0"
+                                    "text": ""
                                 }
                             },
                             {
@@ -1152,7 +1149,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 80.0, 150.0, 285.0, 20.0 ],
+                                    "patching_rect": [ 80.0, 150.0, 213.0, 20.0 ],
                                     "text": "clients: count and IDs, on the dumpout"
                                 }
                             }

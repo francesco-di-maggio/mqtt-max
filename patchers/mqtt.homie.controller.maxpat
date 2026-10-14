@@ -13,14 +13,14 @@
         "boxes": [
             {
                 "box": {
+                    "comment": "set <device> <node> <property> <value>, broadcast <subtopic> <text>, domain",
                     "id": "in",
+                    "index": 0,
                     "maxclass": "inlet",
                     "numinlets": 0,
                     "numoutlets": 1,
-                    "patching_rect": [ 20.0, 20.0, 30.0, 30.0 ],
                     "outlettype": [ "" ],
-                    "comment": "set <device> <node> <property> <value>, broadcast <subtopic> <text>, domain",
-                    "index": 0
+                    "patching_rect": [ 20.0, 20.0, 30.0, 30.0 ]
                 }
             },
             {
@@ -29,8 +29,8 @@
                     "maxclass": "newobj",
                     "numinlets": 2,
                     "numoutlets": 2,
-                    "patching_rect": [ 20.0, 60.0, 60.0, 22.0 ],
                     "outlettype": [ "", "" ],
+                    "patching_rect": [ 20.0, 60.0, 55.0, 22.0 ],
                     "text": "route set"
                 }
             },
@@ -40,8 +40,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 1,
-                    "patching_rect": [ 20.0, 90.0, 244.0, 22.0 ],
                     "outlettype": [ "" ],
+                    "patching_rect": [ 20.0, 90.0, 195.0, 22.0 ],
                     "text": "prepend controller #0-controller set"
                 }
             },
@@ -51,8 +51,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 1,
-                    "patching_rect": [ 20.0, 200.0, 180.0, 22.0 ],
                     "outlettype": [ "" ],
+                    "patching_rect": [ 20.0, 200.0, 175.0, 22.0 ],
                     "text": "prepend controller #0-controller"
                 }
             },
@@ -62,7 +62,7 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 440.0, 55.0, 22.0 ],
+                    "patching_rect": [ 20.0, 440.0, 49.0, 22.0 ],
                     "text": "forward"
                 }
             },
@@ -72,7 +72,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 300.0, 20.0, 80.0, 20.0 ],
+                    "patching_rect": [ 300.0, 20.0, 67.0, 20.0 ],
                     "text": "connection"
                 }
             },
@@ -82,8 +82,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 1,
-                    "patching_rect": [ 300.0, 45.0, 60.0, 22.0 ],
                     "outlettype": [ "bang" ],
+                    "patching_rect": [ 300.0, 45.0, 58.0, 22.0 ],
                     "text": "loadbang"
                 }
             },
@@ -93,8 +93,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 2,
-                    "patching_rect": [ 300.0, 75.0, 40.0, 22.0 ],
                     "outlettype": [ "bang", "bang" ],
+                    "patching_rect": [ 300.0, 75.0, 32.0, 22.0 ],
                     "text": "t b b"
                 }
             },
@@ -104,8 +104,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 1,
-                    "patching_rect": [ 300.0, 105.0, 55.0, 22.0 ],
                     "outlettype": [ "" ],
+                    "patching_rect": [ 300.0, 105.0, 54.0, 22.0 ],
                     "text": "deferlow"
                 }
             },
@@ -115,8 +115,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 2,
-                    "patching_rect": [ 300.0, 135.0, 40.0, 22.0 ],
                     "outlettype": [ "bang", "bang" ],
+                    "patching_rect": [ 300.0, 135.0, 32.0, 22.0 ],
                     "text": "t b b"
                 }
             },
@@ -126,8 +126,8 @@
                     "maxclass": "message",
                     "numinlets": 2,
                     "numoutlets": 1,
-                    "patching_rect": [ 350.0, 165.0, 55.0, 22.0 ],
                     "outlettype": [ "" ],
+                    "patching_rect": [ 350.0, 165.0, 49.0, 22.0 ],
                     "text": "register"
                 }
             },
@@ -137,8 +137,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 2,
-                    "patching_rect": [ 300.0, 200.0, 75.0, 22.0 ],
                     "outlettype": [ "", "" ],
+                    "patching_rect": [ 300.0, 200.0, 72.0, 22.0 ],
                     "text": "patcherargs"
                 }
             },
@@ -146,10 +146,10 @@
                 "box": {
                     "id": "done",
                     "maxclass": "newobj",
-                    "numinlets": 1,
+                    "numinlets": 2,
                     "numoutlets": 2,
-                    "patching_rect": [ 420.0, 230.0, 70.0, 22.0 ],
                     "outlettype": [ "", "" ],
+                    "patching_rect": [ 420.0, 230.0, 66.0, 22.0 ],
                     "text": "route done"
                 }
             },
@@ -159,8 +159,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 2,
-                    "patching_rect": [ 300.0, 290.0, 40.0, 22.0 ],
                     "outlettype": [ "", "" ],
+                    "patching_rect": [ 300.0, 290.0, 31.0, 22.0 ],
                     "text": "t s s"
                 }
             },
@@ -170,8 +170,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 1,
-                    "patching_rect": [ 300.0, 320.0, 190.0, 22.0 ],
                     "outlettype": [ "" ],
+                    "patching_rect": [ 300.0, 320.0, 174.0, 22.0 ],
                     "text": "sprintf symout mqtt.client.%s.in"
                 }
             },
@@ -181,8 +181,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 1,
-                    "patching_rect": [ 320.0, 350.0, 195.0, 22.0 ],
                     "outlettype": [ "" ],
+                    "patching_rect": [ 320.0, 350.0, 181.0, 22.0 ],
                     "text": "sprintf symout mqtt.client.%s.out"
                 }
             },
@@ -192,8 +192,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 1,
-                    "patching_rect": [ 300.0, 385.0, 78.0, 22.0 ],
                     "outlettype": [ "" ],
+                    "patching_rect": [ 300.0, 385.0, 82.0, 22.0 ],
                     "text": "prepend send"
                 }
             },
@@ -203,8 +203,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 1,
-                    "patching_rect": [ 400.0, 385.0, 72.0, 22.0 ],
                     "outlettype": [ "" ],
+                    "patching_rect": [ 400.0, 385.0, 72.0, 22.0 ],
                     "text": "prepend set"
                 }
             },
@@ -214,8 +214,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 1,
-                    "patching_rect": [ 420.0, 45.0, 60.0, 22.0 ],
-                    "outlettype": [ "" ],
+                    "outlettype": [ "bang" ],
+                    "patching_rect": [ 420.0, 45.0, 56.0, 22.0 ],
                     "text": "freebang"
                 }
             },
@@ -225,8 +225,8 @@
                     "maxclass": "message",
                     "numinlets": 2,
                     "numoutlets": 1,
-                    "patching_rect": [ 420.0, 75.0, 35.0, 22.0 ],
                     "outlettype": [ "" ],
+                    "patching_rect": [ 420.0, 75.0, 29.5, 22.0 ],
                     "text": "free"
                 }
             },
@@ -236,7 +236,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 560.0, 20.0, 60.0, 20.0 ],
+                    "patching_rect": [ 560.0, 20.0, 42.0, 20.0 ],
                     "text": "output"
                 }
             },
@@ -246,8 +246,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 1,
-                    "patching_rect": [ 560.0, 45.0, 50.0, 22.0 ],
                     "outlettype": [ "" ],
+                    "patching_rect": [ 560.0, 45.0, 47.0, 22.0 ],
                     "text": "receive"
                 }
             },
@@ -255,10 +255,10 @@
                 "box": {
                     "id": "rrole",
                     "maxclass": "newobj",
-                    "numinlets": 1,
+                    "numinlets": 3,
                     "numoutlets": 3,
-                    "patching_rect": [ 560.0, 75.0, 130.0, 22.0 ],
                     "outlettype": [ "", "", "" ],
+                    "patching_rect": [ 560.0, 75.0, 122.0, 22.0 ],
                     "text": "route controller ready"
                 }
             },
@@ -266,10 +266,10 @@
                 "box": {
                     "id": "rid",
                     "maxclass": "newobj",
-                    "numinlets": 1,
+                    "numinlets": 2,
                     "numoutlets": 2,
-                    "patching_rect": [ 560.0, 105.0, 115.0, 22.0 ],
                     "outlettype": [ "", "" ],
+                    "patching_rect": [ 560.0, 105.0, 106.0, 22.0 ],
                     "text": "route #0-controller"
                 }
             },
@@ -277,10 +277,10 @@
                 "box": {
                     "id": "rkind",
                     "maxclass": "newobj",
-                    "numinlets": 1,
+                    "numinlets": 7,
                     "numoutlets": 7,
-                    "patching_rect": [ 560.0, 135.0, 275.0, 22.0 ],
                     "outlettype": [ "", "", "", "", "", "", "" ],
+                    "patching_rect": [ 560.0, 135.0, 269.0, 22.0 ],
                     "text": "route value devices dumpout description alert log"
                 }
             },
@@ -290,8 +290,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 1,
-                    "patching_rect": [ 680.0, 170.0, 115.0, 22.0 ],
                     "outlettype": [ "" ],
+                    "patching_rect": [ 680.0, 170.0, 114.0, 22.0 ],
                     "text": "prepend description"
                 }
             },
@@ -301,8 +301,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 1,
-                    "patching_rect": [ 680.0, 200.0, 80.0, 22.0 ],
                     "outlettype": [ "" ],
+                    "patching_rect": [ 680.0, 200.0, 79.0, 22.0 ],
                     "text": "prepend alert"
                 }
             },
@@ -312,116 +312,50 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 1,
-                    "patching_rect": [ 680.0, 230.0, 70.0, 22.0 ],
                     "outlettype": [ "" ],
+                    "patching_rect": [ 680.0, 230.0, 72.0, 22.0 ],
                     "text": "prepend log"
                 }
             },
             {
                 "box": {
-                    "id": "out0",
-                    "maxclass": "outlet",
-                    "numinlets": 1,
-                    "numoutlets": 0,
-                    "patching_rect": [ 560.0, 470.0, 30.0, 30.0 ],
                     "comment": "values: <device> <node> <property> <value>",
-                    "index": 0
+                    "id": "out0",
+                    "index": 0,
+                    "maxclass": "outlet",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 560.0, 470.0, 30.0, 30.0 ]
                 }
             },
             {
                 "box": {
-                    "id": "out1",
-                    "maxclass": "outlet",
-                    "numinlets": 1,
-                    "numoutlets": 0,
-                    "patching_rect": [ 640.0, 470.0, 30.0, 30.0 ],
                     "comment": "devices: dictionary of online and offline devices",
-                    "index": 1
+                    "id": "out1",
+                    "index": 0,
+                    "maxclass": "outlet",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 640.0, 470.0, 30.0, 30.0 ]
                 }
             },
             {
                 "box": {
+                    "comment": "dumpout: description, alert, log, error",
                     "id": "out2",
+                    "index": 0,
                     "maxclass": "outlet",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 720.0, 470.0, 30.0, 30.0 ],
-                    "comment": "dumpout: description, alert, log, error",
-                    "index": 2
+                    "patching_rect": [ 720.0, 470.0, 30.0, 30.0 ]
                 }
             }
         ],
         "lines": [
             {
                 "patchline": {
-                    "destination": [ "rset", 0 ],
-                    "source": [ "in", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "pset", 0 ],
-                    "source": [ "rset", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "fwd", 0 ],
-                    "source": [ "pset", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "role", 0 ],
-                    "source": [ "rset", 1 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "fwd", 0 ],
-                    "source": [ "role", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "tload", 0 ],
-                    "source": [ "load", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "args", 0 ],
-                    "source": [ "tload", 1 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "defer", 0 ],
-                    "source": [ "tload", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "treg", 0 ],
-                    "source": [ "defer", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "args", 0 ],
-                    "source": [ "treg", 1 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "register", 0 ],
-                    "source": [ "treg", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "role", 0 ],
-                    "source": [ "register", 0 ]
+                    "destination": [ "done", 0 ],
+                    "source": [ "args", 1 ]
                 }
             },
             {
@@ -432,50 +366,14 @@
             },
             {
                 "patchline": {
-                    "destination": [ "done", 0 ],
-                    "source": [ "args", 1 ]
+                    "destination": [ "treg", 0 ],
+                    "source": [ "defer", 0 ]
                 }
             },
             {
                 "patchline": {
                     "destination": [ "role", 0 ],
                     "source": [ "done", 1 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "namein", 0 ],
-                    "source": [ "tname", 1 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "nameout", 0 ],
-                    "source": [ "tname", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "setin", 0 ],
-                    "source": [ "namein", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "setout", 0 ],
-                    "source": [ "nameout", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "fwd", 0 ],
-                    "source": [ "setin", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "recv", 0 ],
-                    "source": [ "setout", 0 ]
                 }
             },
             {
@@ -492,20 +390,62 @@
             },
             {
                 "patchline": {
+                    "destination": [ "rset", 0 ],
+                    "source": [ "in", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "tload", 0 ],
+                    "source": [ "load", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "setin", 0 ],
+                    "source": [ "namein", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "setout", 0 ],
+                    "source": [ "nameout", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "out2", 0 ],
+                    "source": [ "palert", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "out2", 0 ],
+                    "source": [ "pdesc", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "out2", 0 ],
+                    "source": [ "plog", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "fwd", 0 ],
+                    "source": [ "pset", 0 ]
+                }
+            },
+            {
+                "patchline": {
                     "destination": [ "rrole", 0 ],
                     "source": [ "recv", 0 ]
                 }
             },
             {
                 "patchline": {
-                    "destination": [ "rid", 0 ],
-                    "source": [ "rrole", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "treg", 0 ],
-                    "source": [ "rrole", 1 ]
+                    "destination": [ "role", 0 ],
+                    "source": [ "register", 0 ]
                 }
             },
             {
@@ -534,14 +474,14 @@
             },
             {
                 "patchline": {
-                    "destination": [ "pdesc", 0 ],
-                    "source": [ "rkind", 3 ]
+                    "destination": [ "palert", 0 ],
+                    "source": [ "rkind", 4 ]
                 }
             },
             {
                 "patchline": {
-                    "destination": [ "palert", 0 ],
-                    "source": [ "rkind", 4 ]
+                    "destination": [ "pdesc", 0 ],
+                    "source": [ "rkind", 3 ]
                 }
             },
             {
@@ -552,20 +492,80 @@
             },
             {
                 "patchline": {
-                    "destination": [ "out2", 0 ],
-                    "source": [ "pdesc", 0 ]
+                    "destination": [ "fwd", 0 ],
+                    "source": [ "role", 0 ]
                 }
             },
             {
                 "patchline": {
-                    "destination": [ "out2", 0 ],
-                    "source": [ "palert", 0 ]
+                    "destination": [ "rid", 0 ],
+                    "source": [ "rrole", 0 ]
                 }
             },
             {
                 "patchline": {
-                    "destination": [ "out2", 0 ],
-                    "source": [ "plog", 0 ]
+                    "destination": [ "treg", 0 ],
+                    "source": [ "rrole", 1 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "pset", 0 ],
+                    "source": [ "rset", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "role", 0 ],
+                    "source": [ "rset", 1 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "fwd", 0 ],
+                    "source": [ "setin", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "recv", 0 ],
+                    "source": [ "setout", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "args", 0 ],
+                    "source": [ "tload", 1 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "defer", 0 ],
+                    "source": [ "tload", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "namein", 0 ],
+                    "source": [ "tname", 1 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "nameout", 0 ],
+                    "source": [ "tname", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "args", 0 ],
+                    "source": [ "treg", 1 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "register", 0 ],
+                    "source": [ "treg", 0 ]
                 }
             }
         ],

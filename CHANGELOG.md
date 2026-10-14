@@ -10,5 +10,5 @@ First release as a Max package.
 - `[mqtt.broker]`: an MQTT 3.1.1 broker (Aedes) on TCP, TLS, WebSocket and secure WebSocket, with optional login; reports client connections and subscriptions.
 - `[mqtt.send]` and `[mqtt.receive]`: one topic per object, like `[send]` and `[receive]`; retain, QoS, wildcards; text, raw bytes or JSON.
 - `[mqtt.homie.device]` and `[mqtt.homie.controller]`: Homie 5 devices and controllers: state and last will, descriptions, typed values with ranges and steps, commands, broadcasts, alerts and logs.
-- Help files with tabs and reference pages for every object; six examples, one per setup; a landing patch.
+- Help files with tabs and reference pages for every object; seven examples, one per setup; a landing patch.
 - Remote: web app for phones, tablets and computers. Motion, round trip, XY pad, 4 sliders, 8 buttons, mic level, as Homie values.

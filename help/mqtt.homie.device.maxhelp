@@ -83,7 +83,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 120.0, 768.0, 20.0 ],
+                                    "patching_rect": [ 20.0, 120.0, 741.0, 20.0 ],
                                     "text": "Max as the Homie device mqtt-max-help/5/lamp. Description first (bang the dict), then values. A controller on the same client commands it."
                                 }
                             },
@@ -285,8 +285,8 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 380.0, 420.0, 80.0, 22.0 ],
-                                    "text": "ready"
+                                    "patching_rect": [ 380.0, 420.0, 39.0, 22.0 ],
+                                    "text": ""
                                 }
                             },
                             {
@@ -369,8 +369,8 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20.0, 545.0, 220.0, 22.0 ],
-                                    "text": "lamp light on 1"
+                                    "patching_rect": [ 20.0, 545.0, 87.0, 22.0 ],
+                                    "text": ""
                                 }
                             },
                             {
@@ -401,7 +401,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 575.0, 300.0, 20.0 ],
+                                    "patching_rect": [ 20.0, 575.0, 274.0, 20.0 ],
                                     "text": "A complete setup: the example mqtt-synth-device."
                                 }
                             }
@@ -562,7 +562,7 @@
                             "modernui": 1
                         },
                         "classnamespace": "box",
-                        "rect": [ 100.0, 126.0, 825.0, 600.0 ],
+                        "rect": [ 0.0, 26.0, 825.0, 600.0 ],
                         "showontab": 1,
                         "boxes": [
                             {
@@ -586,7 +586,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 120.0, 540.0, 20.0 ],
+                                    "patching_rect": [ 20.0, 120.0, 359.0, 20.0 ],
                                     "text": "$description: nodes with properties. homie and version are added."
                                 }
                             },
@@ -651,11 +651,11 @@
                             {
                                 "box": {
                                     "id": "ctypes",
-                                    "linecount": 12,
+                                    "linecount": 10,
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 340.0, 150.0, 343.0, 167.0 ],
+                                    "patching_rect": [ 340.0, 150.0, 396.0, 141.0 ],
                                     "text": "datatype (Max value): integer, float (numbers) · boolean (1/0) · string, enum (symbol) · color (type and values: rgb 255 0 0, hsv, xyz) · json (dictionary) · datetime, duration (text)\n\nformat: \"min:max[:step]\" for numbers, \"a,b,c\" for enum, \"rgb,hsv\" for color\nsettable: true lets controllers send commands\nretained: false streams values at QoS 0 (sensors), otherwise retained\nunit: e.g. \"°\", \"%\", \"ms\"\n\nIDs: a-z, 0-9 and hyphens"
                                 }
                             }
@@ -696,7 +696,7 @@
                             "modernui": 1
                         },
                         "classnamespace": "box",
-                        "rect": [ 0.0, 26.0, 825.0, 600.0 ],
+                        "rect": [ 100.0, 126.0, 825.0, 600.0 ],
                         "showontab": 1,
                         "boxes": [
                             {
@@ -720,7 +720,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 120.0, 631.0, 20.0 ],
+                                    "patching_rect": [ 20.0, 120.0, 492.0, 20.0 ],
                                     "text": "Connect: init, description, values, ready. Dropped: lost (last will). Disconnect: disconnected."
                                 }
                             },

@@ -9,7 +9,7 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 100.0, 100.0, 799.0, 559.0 ],
+        "rect": [ 100.0, 100.0, 848.0, 559.0 ],
         "showrootpatcherontab": 0,
         "showontab": 0,
         "boxes": [
@@ -35,7 +35,7 @@
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 10.0, 75.0, 198, 22.0 ],
+                    "patching_rect": [ 10.0, 75.0, 198.0, 22.0 ],
                     "saved_object_attributes": {
                         "filename": "helpstarter.js",
                         "parameter_enable": 0
@@ -59,7 +59,7 @@
                             "modernui": 1
                         },
                         "classnamespace": "box",
-                        "rect": [ 100.0, 126.0, 799.0, 533.0 ],
+                        "rect": [ 0.0, 26.0, 848.0, 533.0 ],
                         "showontab": 1,
                         "boxes": [
                             {
@@ -83,7 +83,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20, 120, 700, 20.0 ],
+                                    "patching_rect": [ 20.0, 120.0, 660.0, 20.0 ],
                                     "text": "Publishes every message to one topic, like [send] across the network. [mqtt.receive] on that topic, on any computer, gets it."
                                 }
                             },
@@ -94,7 +94,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20, 150, 361, 22.0 ],
+                                    "patching_rect": [ 20.0, 150.0, 261.0, 22.0 ],
                                     "text": "connect mqtt://public.cloud.shiftr.io public public"
                                 }
                             },
@@ -105,7 +105,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 300, 150, 82, 22.0 ],
+                                    "patching_rect": [ 300.0, 150.0, 66.0, 22.0 ],
                                     "text": "disconnect"
                                 }
                             },
@@ -116,20 +116,20 @@
                                     "numinlets": 1,
                                     "numoutlets": 2,
                                     "outlettype": [ "", "" ],
-                                    "patching_rect": [ 20, 185, 157, 22.0 ],
+                                    "patching_rect": [ 20.0, 185.0, 119.0, 22.0 ],
                                     "text": "mqtt.client send-help"
                                 }
                             },
                             {
                                 "box": {
+                                    "format": 6,
                                     "id": "val",
                                     "maxclass": "flonum",
                                     "numinlets": 1,
                                     "numoutlets": 2,
                                     "outlettype": [ "", "bang" ],
                                     "parameter_enable": 0,
-                                    "patching_rect": [ 20, 235, 50.0, 22.0 ],
-                                    "format": 6
+                                    "patching_rect": [ 20.0, 235.0, 50.0, 22.0 ]
                                 }
                             },
                             {
@@ -139,7 +139,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 80, 235, 89, 22.0 ],
+                                    "patching_rect": [ 80.0, 235.0, 66.0, 22.0 ],
                                     "text": "hello world"
                                 }
                             },
@@ -150,7 +150,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 170, 235, 48, 22.0 ],
+                                    "patching_rect": [ 170.0, 235.0, 35.0, 22.0 ],
                                     "text": "1 2 3"
                                 }
                             },
@@ -161,7 +161,7 @@
                                     "numinlets": 1,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20, 270, 313, 22.0 ],
+                                    "patching_rect": [ 20.0, 270.0, 259.0, 22.0 ],
                                     "text": "mqtt.send send-help mqtt-max-help/send/value"
                                 }
                             },
@@ -170,9 +170,8 @@
                                     "id": "perr",
                                     "maxclass": "newobj",
                                     "numinlets": 1,
-                                    "numoutlets": 1,
-                                    "outlettype": [ "" ],
-                                    "patching_rect": [ 20, 300, 116, 22.0 ],
+                                    "numoutlets": 0,
+                                    "patching_rect": [ 20.0, 300.0, 88.0, 22.0 ],
                                     "text": "print mqtt.send"
                                 }
                             },
@@ -183,7 +182,7 @@
                                     "numinlets": 1,
                                     "numoutlets": 2,
                                     "outlettype": [ "", "" ],
-                                    "patching_rect": [ 380, 270, 334, 22.0 ],
+                                    "patching_rect": [ 380.0, 270.0, 271.0, 22.0 ],
                                     "text": "mqtt.receive send-help mqtt-max-help/send/value"
                                 }
                             },
@@ -194,7 +193,7 @@
                                     "numinlets": 1,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 380, 300, 89, 22.0 ],
+                                    "patching_rect": [ 380.0, 300.0, 72.0, 22.0 ],
                                     "text": "prepend set"
                                 }
                             },
@@ -205,8 +204,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 380, 330, 180.0, 22.0 ],
-                                    "text": ""
+                                    "patching_rect": [ 380.0, 330.0, 180.0, 22.0 ]
                                 }
                             },
                             {
@@ -215,7 +213,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 570.0, 330, 68, 20.0 ],
+                                    "patching_rect": [ 570.0, 330.0, 54.0, 20.0 ],
                                     "text": "received"
                                 }
                             },
@@ -225,7 +223,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20, 370, 400, 20.0 ],
+                                    "patching_rect": [ 20.0, 370.0, 269.0, 20.0 ],
                                     "text": "A dictionary is sent as JSON: dictionary <name>."
                                 }
                             }
@@ -246,12 +244,6 @@
                             {
                                 "patchline": {
                                     "destination": [ "send", 0 ],
-                                    "source": [ "val", 0 ]
-                                }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "send", 0 ],
                                     "source": [ "m1", 0 ]
                                 }
                             },
@@ -263,8 +255,8 @@
                             },
                             {
                                 "patchline": {
-                                    "destination": [ "perr", 0 ],
-                                    "source": [ "send", 0 ]
+                                    "destination": [ "disp", 0 ],
+                                    "source": [ "pset", 0 ]
                                 }
                             },
                             {
@@ -275,8 +267,14 @@
                             },
                             {
                                 "patchline": {
-                                    "destination": [ "disp", 0 ],
-                                    "source": [ "pset", 0 ]
+                                    "destination": [ "perr", 0 ],
+                                    "source": [ "send", 0 ]
+                                }
+                            },
+                            {
+                                "patchline": {
+                                    "destination": [ "send", 0 ],
+                                    "source": [ "val", 0 ]
                                 }
                             }
                         ]
@@ -302,7 +300,7 @@
                             "modernui": 1
                         },
                         "classnamespace": "box",
-                        "rect": [ 0.0, 26.0, 799.0, 533.0 ],
+                        "rect": [ 0.0, 26.0, 848.0, 533.0 ],
                         "showontab": 1,
                         "boxes": [
                             {
@@ -323,12 +321,12 @@
                             {
                                 "box": {
                                     "id": "c0",
+                                    "linecount": 2,
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20, 115, 700, 34 ],
-                                    "text": "@retain 1: the broker keeps the last message. A [mqtt.receive] that subscribes later gets it at once.\n@qos 1 or 2: the broker confirms delivery; 0 (default) is fastest, for streams. See [mqtt.client], qos & retain.",
-                                    "linecount": 2
+                                    "patching_rect": [ 20.0, 115.0, 573.0, 33.0 ],
+                                    "text": "@retain 1: the broker keeps the last message. A [mqtt.receive] that subscribes later gets it at once.\n@qos 1 or 2: the broker confirms delivery; 0 (default) is fastest, for streams. See [mqtt.client], qos & retain."
                                 }
                             },
                             {
@@ -338,7 +336,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20, 150, 361, 22.0 ],
+                                    "patching_rect": [ 20.0, 150.0, 261.0, 22.0 ],
                                     "text": "connect mqtt://public.cloud.shiftr.io public public"
                                 }
                             },
@@ -349,7 +347,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 300, 150, 82, 22.0 ],
+                                    "patching_rect": [ 300.0, 150.0, 66.0, 22.0 ],
                                     "text": "disconnect"
                                 }
                             },
@@ -360,7 +358,7 @@
                                     "numinlets": 1,
                                     "numoutlets": 2,
                                     "outlettype": [ "", "" ],
-                                    "patching_rect": [ 20, 185, 204, 22.0 ],
+                                    "patching_rect": [ 20.0, 185.0, 153.0, 22.0 ],
                                     "text": "mqtt.client send-retain-help"
                                 }
                             },
@@ -372,7 +370,7 @@
                                     "numoutlets": 2,
                                     "outlettype": [ "", "bang" ],
                                     "parameter_enable": 0,
-                                    "patching_rect": [ 20, 235, 50.0, 22.0 ]
+                                    "patching_rect": [ 20.0, 235.0, 50.0, 22.0 ]
                                 }
                             },
                             {
@@ -382,7 +380,7 @@
                                     "numinlets": 1,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20, 270, 476, 22.0 ],
+                                    "patching_rect": [ 20.0, 270.0, 390.0, 22.0 ],
                                     "text": "mqtt.send send-retain-help mqtt-max-help/send/state @retain 1 @qos 1"
                                 }
                             },
@@ -393,7 +391,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 380, 235, 218, 22.0 ],
+                                    "patching_rect": [ 380.0, 235.0, 173.0, 22.0 ],
                                     "text": "topic mqtt-max-help/send/state"
                                 }
                             },
@@ -404,7 +402,7 @@
                                     "numinlets": 1,
                                     "numoutlets": 2,
                                     "outlettype": [ "", "" ],
-                                    "patching_rect": [ 380, 270, 211, 22.0 ],
+                                    "patching_rect": [ 380.0, 270.0, 164.0, 22.0 ],
                                     "text": "mqtt.receive send-retain-help"
                                 }
                             },
@@ -415,7 +413,7 @@
                                     "numinlets": 1,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 380, 300, 89, 22.0 ],
+                                    "patching_rect": [ 380.0, 300.0, 72.0, 22.0 ],
                                     "text": "prepend set"
                                 }
                             },
@@ -426,8 +424,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 380, 330, 180.0, 22.0 ],
-                                    "text": ""
+                                    "patching_rect": [ 380.0, 330.0, 180.0, 22.0 ]
                                 }
                             },
                             {
@@ -436,7 +433,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 380, 205, 330, 20.0 ],
+                                    "patching_rect": [ 380.0, 205.0, 292.0, 20.0 ],
                                     "text": "1. set a number  2. subscribe: the last number arrives"
                                 }
                             },
@@ -446,7 +443,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20, 370, 500, 20.0 ],
+                                    "patching_rect": [ 20.0, 370.0, 422.0, 20.0 ],
                                     "text": "An empty retained message deletes it: [mqtt.send] with @retain 1 and a bang."
                                 }
                             }
@@ -466,14 +463,8 @@
                             },
                             {
                                 "patchline": {
-                                    "destination": [ "send", 0 ],
-                                    "source": [ "val", 0 ]
-                                }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "recv", 0 ],
-                                    "source": [ "sub", 0 ]
+                                    "destination": [ "disp", 0 ],
+                                    "source": [ "pset", 0 ]
                                 }
                             },
                             {
@@ -484,8 +475,14 @@
                             },
                             {
                                 "patchline": {
-                                    "destination": [ "disp", 0 ],
-                                    "source": [ "pset", 0 ]
+                                    "destination": [ "recv", 0 ],
+                                    "source": [ "sub", 0 ]
+                                }
+                            },
+                            {
+                                "patchline": {
+                                    "destination": [ "send", 0 ],
+                                    "source": [ "val", 0 ]
                                 }
                             }
                         ]
@@ -511,7 +508,7 @@
                             "modernui": 1
                         },
                         "classnamespace": "box",
-                        "rect": [ 0.0, 26.0, 799.0, 533.0 ],
+                        "rect": [ 100.0, 126.0, 848.0, 533.0 ],
                         "showontab": 1,
                         "boxes": [
                             {
@@ -532,12 +529,12 @@
                             {
                                 "box": {
                                     "id": "c0",
+                                    "linecount": 2,
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20, 115, 700, 34 ],
-                                    "text": "@format bytes: integers 0-255 are sent as raw bytes, not as text. For devices and tools that read binary payloads,\ne.g. mqtt-midi and midge: one value byte per topic, such as remote/in/cc/1/7.",
-                                    "linecount": 2
+                                    "patching_rect": [ 20.0, 115.0, 612.0, 33.0 ],
+                                    "text": "@format bytes: integers 0-255 are sent as raw bytes, not as text. For devices and tools that read binary payloads,\ne.g. mqtt-midi and midge: one value byte per topic, such as remote/in/cc/1/7."
                                 }
                             },
                             {
@@ -547,7 +544,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20, 150, 361, 22.0 ],
+                                    "patching_rect": [ 20.0, 150.0, 261.0, 22.0 ],
                                     "text": "connect mqtt://public.cloud.shiftr.io public public"
                                 }
                             },
@@ -558,7 +555,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 300, 150, 82, 22.0 ],
+                                    "patching_rect": [ 300.0, 150.0, 66.0, 22.0 ],
                                     "text": "disconnect"
                                 }
                             },
@@ -569,7 +566,7 @@
                                     "numinlets": 1,
                                     "numoutlets": 2,
                                     "outlettype": [ "", "" ],
-                                    "patching_rect": [ 20, 185, 204, 22.0 ],
+                                    "patching_rect": [ 20.0, 185.0, 157.0, 22.0 ],
                                     "text": "mqtt.client send-format-help"
                                 }
                             },
@@ -581,7 +578,7 @@
                                     "numoutlets": 2,
                                     "outlettype": [ "", "bang" ],
                                     "parameter_enable": 0,
-                                    "patching_rect": [ 20, 235, 50.0, 22.0 ]
+                                    "patching_rect": [ 20.0, 235.0, 50.0, 22.0 ]
                                 }
                             },
                             {
@@ -591,7 +588,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 80, 235, 75, 22.0 ],
+                                    "patching_rect": [ 80.0, 235.0, 62.0, 22.0 ],
                                     "text": "0 127 255"
                                 }
                             },
@@ -602,7 +599,7 @@
                                     "numinlets": 1,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20, 270, 456, 22.0 ],
+                                    "patching_rect": [ 20.0, 270.0, 378.0, 22.0 ],
                                     "text": "mqtt.send send-format-help mqtt-max-help/send/bytes @format bytes"
                                 }
                             },
@@ -611,9 +608,8 @@
                                     "id": "perr",
                                     "maxclass": "newobj",
                                     "numinlets": 1,
-                                    "numoutlets": 1,
-                                    "outlettype": [ "" ],
-                                    "patching_rect": [ 20, 300, 116, 22.0 ],
+                                    "numoutlets": 0,
+                                    "patching_rect": [ 20.0, 300.0, 88.0, 22.0 ],
                                     "text": "print mqtt.send"
                                 }
                             },
@@ -624,7 +620,7 @@
                                     "numinlets": 1,
                                     "numoutlets": 2,
                                     "outlettype": [ "", "" ],
-                                    "patching_rect": [ 380, 270, 476, 22.0 ],
+                                    "patching_rect": [ 410.0, 270.0, 391.0, 22.0 ],
                                     "text": "mqtt.receive send-format-help mqtt-max-help/send/bytes @format bytes"
                                 }
                             },
@@ -635,7 +631,7 @@
                                     "numinlets": 1,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 380, 300, 89, 22.0 ],
+                                    "patching_rect": [ 410.0, 300.0, 72.0, 22.0 ],
                                     "text": "prepend set"
                                 }
                             },
@@ -646,8 +642,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 380, 330, 180.0, 22.0 ],
-                                    "text": ""
+                                    "patching_rect": [ 410.0, 330.0, 180.0, 22.0 ]
                                 }
                             },
                             {
@@ -656,7 +651,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 570, 330, 109, 20.0 ],
+                                    "patching_rect": [ 600.0, 330.0, 86.0, 20.0 ],
                                     "text": "received bytes"
                                 }
                             }
@@ -677,19 +672,13 @@
                             {
                                 "patchline": {
                                     "destination": [ "send", 0 ],
-                                    "source": [ "val", 0 ]
-                                }
-                            },
-                            {
-                                "patchline": {
-                                    "destination": [ "send", 0 ],
                                     "source": [ "m1", 0 ]
                                 }
                             },
                             {
                                 "patchline": {
-                                    "destination": [ "perr", 0 ],
-                                    "source": [ "send", 0 ]
+                                    "destination": [ "disp", 0 ],
+                                    "source": [ "pset", 0 ]
                                 }
                             },
                             {
@@ -700,8 +689,14 @@
                             },
                             {
                                 "patchline": {
-                                    "destination": [ "disp", 0 ],
-                                    "source": [ "pset", 0 ]
+                                    "destination": [ "perr", 0 ],
+                                    "source": [ "send", 0 ]
+                                }
+                            },
+                            {
+                                "patchline": {
+                                    "destination": [ "send", 0 ],
+                                    "source": [ "val", 0 ]
                                 }
                             }
                         ]
@@ -727,10 +722,10 @@
                             "modernui": 1
                         },
                         "classnamespace": "box",
-                        "rect": [ 0.0, 26.0, 799.0, 533.0 ],
+                        "rect": [ 0.0, 26.0, 848.0, 533.0 ],
                         "showontab": 1,
-                        "boxes": [  ],
-                        "lines": [  ]
+                        "boxes": [],
+                        "lines": []
                     },
                     "patching_rect": [ 10.0, 200.0, 120.0, 22.0 ],
                     "text": "p ?",
@@ -738,7 +733,7 @@
                 }
             }
         ],
-        "lines": [  ],
+        "lines": [],
         "autosave": 0
     }
 }

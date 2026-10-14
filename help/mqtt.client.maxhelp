@@ -59,7 +59,7 @@
                             "modernui": 1
                         },
                         "classnamespace": "box",
-                        "rect": [ 100.0, 126.0, 779.0, 501.0 ],
+                        "rect": [ 0.0, 26.0, 779.0, 501.0 ],
                         "showontab": 1,
                         "boxes": [
                             {
@@ -83,7 +83,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 120.0, 413.0, 20.0 ],
+                                    "patching_rect": [ 20.0, 120.0, 356.0, 20.0 ],
                                     "text": "Connect, subscribe, publish: the broker sends the message back."
                                 }
                             },
@@ -127,7 +127,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20.0, 185.0, 232, 22.0 ],
+                                    "patching_rect": [ 20.0, 185.0, 181.0, 22.0 ],
                                     "text": "subscribe mqtt-max-help/client/#"
                                 }
                             },
@@ -138,7 +138,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 190.0, 185.0, 327, 22.0 ],
+                                    "patching_rect": [ 220.0, 185.0, 247.0, 22.0 ],
                                     "text": "publish mqtt-max-help/client/hello 1 2.5 three"
                                 }
                             },
@@ -202,8 +202,8 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20.0, 390.0, 110.0, 22.0 ],
-                                    "text": "disconnected"
+                                    "patching_rect": [ 20.0, 390.0, 79.0, 22.0 ],
+                                    "text": ""
                                 }
                             },
                             {
@@ -232,7 +232,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 430.0, 405.0, 20.0 ],
+                                    "patching_rect": [ 20.0, 430.0, 339.0, 20.0 ],
                                     "text": "Max Console shows \"Cannot find module\": once per computer"
                                 }
                             },
@@ -362,7 +362,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 120.0, 662.0, 20.0 ],
+                                    "patching_rect": [ 20.0, 120.0, 333.0, 20.0 ],
                                     "text": "Payloads are bytes. @format: text, bytes, or json (dictionary)."
                                 }
                             },
@@ -406,7 +406,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 380.0, 150.0, 286, 22.0 ],
+                                    "patching_rect": [ 380.0, 150.0, 227.0, 22.0 ],
                                     "text": "subscribe mqtt-max-help/client/payload/#"
                                 }
                             },
@@ -450,7 +450,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20.0, 260.0, 361, 22.0 ],
+                                    "patching_rect": [ 20.0, 260.0, 275.0, 22.0 ],
                                     "text": "publish mqtt-max-help/client/payload/text hello 1 2"
                                 }
                             },
@@ -461,7 +461,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20.0, 290.0, 402, 22.0 ],
+                                    "patching_rect": [ 20.0, 290.0, 321.0, 22.0 ],
                                     "text": "publishbytes mqtt-max-help/client/payload/bytes 0 127 255"
                                 }
                             },
@@ -504,7 +504,7 @@
                                     "numinlets": 1,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 395.0, 282.0, 347, 22.0 ],
+                                    "patching_rect": [ 395.0, 282.0, 276.0, 22.0 ],
                                     "text": "prepend publish mqtt-max-help/client/payload/json"
                                 }
                             },
@@ -546,7 +546,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 2,
                                     "outlettype": [ "", "" ],
-                                    "patching_rect": [ 395.0, 352.0, 279, 22.0 ],
+                                    "patching_rect": [ 395.0, 352.0, 218.0, 22.0 ],
                                     "text": "route mqtt-max-help/client/payload/json"
                                 }
                             },
@@ -722,7 +722,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 120.0, 553.0, 20.0 ],
+                                    "patching_rect": [ 20.0, 120.0, 426.0, 20.0 ],
                                     "text": "qos, retain: for the next publishes. Subscription QoS: subscribe <topic> <qos>."
                                 }
                             },
@@ -821,7 +821,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20.0, 260.0, 306, 22.0 ],
+                                    "patching_rect": [ 20.0, 260.0, 233.0, 22.0 ],
                                     "text": "publish mqtt-max-help/client/retained hello"
                                 }
                             },
@@ -832,7 +832,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 250.0, 260.0, 266, 22.0 ],
+                                    "patching_rect": [ 280.0, 260.0, 205.0, 22.0 ],
                                     "text": "publish mqtt-max-help/client/retained"
                                 }
                             },
@@ -842,7 +842,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 440.0, 255.0, 323.0, 20.0 ],
+                                    "patching_rect": [ 489.0, 261.0, 278.0, 20.0 ],
                                     "text": "retain 1, no payload: deletes the retained message"
                                 }
                             },
@@ -853,7 +853,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20.0, 300.0, 293, 22.0 ],
+                                    "patching_rect": [ 20.0, 300.0, 228.0, 22.0 ],
                                     "text": "subscribe mqtt-max-help/client/retained 1"
                                 }
                             },
@@ -864,7 +864,7 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 230.0, 300.0, 293, 22.0 ],
+                                    "patching_rect": [ 260.0, 300.0, 231.0, 22.0 ],
                                     "text": "unsubscribe mqtt-max-help/client/retained"
                                 }
                             },
@@ -874,7 +874,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 330.0, 674.0, 20.0 ],
+                                    "patching_rect": [ 20.0, 330.0, 477.0, 20.0 ],
                                     "text": "retain 1: publish, unsubscribe, subscribe. The broker sends the retained message again."
                                 }
                             },
@@ -1012,7 +1012,7 @@
                             "modernui": 1
                         },
                         "classnamespace": "box",
-                        "rect": [ 0.0, 26.0, 779.0, 501.0 ],
+                        "rect": [ 100.0, 126.0, 779.0, 501.0 ],
                         "showontab": 1,
                         "boxes": [
                             {
@@ -1036,7 +1036,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 120.0, 571.0, 20.0 ],
+                                    "patching_rect": [ 20.0, 120.0, 424.0, 20.0 ],
                                     "text": "Attributes set the connection. mqtt://, mqtts:// (TLS), ws://, wss:// (WebSocket)."
                                 }
                             },
@@ -1123,7 +1123,7 @@
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 215.0, 313.0, 20.0 ],
+                                    "patching_rect": [ 20.0, 215.0, 235.0, 20.0 ],
                                     "text": "localhost: needs a broker on this computer"
                                 }
                             },
@@ -1182,11 +1182,10 @@
                             {
                                 "box": {
                                     "id": "cn",
-                                    "linecount": 2,
                                     "maxclass": "comment",
                                     "numinlets": 1,
                                     "numoutlets": 0,
-                                    "patching_rect": [ 20.0, 400.0, 678.0, 33.0 ],
+                                    "patching_rect": [ 20.0, 400.0, 722.0, 20.0 ],
                                     "text": "keepalive (s): drop noticed after 1.5 × keepalive. clientid: equal IDs disconnect each other. A password in the box is saved in the patch."
                                 }
                             }

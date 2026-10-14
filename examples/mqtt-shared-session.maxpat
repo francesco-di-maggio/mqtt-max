@@ -9,7 +9,7 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 134.0, 163.0, 1080.0, 850.0 ],
+        "rect": [ 134.0, 91.0, 1080.0, 807.0 ],
         "boxes": [
             {
                 "box": {
@@ -18,19 +18,19 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 15.0, 109, 20.0 ],
+                    "patching_rect": [ 20.0, 15.0, 116.0, 20.0 ],
                     "text": "SHARED SESSION"
                 }
             },
             {
                 "box": {
                     "id": "setup",
+                    "linecount": 2,
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 40.0, 1020, 34 ],
-                    "text": "Patches in different places share one session: tempo and scene as retained state, a parameter as a stream, and who is online.\nOpen this patch on each computer and Connect. A patch that joins later gets the current tempo and scene at once.",
-                    "linecount": 2
+                    "patching_rect": [ 20.0, 40.0, 681.0, 33.0 ],
+                    "text": "Patches in different places share one session: tempo and scene as retained state, a parameter as a stream, and who is online.\nOpen this patch on each computer and Connect. A patch that joins later gets the current tempo and scene at once."
                 }
             },
             {
@@ -40,7 +40,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 78.0, 361, 22.0 ],
+                    "patching_rect": [ 20.0, 78.0, 261.0, 22.0 ],
                     "text": "connect mqtt://public.cloud.shiftr.io public public"
                 }
             },
@@ -51,7 +51,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 391.0, 78.0, 82, 22.0 ],
+                    "patching_rect": [ 391.0, 78.0, 66.0, 22.0 ],
                     "text": "disconnect"
                 }
             },
@@ -62,7 +62,7 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 20.0, 113.0, 191, 22.0 ],
+                    "patching_rect": [ 20.0, 113.0, 148.0, 22.0 ],
                     "text": "mqtt.client shared-session"
                 }
             },
@@ -73,7 +73,7 @@
                     "numinlets": 2,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 231.0, 113.0, 96, 22.0 ],
+                    "patching_rect": [ 231.0, 113.0, 71.0, 22.0 ],
                     "text": "route status"
                 }
             },
@@ -84,7 +84,7 @@
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 231.0, 143.0, 89, 22.0 ],
+                    "patching_rect": [ 231.0, 143.0, 72.0, 22.0 ],
                     "text": "prepend set"
                 }
             },
@@ -95,19 +95,18 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 330.0, 143.0, 100, 22.0 ],
-                    "text": ""
+                    "patching_rect": [ 330.0, 143.0, 100.0, 22.0 ]
                 }
             },
             {
                 "box": {
+                    "fontface": 1,
                     "id": "ca",
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 188.0, 130, 20 ],
-                    "text": "A  ·  WHO IS HERE",
-                    "fontface": 1
+                    "patching_rect": [ 20.0, 188.0, 115.0, 20.0 ],
+                    "text": "A  ·  WHO IS HERE"
                 }
             },
             {
@@ -116,8 +115,8 @@
                     "maxclass": "newobj",
                     "numinlets": 1,
                     "numoutlets": 1,
-                    "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 213.0, 68, 22.0 ],
+                    "outlettype": [ "bang" ],
+                    "patching_rect": [ 20.0, 213.0, 58.0, 22.0 ],
                     "text": "loadbang"
                 }
             },
@@ -128,7 +127,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 243.0, 96, 22.0 ],
+                    "patching_rect": [ 20.0, 243.0, 86.0, 22.0 ],
                     "text": "random 10000"
                 }
             },
@@ -139,7 +138,7 @@
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 273.0, 157, 22.0 ],
+                    "patching_rect": [ 20.0, 273.0, 125.0, 22.0 ],
                     "text": "sprintf id member-%ld"
                 }
             },
@@ -150,7 +149,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 200.0, 273.0, 109, 22.0 ],
+                    "patching_rect": [ 200.0, 273.0, 93.0, 22.0 ],
                     "text": "id <your-name>"
                 }
             },
@@ -160,7 +159,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 320.0, 273.0, 198, 20 ],
+                    "patching_rect": [ 320.0, 273.0, 136.0, 20.0 ],
                     "text": "edit and click: a-z, 0-9, -"
                 }
             },
@@ -171,7 +170,7 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 20.0, 308.0, 449, 22.0 ],
+                    "patching_rect": [ 20.0, 308.0, 384.0, 22.0 ],
                     "text": "mqtt.homie.device shared-session @domain mqtt-max-shared-session"
                 }
             },
@@ -180,9 +179,8 @@
                     "id": "perr",
                     "maxclass": "newobj",
                     "numinlets": 1,
-                    "numoutlets": 1,
-                    "outlettype": [ "" ],
-                    "patching_rect": [ 560.0, 308.0, 150, 22.0 ],
+                    "numoutlets": 0,
+                    "patching_rect": [ 560.0, 308.0, 124.0, 22.0 ],
                     "text": "print session-member"
                 }
             },
@@ -193,7 +191,7 @@
                     "numinlets": 1,
                     "numoutlets": 3,
                     "outlettype": [ "", "", "" ],
-                    "patching_rect": [ 20.0, 343.0, 476, 22.0 ],
+                    "patching_rect": [ 20.0, 343.0, 399.0, 22.0 ],
                     "text": "mqtt.homie.controller shared-session @domain mqtt-max-shared-session"
                 }
             },
@@ -209,23 +207,23 @@
             {
                 "box": {
                     "id": "cview",
+                    "linecount": 2,
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 330.0, 378.0, 517, 34 ],
-                    "text": "online and offline members. The broker keeps each member's last state,\nso members that left stay listed as offline. A fixed name avoids new ones.",
-                    "linecount": 2
+                    "patching_rect": [ 330.0, 378.0, 396.0, 33.0 ],
+                    "text": "online and offline members. The broker keeps each member's last state,\nso members that left stay listed as offline. A fixed name avoids new ones."
                 }
             },
             {
                 "box": {
+                    "fontface": 1,
                     "id": "cb",
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 503.0, 170, 20 ],
-                    "text": "B  ·  TEMPO  (retained)",
-                    "fontface": 1
+                    "patching_rect": [ 20.0, 503.0, 139.0, 20.0 ],
+                    "text": "B  ·  TEMPO  (retained)"
                 }
             },
             {
@@ -245,7 +243,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 75.0, 533.0, 36.0, 20 ],
+                    "patching_rect": [ 75.0, 533.0, 25.0, 20.0 ],
                     "text": "set"
                 }
             },
@@ -256,7 +254,7 @@
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 563.0, 504, 22.0 ],
+                    "patching_rect": [ 20.0, 563.0, 426.0, 22.0 ],
                     "text": "mqtt.send shared-session mqtt-max-example/shared-session/tempo @retain 1"
                 }
             },
@@ -267,7 +265,7 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 20.0, 598.0, 456, 22.0 ],
+                    "patching_rect": [ 20.0, 598.0, 383.0, 22.0 ],
                     "text": "mqtt.receive shared-session mqtt-max-example/shared-session/tempo"
                 }
             },
@@ -288,7 +286,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 75.0, 628.0, 102, 20 ],
+                    "patching_rect": [ 75.0, 628.0, 86.0, 20.0 ],
                     "text": "session tempo"
                 }
             },
@@ -298,8 +296,8 @@
                     "maxclass": "newobj",
                     "numinlets": 2,
                     "numoutlets": 1,
-                    "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 658.0, 75, 22.0 ],
+                    "outlettype": [ "float" ],
+                    "patching_rect": [ 20.0, 658.0, 55.0, 22.0 ],
                     "text": "!/ 60000."
                 }
             },
@@ -311,7 +309,7 @@
                     "numoutlets": 1,
                     "outlettype": [ "int" ],
                     "parameter_enable": 0,
-                    "patching_rect": [ 160.0, 658.0, 22.0, 22.0 ]
+                    "patching_rect": [ 160.0, 658.0, 24.0, 24.0 ]
                 }
             },
             {
@@ -320,7 +318,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 185.0, 658.0, 41, 20 ],
+                    "patching_rect": [ 185.0, 658.0, 31.0, 20.0 ],
                     "text": "play"
                 }
             },
@@ -330,8 +328,8 @@
                     "maxclass": "newobj",
                     "numinlets": 2,
                     "numoutlets": 1,
-                    "outlettype": [ "" ],
-                    "patching_rect": [ 160.0, 688.0, 75, 22.0 ],
+                    "outlettype": [ "bang" ],
+                    "patching_rect": [ 160.0, 688.0, 63.0, 22.0 ],
                     "text": "metro 500"
                 }
             },
@@ -352,19 +350,19 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 753.0, 480, 20 ],
+                    "patching_rect": [ 20.0, 753.0, 441.0, 20.0 ],
                     "text": "The tempo is shared, not the beat: each computer's [metro] runs on its own clock."
                 }
             },
             {
                 "box": {
+                    "fontface": 1,
                     "id": "cc",
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 540.0, 503.0, 170, 20 ],
-                    "text": "C  ·  SCENE  (retained)",
-                    "fontface": 1
+                    "patching_rect": [ 540.0, 503.0, 137.0, 20.0 ],
+                    "text": "C  ·  SCENE  (retained)"
                 }
             },
             {
@@ -384,7 +382,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 595.0, 533.0, 36.0, 20 ],
+                    "patching_rect": [ 595.0, 533.0, 25.0, 20.0 ],
                     "text": "set"
                 }
             },
@@ -395,7 +393,7 @@
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 540.0, 563.0, 504, 22.0 ],
+                    "patching_rect": [ 540.0, 563.0, 424.0, 22.0 ],
                     "text": "mqtt.send shared-session mqtt-max-example/shared-session/scene @retain 1"
                 }
             },
@@ -406,7 +404,7 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 540.0, 598.0, 456, 22.0 ],
+                    "patching_rect": [ 540.0, 598.0, 381.0, 22.0 ],
                     "text": "mqtt.receive shared-session mqtt-max-example/shared-session/scene"
                 }
             },
@@ -427,31 +425,31 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 595.0, 628.0, 102, 20 ],
+                    "patching_rect": [ 595.0, 628.0, 85.0, 20.0 ],
                     "text": "session scene"
                 }
             },
             {
                 "box": {
+                    "fontface": 1,
                     "id": "cd",
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 540.0, 673.0, 259, 20 ],
-                    "text": "D  ·  CUTOFF  (stream, not retained)",
-                    "fontface": 1
+                    "patching_rect": [ 540.0, 673.0, 212.0, 20.0 ],
+                    "text": "D  ·  CUTOFF  (stream, not retained)"
                 }
             },
             {
                 "box": {
+                    "format": 6,
                     "id": "cut_in",
                     "maxclass": "flonum",
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "", "bang" ],
                     "parameter_enable": 0,
-                    "patching_rect": [ 540.0, 703.0, 50.0, 22.0 ],
-                    "format": 6
+                    "patching_rect": [ 540.0, 703.0, 50.0, 22.0 ]
                 }
             },
             {
@@ -461,7 +459,7 @@
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 540.0, 733.0, 442, 22.0 ],
+                    "patching_rect": [ 540.0, 733.0, 366.0, 22.0 ],
                     "text": "mqtt.send shared-session mqtt-max-example/shared-session/cutoff"
                 }
             },
@@ -472,28 +470,52 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 540.0, 768.0, 463, 22.0 ],
+                    "patching_rect": [ 540.0, 768.0, 378.0, 22.0 ],
                     "text": "mqtt.receive shared-session mqtt-max-example/shared-session/cutoff"
                 }
             },
             {
                 "box": {
+                    "format": 6,
                     "id": "cut",
                     "maxclass": "flonum",
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "", "bang" ],
                     "parameter_enable": 0,
-                    "patching_rect": [ 540.0, 798.0, 50.0, 22.0 ],
-                    "format": 6
+                    "patching_rect": [ 540.0, 798.0, 50.0, 22.0 ]
                 }
             }
         ],
         "lines": [
             {
                 "patchline": {
+                    "destination": [ "rstatus", 0 ],
+                    "source": [ "client", 1 ]
+                }
+            },
+            {
+                "patchline": {
                     "destination": [ "client", 0 ],
                     "source": [ "conn", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "view", 0 ],
+                    "source": [ "ctl", 1 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "cut_send", 0 ],
+                    "source": [ "cut_in", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "cut", 0 ],
+                    "source": [ "cut_recv", 0 ]
                 }
             },
             {
@@ -504,26 +526,44 @@
             },
             {
                 "patchline": {
-                    "destination": [ "rstatus", 0 ],
-                    "source": [ "client", 1 ]
+                    "destination": [ "rand", 0 ],
+                    "source": [ "load", 0 ]
                 }
             },
             {
                 "patchline": {
-                    "destination": [ "pstatus", 0 ],
-                    "source": [ "rstatus", 0 ]
+                    "destination": [ "perr", 0 ],
+                    "source": [ "member", 1 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "beat", 0 ],
+                    "source": [ "metro", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "metro", 1 ],
+                    "source": [ "ms", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "member", 0 ],
+                    "source": [ "pid", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "metro", 0 ],
+                    "source": [ "play", 0 ]
                 }
             },
             {
                 "patchline": {
                     "destination": [ "status", 0 ],
                     "source": [ "pstatus", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "rand", 0 ],
-                    "source": [ "load", 0 ]
                 }
             },
             {
@@ -535,61 +575,13 @@
             {
                 "patchline": {
                     "destination": [ "member", 0 ],
-                    "source": [ "pid", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "member", 0 ],
                     "source": [ "rename", 0 ]
                 }
             },
             {
                 "patchline": {
-                    "destination": [ "perr", 0 ],
-                    "source": [ "member", 1 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "view", 0 ],
-                    "source": [ "ctl", 1 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "tempo_send", 0 ],
-                    "source": [ "tempo_in", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "tempo", 0 ],
-                    "source": [ "tempo_recv", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "ms", 0 ],
-                    "source": [ "tempo", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "metro", 1 ],
-                    "source": [ "ms", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "metro", 0 ],
-                    "source": [ "play", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "beat", 0 ],
-                    "source": [ "metro", 0 ]
+                    "destination": [ "pstatus", 0 ],
+                    "source": [ "rstatus", 0 ]
                 }
             },
             {
@@ -606,14 +598,20 @@
             },
             {
                 "patchline": {
-                    "destination": [ "cut_send", 0 ],
-                    "source": [ "cut_in", 0 ]
+                    "destination": [ "ms", 0 ],
+                    "source": [ "tempo", 0 ]
                 }
             },
             {
                 "patchline": {
-                    "destination": [ "cut", 0 ],
-                    "source": [ "cut_recv", 0 ]
+                    "destination": [ "tempo_send", 0 ],
+                    "source": [ "tempo_in", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "tempo", 0 ],
+                    "source": [ "tempo_recv", 0 ]
                 }
             }
         ],

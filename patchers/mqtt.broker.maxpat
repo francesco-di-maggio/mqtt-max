@@ -15,7 +15,7 @@
                 "box": {
                     "comment": "start, stop, clients, attributes",
                     "id": "in",
-                    "index": 1,
+                    "index": 0,
                     "maxclass": "inlet",
                     "numinlets": 0,
                     "numoutlets": 1,
@@ -120,8 +120,6 @@
                     "saved_object_attributes": {
                         "autostart": 1,
                         "defer": 0,
-                        "node_bin_path": "",
-                        "npm_bin_path": "",
                         "watch": 0
                     },
                     "text": "node.script mqtt.broker.js @autostart 1 @watch 0",
@@ -192,7 +190,7 @@
                 "box": {
                     "comment": "clients: connected, disconnected, subscribe, unsubscribe",
                     "id": "out0",
-                    "index": 1,
+                    "index": 0,
                     "maxclass": "outlet",
                     "numinlets": 1,
                     "numoutlets": 0,
@@ -203,7 +201,7 @@
                 "box": {
                     "comment": "dumpout: status, address, clients, error, script",
                     "id": "out1",
-                    "index": 2,
+                    "index": 0,
                     "maxclass": "outlet",
                     "numinlets": 1,
                     "numoutlets": 0,
@@ -326,6 +324,7 @@
                     "source": [ "tready", 0 ]
                 }
             }
-        ]
+        ],
+        "autosave": 0
     }
 }

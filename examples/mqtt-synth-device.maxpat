@@ -9,7 +9,7 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 79.0, 113.0, 880.0, 793.0 ],
+        "rect": [ 79.0, 105.0, 880.0, 793.0 ],
         "boxes": [
             {
                 "box": {
@@ -29,7 +29,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 15.0, 110.0, 20.0 ],
+                    "patching_rect": [ 20.0, 15.0, 97.0, 20.0 ],
                     "text": "SYNTH DEVICE"
                 }
             },
@@ -40,7 +40,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 40.0, 820.0, 48.0 ],
+                    "patching_rect": [ 20.0, 40.0, 765.0, 47.0 ],
                     "text": "A synth that anyone on the network can play: Max publishes it as the Homie device max-synth in the domain mqtt-max-synth-device.\nPlay it from another computer, Home Assistant, any MQTT dashboard, or the [mqtt.homie.controller] help: domain mqtt-max-synth-device, then\nset max-synth synth pitch 60. Turn audio on."
                 }
             },
@@ -73,7 +73,7 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 20.0, 133.0, 197, 22.0 ],
+                    "patching_rect": [ 20.0, 133.0, 134.0, 22.0 ],
                     "text": "mqtt.client synth-device"
                 }
             },
@@ -107,7 +107,7 @@
                     "numoutlets": 1,
                     "outlettype": [ "" ],
                     "patching_rect": [ 280.0, 163.0, 64.0, 22.0 ],
-                    "text": "connected"
+                    "text": ""
                 }
             },
             {
@@ -212,7 +212,7 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 20.0, 398.0, 467, 22.0 ],
+                    "patching_rect": [ 20.0, 398.0, 415.0, 22.0 ],
                     "text": "mqtt.homie.device synth-device max-synth @domain mqtt-max-synth-device"
                 }
             },

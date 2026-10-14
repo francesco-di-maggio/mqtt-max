@@ -9,7 +9,7 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 95.0, 91.0, 980.0, 1040.0 ],
+        "rect": [ 95.0, 91.0, 980.0, 807.0 ],
         "boxes": [
             {
                 "box": {
@@ -18,7 +18,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 15.0, 110.0, 20.0 ],
+                    "patching_rect": [ 20.0, 15.0, 91.0, 20.0 ],
                     "text": "ROUND TRIPS"
                 }
             },
@@ -29,7 +29,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 40.0, 614.0, 47.0 ],
+                    "patching_rect": [ 20.0, 40.0, 589.0, 47.0 ],
                     "text": "A: Max → broker → Max, a message on a topic of its own.\nB: Remote → broker → Remote, the Remote's Latency input. Remote: prefix remote, Round trip on, Connect.\nA + B ≈ Max → broker → remote → broker → Max."
                 }
             },
@@ -62,7 +62,7 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 20.0, 125.0, 164, 22.0 ],
+                    "patching_rect": [ 20.0, 125.0, 124.0, 22.0 ],
                     "text": "mqtt.client round-trips"
                 }
             },
@@ -127,7 +127,7 @@
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 285.0, 342, 22.0 ],
+                    "patching_rect": [ 20.0, 285.0, 283.0, 22.0 ],
                     "text": "sprintf subscribe mqtt-max-example/round-trips/%ld"
                 }
             },
@@ -138,7 +138,7 @@
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 400.0, 285.0, 388, 22.0 ],
+                    "patching_rect": [ 400.0, 285.0, 315.0, 22.0 ],
                     "text": "sprintf set publish mqtt-max-example/round-trips/%ld ping"
                 }
             },
@@ -149,8 +149,8 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 400.0, 315.0, 329, 22.0 ],
-                    "text": "publish mqtt-max-example/round-trips/466423 ping"
+                    "patching_rect": [ 400.0, 315.0, 279.0, 22.0 ],
+                    "text": "publish mqtt-max-example/round-trips/617618 ping"
                 }
             },
             {
@@ -499,7 +499,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 610.0, 225.0, 20.0 ],
+                    "patching_rect": [ 20.0, 610.0, 227.0, 20.0 ],
                     "text": "B  ·  REMOTE → BROKER → REMOTE"
                 }
             },
@@ -773,7 +773,7 @@
                     "numinlets": 1,
                     "numoutlets": 3,
                     "outlettype": [ "", "", "" ],
-                    "patching_rect": [ 20.0, 640.0, 329, 22.0 ],
+                    "patching_rect": [ 20.0, 640.0, 277.0, 22.0 ],
                     "text": "mqtt.homie.controller round-trips @domain remote"
                 }
             },
@@ -795,7 +795,7 @@
                     "numinlets": 2,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 20.0, 705.0, 85.0, 22.0 ],
+                    "patching_rect": [ 20.0, 705.0, 91.0, 22.0 ],
                     "text": "route round-trip"
                 }
             },
@@ -806,7 +806,7 @@
                     "numinlets": 2,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 20.0, 735.0, 55.0, 22.0 ],
+                    "patching_rect": [ 20.0, 735.0, 62.0, 22.0 ],
                     "text": "route time"
                 }
             },
@@ -816,7 +816,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 364.0, 640.0, 360.0, 20.0 ],
+                    "patching_rect": [ 364.0, 640.0, 337.0, 20.0 ],
                     "text": "values from every Remote: [route <id>] after zl.slice picks one"
                 }
             },
@@ -826,7 +826,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 930.0, 340.0, 20.0 ],
+                    "patching_rect": [ 20.0, 930.0, 334.0, 20.0 ],
                     "text": "A + B  ·  MAX → BROKER → REMOTE → BROKER → MAX"
                 }
             },
@@ -836,8 +836,8 @@
                     "maxclass": "newobj",
                     "numinlets": 2,
                     "numoutlets": 1,
-                    "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 960.0, 40.0, 22.0 ],
+                    "outlettype": [ "float" ],
+                    "patching_rect": [ 20.0, 960.0, 29.5, 22.0 ],
                     "text": "+ 0."
                 }
             },
@@ -859,7 +859,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 80.0, 990.0, 220.0, 20.0 ],
+                    "patching_rect": [ 80.0, 990.0, 184.0, 20.0 ],
                     "text": "ms, from the last A and the last B"
                 }
             },
@@ -916,6 +916,12 @@
                 "patchline": {
                     "destination": [ "aan2", 0 ],
                     "source": [ "aamin", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "csum", 1 ],
+                    "source": [ "aan0", 0 ]
                 }
             },
             {
@@ -1000,6 +1006,12 @@
                 "patchline": {
                     "destination": [ "aazl", 0 ],
                     "source": [ "aazlc", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "arand", 0 ],
+                    "source": [ "aload", 0 ]
                 }
             },
             {
@@ -1114,6 +1126,12 @@
             },
             {
                 "patchline": {
+                    "destination": [ "csum", 0 ],
+                    "source": [ "bbn0", 0 ]
+                }
+            },
+            {
+                "patchline": {
                     "destination": [ "bbbig", 0 ],
                     "source": [ "bbreset", 2 ]
                 }
@@ -1192,6 +1210,30 @@
             },
             {
                 "patchline": {
+                    "destination": [ "bslice", 0 ],
+                    "source": [ "bctl", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "brtt", 0 ],
+                    "source": [ "bnode", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "bbt", 0 ],
+                    "source": [ "brtt", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "bnode", 0 ],
+                    "source": [ "bslice", 1 ]
+                }
+            },
+            {
+                "patchline": {
                     "destination": [ "aslice", 0 ],
                     "source": [ "client", 0 ]
                 }
@@ -1210,6 +1252,12 @@
             },
             {
                 "patchline": {
+                    "destination": [ "csumn", 0 ],
+                    "source": [ "csum", 0 ]
+                }
+            },
+            {
+                "patchline": {
                     "destination": [ "client", 0 ],
                     "source": [ "disc", 0 ]
                 }
@@ -1224,54 +1272,6 @@
                 "patchline": {
                     "destination": [ "pstatus", 0 ],
                     "source": [ "rstatus", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "bslice", 0 ],
-                    "source": [ "bctl", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "bnode", 0 ],
-                    "source": [ "bslice", 1 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "brtt", 0 ],
-                    "source": [ "bnode", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "bbt", 0 ],
-                    "source": [ "brtt", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "csum", 0 ],
-                    "source": [ "bbn0", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "csum", 1 ],
-                    "source": [ "aan0", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "csumn", 0 ],
-                    "source": [ "csum", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "arand", 0 ],
-                    "source": [ "aload", 0 ]
                 }
             }
         ],

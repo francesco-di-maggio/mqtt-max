@@ -95,8 +95,8 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 280.0, 143.0, 100.0, 22.0 ],
-                    "text": "connected"
+                    "patching_rect": [ 280.0, 143.0, 64.0, 22.0 ],
+                    "text": ""
                 }
             },
             {
