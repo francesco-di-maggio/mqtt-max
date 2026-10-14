@@ -30,7 +30,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 20.0, 40.0, 782.0, 33.0 ],
-                    "text": "MIDI with midge and mqtt-midi (Grantler Instruments): one topic per value, a raw byte as payload. midge connects them to a DAW or MIDI device.\nmidge: the same broker, prefix remote. Channels 1-16 in the topic. Note off is note on with velocity 0. Not yet tested with midge."
+                    "text": "MIDI with midge and mqtt-midi (Grantler Instruments): one topic per value, a raw byte as payload. midge connects them to a DAW or MIDI device.\nmidge: the same broker, prefix remote. Channels 1-16 in the topic. Note off is note on with velocity 0."
                 }
             },
             {
