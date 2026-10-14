@@ -8,7 +8,7 @@ First release as a Max package.
 
 - `[mqtt.client]`: MQTT 3.1.1 over TCP, TLS and WebSocket; subscribe, publish text, bytes or JSON dictionaries; QoS, retain, last will, keepalive, clean session; one connection shared by name; messages sent before the script is ready are held.
 - `[mqtt.broker]`: an MQTT 3.1.1 broker (Aedes) on TCP, TLS, WebSocket and secure WebSocket, with optional login; reports client connections and subscriptions.
-- `[mqtt.midi]`: MIDI messages over MQTT, including SysEx and clock, as raw MIDI bytes, on topics set with `@receive` and `@send`; optional virtual MIDI port on macOS.
+- `[mqtt.send]` and `[mqtt.receive]`: one topic per object, like `[send]` and `[receive]`; retain, QoS, wildcards; text, raw bytes or JSON.
 - `[mqtt.homie.device]` and `[mqtt.homie.controller]`: Homie 5 devices and controllers: state and last will, descriptions, typed values with ranges and steps, commands, broadcasts, alerts and logs.
-- Help files with tabs and reference pages for every object; four examples with the remote; a landing patch.
-- Remote: web app for phones, tablets and computers. Motion, latency, XY pad, 4 sliders, 8 buttons, mic level; as MIDI or Homie values.
+- Help files with tabs and reference pages for every object; six examples, one per setup; a landing patch.
+- Remote: web app for phones, tablets and computers. Motion, round trip, XY pad, 4 sliders, 8 buttons, mic level, as Homie values.

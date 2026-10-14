@@ -59,7 +59,7 @@ The broker stores the last **retained** message per topic and sends it to every 
 | `ws://` | WebSocket | depends on the broker |
 | `wss://` | WebSocket with TLS | depends on the broker |
 
-Web pages, such as the remote, use WebSockets only.
+Web pages, such as the Remote, use WebSockets only.
 
 ### Brokers
 
@@ -69,24 +69,7 @@ Web pages, such as the remote, use WebSockets only.
 | Local: `[mqtt.broker]`, Mosquitto on a computer or Raspberry Pi | A few ms. Private. |
 | Hosted or own server | Across the internet. Login, TLS. |
 
-## Formats on top of MQTT
-
-MQTT leaves topics and payloads open. mqtt-max uses two formats.
-
-### MIDI
-
-`[mqtt.midi]` publishes MIDI 1.0 messages as raw bytes, one or more complete messages per MQTT message. One topic per device:
-
-```
-studio/phone-a1b2/midi    B0 07 40       control change 7, value 64, channel 1
-studio/phone-a1b2/midi    90 3C 64       note on 60, velocity 100
-studio/phone-a1b2/midi    F0 7D 01 F7    SysEx
-studio/phone-a1b2/midi    F8             clock
-```
-
-`studio/+/midi` receives every device. MIDI limits apply: 7-bit values, 16 channels per topic.
-
-### Homie
+## Homie
 
 [Homie](https://homieiot.github.io/specification/) describes devices. A device publishes, retained:
 
@@ -124,7 +107,7 @@ Objects: see the [README](../README.md). Uses:
 - Microcontrollers (e.g. ESP32) publishing sensor values.
 - Devices on different networks, through a broker on the internet.
 - Presence: retained states and the last will report joins, disconnects and dropped connections.
-- MIDI from the network on a virtual MIDI port.
+- Sound and MIDI made in Max from any device's values.
 - Other MQTT software: Node-RED, Home Assistant, openHAB.
 
 ## Further reading
@@ -132,5 +115,4 @@ Objects: see the [README](../README.md). Uses:
 - [MQTT 3.1.1 specification (OASIS)](https://docs.oasis-open.org/mqtt/mqtt/v3.1.1/os/mqtt-v3.1.1-os.html)
 - [MQTT 5.0 specification (OASIS)](https://docs.oasis-open.org/mqtt/mqtt/v5.0/os/mqtt-v5.0-os.html)
 - [Homie convention](https://homieiot.github.io/specification/)
-- [MIDI 1.0 core specifications (MIDI Association)](https://midi.org/midi-1-0-core-specifications)
 - [MQTT.js](https://github.com/mqttjs/MQTT.js), the client library mqtt-max uses

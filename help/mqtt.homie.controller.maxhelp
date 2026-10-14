@@ -271,7 +271,18 @@
                                     "numinlets": 1,
                                     "numoutlets": 0,
                                     "patching_rect": [ 340.0, 410.0, 291.0, 47.0 ],
-                                    "text": "No @domain: all domains, devices named <domain>/<device>. The remote's domain is its prefix, default remote."
+                                    "text": "No @domain: all domains, devices named <domain>/<device>. The Remote's domain is its prefix, default remote."
+                                }
+                            },
+                            {
+                                "box": {
+                                    "id": "cexample",
+                                    "maxclass": "comment",
+                                    "numinlets": 1,
+                                    "numoutlets": 0,
+                                    "patching_rect": [ 340.0, 470.0, 291.0, 33.0 ],
+                                    "text": "Complete setups: the examples mqtt-remote-sound, mqtt-remote-midi and mqtt-synth-device.",
+                                    "linecount": 2
                                 }
                             }
                         ],
@@ -761,8 +772,8 @@
                         "classnamespace": "box",
                         "rect": [ 0.0, 26.0, 799.0, 533.0 ],
                         "showontab": 1,
-                        "boxes": [],
-                        "lines": []
+                        "boxes": [  ],
+                        "lines": [  ]
                     },
                     "patching_rect": [ 10.0, 170.0, 120.0, 22.0 ],
                     "text": "p ?",
@@ -770,7 +781,7 @@
                 }
             }
         ],
-        "lines": [],
+        "lines": [  ],
         "autosave": 0
     }
 }

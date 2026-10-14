@@ -13,8 +13,8 @@
 
 	<discussion>
 		<p>MQTT is a publish/subscribe protocol: clients publish messages to named topics on a broker, and every client subscribed to a matching topic receives them. Topics are paths such as <i>studio/sensor/1</i>; in <m>subscribe</m>, <i>+</i> matches one level and <i>#</i> all remaining levels.</p>
-		<p><o>mqtt.client</o> speaks MQTT 3.1.1 through MQTT.js in a Node for Max process. Install its dependencies once per computer by sending <m>script npm install</m>. Messages sent before the process is ready, e.g. from a <o>loadbang</o>, are held and sent once it is.</p>
-		<p>Give the client a name to share its connection: <o>mqtt.midi</o>, <o>mqtt.homie.device</o> and <o>mqtt.homie.controller</o> with the same name use it. Without a name, the client works on its own.</p>
+		<p><o>mqtt.client</o> speaks MQTT 3.1.1 through MQTT.js in a Node for Max process. Install its dependencies once per computer by sending <m>script npm install</m>. Messages sent before the process is ready, e.g. from a <o>loadbang</o>, to the client or to an object sharing it, are held and sent once it is.</p>
+		<p>Give the client a name to share its connection: <o>mqtt.send</o>, <o>mqtt.receive</o>, <o>mqtt.homie.device</o> and <o>mqtt.homie.controller</o> with the same name use it. Without a name, the client works on its own.</p>
 		<p>Two clients with the same <at>clientid</at> disconnect each other: the broker closes the older connection. Leave it empty for a random one.</p>
 		<p>A <at>password</at> typed into the object box is saved in the patch in plain text. For anything other than a public test broker, send it with <m>connect</m> or a <m>password</m> message instead.</p>
 	</discussion>
@@ -171,7 +171,8 @@
 
 	<seealsolist>
 		<seealso name="mqtt.broker" />
-		<seealso name="mqtt.midi" />
+		<seealso name="mqtt.send" />
+		<seealso name="mqtt.receive" />
 		<seealso name="mqtt.homie.device" />
 		<seealso name="mqtt.homie.controller" />
 		<seealso name="node.script" />

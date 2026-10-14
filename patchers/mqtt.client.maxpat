@@ -150,19 +150,8 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 330.0, 315.0, 330.0, 20.0 ],
-                    "text": "attributes and other objects wait until the script is ready"
-                }
-            },
-            {
-                "box": {
-                    "id": "gate",
-                    "maxclass": "newobj",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "patching_rect": [ 300.0, 340.0, 50.0, 22.0 ],
-                    "outlettype": [ "" ],
-                    "text": "gate 1 0"
+                    "patching_rect": [ 330.0, 315.0, 520.0, 20.0 ],
+                    "text": "messages from the inlet, attributes and other objects wait in the queue until the script is ready"
                 }
             },
             {
@@ -208,21 +197,10 @@
                     "id": "tready",
                     "maxclass": "newobj",
                     "numinlets": 1,
-                    "numoutlets": 3,
+                    "numoutlets": 2,
                     "patching_rect": [ 120.0, 440.0, 55.0, 22.0 ],
-                    "outlettype": [ "bang", "bang", "bang" ],
-                    "text": "t b b b"
-                }
-            },
-            {
-                "box": {
-                    "id": "open",
-                    "maxclass": "message",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "patching_rect": [ 230.0, 440.0, 29.0, 22.0 ],
-                    "outlettype": [ "" ],
-                    "text": "1"
+                    "outlettype": [ "bang", "bang" ],
+                    "text": "t b b"
                 }
             },
             {
@@ -285,12 +263,34 @@
             },
             {
                 "box": {
-                    "id": "cqueue",
+                    "id": "rscr",
+                    "maxclass": "newobj",
+                    "numinlets": 2,
+                    "numoutlets": 2,
+                    "outlettype": [ "", "" ],
+                    "patching_rect": [ 20.0, 280.0, 75.0, 22.0 ],
+                    "text": "route script"
+                }
+            },
+            {
+                "box": {
+                    "id": "pscr",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 160.0, 310.0, 90.0, 22.0 ],
+                    "text": "prepend script"
+                }
+            },
+            {
+                "box": {
+                    "id": "cscr",
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 60.0, 250.0, 20.0 ],
-                    "text": "messages wait until the script is ready"
+                    "patching_rect": [ 160.0, 280.0, 330.0, 20.0 ],
+                    "text": "script npm install etc. reach node.script at once"
                 }
             }
         ],
@@ -333,12 +333,6 @@
             },
             {
                 "patchline": {
-                    "destination": [ "gate", 1 ],
-                    "source": [ "done", 1 ]
-                }
-            },
-            {
-                "patchline": {
                     "destination": [ "namein", 0 ],
                     "source": [ "tname", 1 ]
                 }
@@ -371,18 +365,6 @@
                 "patchline": {
                     "destination": [ "fwd", 0 ],
                     "source": [ "setout", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "gate", 1 ],
-                    "source": [ "recv", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "node", 0 ],
-                    "source": [ "gate", 0 ]
                 }
             },
             {
@@ -429,18 +411,6 @@
             },
             {
                 "patchline": {
-                    "destination": [ "open", 0 ],
-                    "source": [ "tready", 2 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "gate", 0 ],
-                    "source": [ "open", 0 ]
-                }
-            },
-            {
-                "patchline": {
                     "destination": [ "args", 0 ],
                     "source": [ "tready", 1 ]
                 }
@@ -465,12 +435,6 @@
             },
             {
                 "patchline": {
-                    "destination": [ "queue", 0 ],
-                    "source": [ "in", 0 ]
-                }
-            },
-            {
-                "patchline": {
                     "destination": [ "node", 0 ],
                     "source": [ "queue", 0 ]
                 }
@@ -479,6 +443,42 @@
                 "patchline": {
                     "destination": [ "queue", 1 ],
                     "source": [ "ready", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "queue", 0 ],
+                    "source": [ "done", 1 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "queue", 0 ],
+                    "source": [ "recv", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "rscr", 0 ],
+                    "source": [ "in", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "pscr", 0 ],
+                    "source": [ "rscr", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "node", 0 ],
+                    "source": [ "pscr", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "queue", 0 ],
+                    "source": [ "rscr", 1 ]
                 }
             }
         ],

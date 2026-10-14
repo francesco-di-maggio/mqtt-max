@@ -57,6 +57,12 @@ class Client {
     if (this.connected) this.mqtt.subscribe(topic, options, (err) => err && this.events.onError(`subscribe ${topic}: ${err.message}`));
   }
 
+  // Subscribing again makes the broker send the filter's retained messages once more (MQTT 3.1.1, 3.8.4).
+  // MQTT.js skips filters it already subscribed to, unless asked with resubscribe.
+  resubscribe(topic, options = {}) {
+    if (this.connected) this.mqtt.subscribe({ [topic]: { qos: options.qos ?? 0 }, resubscribe: true }, (err) => err && this.events.onError(`subscribe ${topic}: ${err.message}`));
+  }
+
   unsubscribe(topic) {
     if (this.connected) this.mqtt.unsubscribe(topic, (err) => err && this.events.onError(`unsubscribe ${topic}: ${err.message}`));
   }

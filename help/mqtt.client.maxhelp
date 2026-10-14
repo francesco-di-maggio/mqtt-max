@@ -127,8 +127,8 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20.0, 185.0, 150.0, 22.0 ],
-                                    "text": "subscribe mqtt-max-help/#"
+                                    "patching_rect": [ 20.0, 185.0, 232, 22.0 ],
+                                    "text": "subscribe mqtt-max-help/client/#"
                                 }
                             },
                             {
@@ -138,8 +138,8 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 190.0, 185.0, 216.0, 22.0 ],
-                                    "text": "publish mqtt-max-help/hello 1 2.5 three"
+                                    "patching_rect": [ 190.0, 185.0, 327, 22.0 ],
+                                    "text": "publish mqtt-max-help/client/hello 1 2.5 three"
                                 }
                             },
                             {
@@ -406,8 +406,8 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 380.0, 150.0, 195.0, 22.0 ],
-                                    "text": "subscribe mqtt-max-help/payload/#"
+                                    "patching_rect": [ 380.0, 150.0, 286, 22.0 ],
+                                    "text": "subscribe mqtt-max-help/client/payload/#"
                                 }
                             },
                             {
@@ -450,8 +450,8 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20.0, 260.0, 243.0, 22.0 ],
-                                    "text": "publish mqtt-max-help/payload/text hello 1 2"
+                                    "patching_rect": [ 20.0, 260.0, 361, 22.0 ],
+                                    "text": "publish mqtt-max-help/client/payload/text hello 1 2"
                                 }
                             },
                             {
@@ -461,8 +461,8 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20.0, 290.0, 289.0, 22.0 ],
-                                    "text": "publishbytes mqtt-max-help/payload/bytes 0 127 255"
+                                    "patching_rect": [ 20.0, 290.0, 402, 22.0 ],
+                                    "text": "publishbytes mqtt-max-help/client/payload/bytes 0 127 255"
                                 }
                             },
                             {
@@ -504,8 +504,8 @@
                                     "numinlets": 1,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 395.0, 282.0, 245.0, 22.0 ],
-                                    "text": "prepend publish mqtt-max-help/payload/json"
+                                    "patching_rect": [ 395.0, 282.0, 347, 22.0 ],
+                                    "text": "prepend publish mqtt-max-help/client/payload/json"
                                 }
                             },
                             {
@@ -546,8 +546,8 @@
                                     "numinlets": 2,
                                     "numoutlets": 2,
                                     "outlettype": [ "", "" ],
-                                    "patching_rect": [ 395.0, 352.0, 187.0, 22.0 ],
-                                    "text": "route mqtt-max-help/payload/json"
+                                    "patching_rect": [ 395.0, 352.0, 279, 22.0 ],
+                                    "text": "route mqtt-max-help/client/payload/json"
                                 }
                             },
                             {
@@ -821,8 +821,8 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20.0, 260.0, 202.0, 22.0 ],
-                                    "text": "publish mqtt-max-help/retained hello"
+                                    "patching_rect": [ 20.0, 260.0, 306, 22.0 ],
+                                    "text": "publish mqtt-max-help/client/retained hello"
                                 }
                             },
                             {
@@ -832,8 +832,8 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 250.0, 260.0, 173.0, 22.0 ],
-                                    "text": "publish mqtt-max-help/retained"
+                                    "patching_rect": [ 250.0, 260.0, 266, 22.0 ],
+                                    "text": "publish mqtt-max-help/client/retained"
                                 }
                             },
                             {
@@ -853,8 +853,8 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20.0, 300.0, 197.0, 22.0 ],
-                                    "text": "subscribe mqtt-max-help/retained 1"
+                                    "patching_rect": [ 20.0, 300.0, 293, 22.0 ],
+                                    "text": "subscribe mqtt-max-help/client/retained 1"
                                 }
                             },
                             {
@@ -864,8 +864,8 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 230.0, 300.0, 200.0, 22.0 ],
-                                    "text": "unsubscribe mqtt-max-help/retained"
+                                    "patching_rect": [ 230.0, 300.0, 293, 22.0 ],
+                                    "text": "unsubscribe mqtt-max-help/client/retained"
                                 }
                             },
                             {
@@ -1277,8 +1277,8 @@
                         "classnamespace": "box",
                         "rect": [ 0.0, 26.0, 779.0, 501.0 ],
                         "showontab": 1,
-                        "boxes": [],
-                        "lines": []
+                        "boxes": [  ],
+                        "lines": [  ]
                     },
                     "patching_rect": [ 10.0, 230.0, 120.0, 22.0 ],
                     "text": "p ?",
@@ -1286,7 +1286,7 @@
                 }
             }
         ],
-        "lines": [],
+        "lines": [  ],
         "autosave": 0
     }
 }

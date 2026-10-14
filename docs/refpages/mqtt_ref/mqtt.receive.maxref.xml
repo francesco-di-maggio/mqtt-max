@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="mqtt.receive" module="max" category="MQTT">
+
+	<digest>
+		Receive from one topic
+	</digest>
+
+	<description>
+		Outputs the messages on one topic filter, like <o>receive</o> across the network.
+	</description>
+
+	<discussion>
+		<p>Text is split into atoms, numbers come out as numbers. An empty message comes out as a bang.</p>
+		<p>With a wildcard in the filter (<i>+</i> one level, <i>#</i> the rest), the topic comes first, so that <o>route</o> can tell the senders apart.</p>
+		<p>A retained message on the topic arrives as soon as the object subscribes. Other receivers of the same filter on the same client get it again then.</p>
+		<p>A client also receives what it publishes itself on a topic it subscribes to: MQTT 3.1.1 has no option to prevent it. A message matching two filters of one client can arrive twice.</p>
+	</discussion>
+
+	<metadatalist>
+		<metadata name="author">Francesco Di Maggio</metadata>
+		<metadata name="tag">MQTT</metadata>
+		<metadata name="tag">Network</metadata>
+	</metadatalist>
+
+	<objarglist>
+		<objarg name="client" optional="0" type="symbol">
+			<digest>Name of the mqtt.client to use</digest>
+		</objarg>
+		<objarg name="topic" optional="1" type="symbol">
+			<digest>Topic filter to subscribe to</digest>
+		</objarg>
+	</objarglist>
+
+	<attributelist>
+		<attribute name="topic" get="0" set="1" type="symbol" size="1">
+			<digest>Topic filter</digest>
+			<description>The topic filter to subscribe to; <i>+</i> and <i>#</i> are allowed. Changing it subscribes to the new filter.</description>
+			<attributelist>
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Topic filter" />
+			</attributelist>
+		</attribute>
+		<attribute name="qos" get="0" set="1" type="int" size="1">
+			<digest>Quality of service</digest>
+			<description>0, 1 or 2: the highest QoS the broker uses for this subscription.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="int" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Quality of service" />
+			</attributelist>
+		</attribute>
+		<attribute name="format" get="0" set="1" type="symbol" size="1">
+			<digest>Payload format</digest>
+			<description><i>text</i>: atoms. <i>bytes</i>: a list of integers 0-255. <i>json</i>: a JSON object as a dictionary, anything else as text.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="symbol" size="1" value="text" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Payload format" />
+			</attributelist>
+		</attribute>
+	</attributelist>
+
+	<misc name="Output">
+		<entry name="left outlet">
+			<description>The messages; with a wildcard filter, the topic first.</description>
+		</entry>
+		<entry name="right outlet">
+			<description>Dumpout: <m>error</m> with a text.</description>
+		</entry>
+	</misc>
+
+	<seealsolist>
+		<seealso name="mqtt.send" />
+		<seealso name="mqtt.client" />
+		<seealso name="receive" />
+	</seealsolist>
+
+</c74object>

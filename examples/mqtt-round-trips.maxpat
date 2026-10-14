@@ -9,7 +9,7 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 95.0, 91.0, 671.0, 900.0 ],
+        "rect": [ 95.0, 91.0, 980.0, 1040.0 ],
         "boxes": [
             {
                 "box": {
@@ -18,7 +18,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 15.0, 91.0, 20.0 ],
+                    "patching_rect": [ 20.0, 15.0, 110.0, 20.0 ],
                     "text": "ROUND TRIPS"
                 }
             },
@@ -30,7 +30,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 20.0, 40.0, 614.0, 47.0 ],
-                    "text": "A: Max → broker → Max, a message on a topic of its own.\nB: remote → broker → remote, the Remote's Latency input. Remote: Send Homie, prefix remote, Latency on, then Connect.\nA + B ≈ Max → broker → remote → broker → Max."
+                    "text": "A: Max → broker → Max, a message on a topic of its own.\nB: Remote → broker → Remote, the Remote's Latency input. Remote: prefix remote, Round trip on, Connect.\nA + B ≈ Max → broker → remote → broker → Max."
                 }
             },
             {
@@ -62,8 +62,8 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
-                    "patching_rect": [ 20.0, 125.0, 105.0, 22.0 ],
-                    "text": "mqtt.client latency"
+                    "patching_rect": [ 20.0, 125.0, 164, 22.0 ],
+                    "text": "mqtt.client round-trips"
                 }
             },
             {
@@ -71,10 +71,10 @@
                     "id": "rstatus",
                     "maxclass": "newobj",
                     "numinlets": 2,
-                    "numoutlets": 3,
-                    "outlettype": [ "", "", "" ],
-                    "patching_rect": [ 180.0, 125.0, 110.0, 22.0 ],
-                    "text": "route status ready"
+                    "numoutlets": 2,
+                    "outlettype": [ "", "" ],
+                    "patching_rect": [ 199.0, 125.0, 71.0, 22.0 ],
+                    "text": "route status"
                 }
             },
             {
@@ -127,8 +127,8 @@
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 285.0, 215.0, 22.0 ],
-                    "text": "sprintf subscribe mqtt-max-latency/%ld"
+                    "patching_rect": [ 20.0, 285.0, 342, 22.0 ],
+                    "text": "sprintf subscribe mqtt-max-example/round-trips/%ld"
                 }
             },
             {
@@ -138,8 +138,8 @@
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 260.0, 285.0, 247.0, 22.0 ],
-                    "text": "sprintf set publish mqtt-max-latency/%ld ping"
+                    "patching_rect": [ 400.0, 285.0, 388, 22.0 ],
+                    "text": "sprintf set publish mqtt-max-example/round-trips/%ld ping"
                 }
             },
             {
@@ -149,8 +149,8 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 260.0, 315.0, 211.0, 22.0 ],
-                    "text": "publish mqtt-max-latency/466423 ping"
+                    "patching_rect": [ 400.0, 315.0, 329, 22.0 ],
+                    "text": "publish mqtt-max-example/round-trips/466423 ping"
                 }
             },
             {
@@ -161,7 +161,7 @@
                     "numoutlets": 1,
                     "outlettype": [ "int" ],
                     "parameter_enable": 0,
-                    "patching_rect": [ 540.0, 225.0, 24.0, 24.0 ]
+                    "patching_rect": [ 840.0, 225.0, 24.0, 24.0 ]
                 }
             },
             {
@@ -170,7 +170,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 570.0, 225.0, 80.0, 20.0 ],
+                    "patching_rect": [ 870.0, 225.0, 80.0, 20.0 ],
                     "text": "every second"
                 }
             },
@@ -181,7 +181,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "bang" ],
-                    "patching_rect": [ 540.0, 255.0, 69.0, 22.0 ],
+                    "patching_rect": [ 840.0, 255.0, 69.0, 22.0 ],
                     "text": "metro 1000"
                 }
             },
@@ -192,7 +192,7 @@
                     "numinlets": 1,
                     "numoutlets": 2,
                     "outlettype": [ "bang", "bang" ],
-                    "patching_rect": [ 540.0, 285.0, 32.0, 22.0 ],
+                    "patching_rect": [ 840.0, 285.0, 32.0, 22.0 ],
                     "text": "t b b"
                 }
             },
@@ -773,8 +773,8 @@
                     "numinlets": 1,
                     "numoutlets": 3,
                     "outlettype": [ "", "", "" ],
-                    "patching_rect": [ 20.0, 640.0, 265.0, 22.0 ],
-                    "text": "mqtt.homie.controller latency @domain remote"
+                    "patching_rect": [ 20.0, 640.0, 329, 22.0 ],
+                    "text": "mqtt.homie.controller round-trips @domain remote"
                 }
             },
             {
@@ -796,7 +796,7 @@
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
                     "patching_rect": [ 20.0, 705.0, 85.0, 22.0 ],
-                    "text": "route latency"
+                    "text": "route round-trip"
                 }
             },
             {
@@ -807,7 +807,7 @@
                     "numoutlets": 2,
                     "outlettype": [ "", "" ],
                     "patching_rect": [ 20.0, 735.0, 55.0, 22.0 ],
-                    "text": "route rtt"
+                    "text": "route time"
                 }
             },
             {
@@ -816,8 +816,8 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 300.0, 640.0, 360.0, 20.0 ],
-                    "text": "values from every remote: [route <id>] after zl.slice picks one"
+                    "patching_rect": [ 364.0, 640.0, 360.0, 20.0 ],
+                    "text": "values from every Remote: [route <id>] after zl.slice picks one"
                 }
             },
             {
@@ -861,6 +861,17 @@
                     "numoutlets": 0,
                     "patching_rect": [ 80.0, 990.0, 220.0, 20.0 ],
                     "text": "ms, from the last A and the last B"
+                }
+            },
+            {
+                "box": {
+                    "id": "aload",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 1,
+                    "outlettype": [ "bang" ],
+                    "patching_rect": [ 20.0, 225.0, 58.0, 22.0 ],
+                    "text": "loadbang"
                 }
             }
         ],
@@ -1260,7 +1271,7 @@
             {
                 "patchline": {
                     "destination": [ "arand", 0 ],
-                    "source": [ "rstatus", 1 ]
+                    "source": [ "aload", 0 ]
                 }
             }
         ],

@@ -394,6 +394,16 @@
                                     "patching_rect": [ 530.0, 495.0, 106.0, 22.0 ],
                                     "text": "set lamp light on 1"
                                 }
+                            },
+                            {
+                                "box": {
+                                    "id": "cexample",
+                                    "maxclass": "comment",
+                                    "numinlets": 1,
+                                    "numoutlets": 0,
+                                    "patching_rect": [ 20.0, 575.0, 300.0, 20.0 ],
+                                    "text": "A complete setup: the example mqtt-synth-device."
+                                }
                             }
                         ],
                         "lines": [
@@ -1104,8 +1114,8 @@
                         "classnamespace": "box",
                         "rect": [ 0.0, 26.0, 825.0, 600.0 ],
                         "showontab": 1,
-                        "boxes": [],
-                        "lines": []
+                        "boxes": [  ],
+                        "lines": [  ]
                     },
                     "patching_rect": [ 10.0, 200.0, 120.0, 22.0 ],
                     "text": "p ?",
@@ -1113,7 +1123,7 @@
                 }
             }
         ],
-        "lines": [],
+        "lines": [  ],
         "autosave": 0
     }
 }

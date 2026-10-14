@@ -9,7 +9,7 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 100.0, 100.0, 620.0, 590.0 ],
+        "rect": [ 100.0, 100.0, 721.0, 701.0 ],
         "boxes": [
             {
                 "box": {
@@ -29,7 +29,7 @@
                     "numinlets": 1,
                     "numoutlets": 0,
                     "patching_rect": [ 20.0, 40.0, 337.0, 20.0 ],
-                    "text": "MQTT for Max: client, broker, MIDI, Homie."
+                    "text": "MQTT for Max: client, broker, send and receive, Homie."
                 }
             },
             {
@@ -98,202 +98,13 @@
             },
             {
                 "box": {
-                    "id": "h0",
-                    "maxclass": "message",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 240.0, 89.0, 22.0 ],
-                    "text": "help mqtt.client"
-                }
-            },
-            {
-                "box": {
-                    "id": "ch0",
-                    "maxclass": "comment",
-                    "numinlets": 1,
-                    "numoutlets": 0,
-                    "patching_rect": [ 180.0, 240.0, 260.0, 20.0 ],
-                    "text": "connection to a broker"
-                }
-            },
-            {
-                "box": {
-                    "id": "h1",
-                    "maxclass": "message",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 268.0, 95.0, 22.0 ],
-                    "text": "help mqtt.broker"
-                }
-            },
-            {
-                "box": {
-                    "id": "ch1",
-                    "maxclass": "comment",
-                    "numinlets": 1,
-                    "numoutlets": 0,
-                    "patching_rect": [ 180.0, 268.0, 188.0, 20.0 ],
-                    "text": "broker on this computer"
-                }
-            },
-            {
-                "box": {
-                    "id": "h2",
-                    "maxclass": "message",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 296.0, 83.0, 22.0 ],
-                    "text": "help mqtt.midi"
-                }
-            },
-            {
-                "box": {
-                    "id": "ch2",
-                    "maxclass": "comment",
-                    "numinlets": 1,
-                    "numoutlets": 0,
-                    "patching_rect": [ 180.0, 296.0, 223.0, 20.0 ],
-                    "text": "MIDI over MQTT, with a virtual MIDI port"
-                }
-            },
-            {
-                "box": {
-                    "id": "h3",
-                    "maxclass": "message",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 324.0, 132.0, 22.0 ],
-                    "text": "help mqtt.homie.device"
-                }
-            },
-            {
-                "box": {
-                    "id": "ch3",
-                    "maxclass": "comment",
-                    "numinlets": 1,
-                    "numoutlets": 0,
-                    "patching_rect": [ 180.0, 324.0, 133.0, 20.0 ],
-                    "text": "Max as a Homie device"
-                }
-            },
-            {
-                "box": {
-                    "id": "h4",
-                    "maxclass": "message",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 352.0, 147.0, 22.0 ],
-                    "text": "help mqtt.homie.controller"
-                }
-            },
-            {
-                "box": {
-                    "id": "ch4",
-                    "maxclass": "comment",
-                    "numinlets": 1,
-                    "numoutlets": 0,
-                    "patching_rect": [ 180.0, 352.0, 198.0, 20.0 ],
-                    "text": "discover and control Homie devices"
-                }
-            },
-            {
-                "box": {
                     "fontface": 1,
                     "id": "c3",
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 20.0, 393.0, 223.0, 20.0 ],
-                    "text": "3  ·  EXAMPLES  (with the remote)"
-                }
-            },
-            {
-                "box": {
-                    "id": "e0",
-                    "maxclass": "message",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 418.0, 200.0, 22.0 ],
-                    "text": "loadunique mqtt-remote-midi.maxpat"
-                }
-            },
-            {
-                "box": {
-                    "id": "ce0",
-                    "maxclass": "comment",
-                    "numinlets": 1,
-                    "numoutlets": 0,
-                    "patching_rect": [ 230.0, 418.0, 110.0, 20.0 ],
-                    "text": "remote → MIDI port"
-                }
-            },
-            {
-                "box": {
-                    "id": "e1",
-                    "maxclass": "message",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 446.0, 211.0, 22.0 ],
-                    "text": "loadunique mqtt-remote-homie.maxpat"
-                }
-            },
-            {
-                "box": {
-                    "id": "ce1",
-                    "maxclass": "comment",
-                    "numinlets": 1,
-                    "numoutlets": 0,
-                    "patching_rect": [ 230.0, 446.0, 133.0, 20.0 ],
-                    "text": "remote → Homie values"
-                }
-            },
-            {
-                "box": {
-                    "id": "e2",
-                    "maxclass": "message",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 474.0, 196.0, 22.0 ],
-                    "text": "loadunique mqtt-remote-live.maxpat"
-                }
-            },
-            {
-                "box": {
-                    "id": "ce2",
-                    "maxclass": "comment",
-                    "numinlets": 1,
-                    "numoutlets": 0,
-                    "patching_rect": [ 230.0, 474.0, 126.0, 20.0 ],
-                    "text": "remote → Ableton Live"
-                }
-            },
-            {
-                "box": {
-                    "id": "e3",
-                    "maxclass": "message",
-                    "numinlets": 2,
-                    "numoutlets": 1,
-                    "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 502.0, 215.0, 22.0 ],
-                    "text": "loadunique mqtt-remote-latency.maxpat"
-                }
-            },
-            {
-                "box": {
-                    "id": "ce3",
-                    "maxclass": "comment",
-                    "numinlets": 1,
-                    "numoutlets": 0,
-                    "patching_rect": [ 230.0, 502.0, 65.0, 20.0 ],
-                    "text": "round trips"
+                    "patching_rect": [ 20.0, 423.0, 110.0, 20.0 ],
+                    "text": "3  ·  EXAMPLES"
                 }
             },
             {
@@ -303,7 +114,7 @@
                     "numinlets": 1,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 450.0, 418.0, 51.0, 22.0 ],
+                    "patching_rect": [ 640.0, 448.0, 51.0, 22.0 ],
                     "text": "pcontrol"
                 }
             },
@@ -315,7 +126,7 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 20.0, 543.0, 403.0, 35.0 ],
+                    "patching_rect": [ 20.0, 631.0, 403.0, 35.0 ],
                     "text": ";\rmax launchbrowser https://francesco-di-maggio.github.io/mqtt-max/remote/"
                 }
             },
@@ -325,8 +136,260 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 437.0, 550.5, 85.0, 20.0 ],
-                    "text": "the remote"
+                    "patching_rect": [ 437.0, 638.5, 85.0, 20.0 ],
+                    "text": "the Remote"
+                }
+            },
+            {
+                "box": {
+                    "id": "h0",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 20.0, 240.0, 123, 22.0 ],
+                    "text": "help mqtt.client"
+                }
+            },
+            {
+                "box": {
+                    "id": "ch0",
+                    "maxclass": "comment",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 200.0, 240.0, 280.0, 20.0 ],
+                    "text": "connection to a broker"
+                }
+            },
+            {
+                "box": {
+                    "id": "h1",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 20.0, 268.0, 123, 22.0 ],
+                    "text": "help mqtt.broker"
+                }
+            },
+            {
+                "box": {
+                    "id": "ch1",
+                    "maxclass": "comment",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 200.0, 268.0, 280.0, 20.0 ],
+                    "text": "broker on this computer"
+                }
+            },
+            {
+                "box": {
+                    "id": "h2",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 20.0, 296.0, 109, 22.0 ],
+                    "text": "help mqtt.send"
+                }
+            },
+            {
+                "box": {
+                    "id": "ch2",
+                    "maxclass": "comment",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 200.0, 296.0, 280.0, 20.0 ],
+                    "text": "publish to one topic, like [send]"
+                }
+            },
+            {
+                "box": {
+                    "id": "h3",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 20.0, 324.0, 130, 22.0 ],
+                    "text": "help mqtt.receive"
+                }
+            },
+            {
+                "box": {
+                    "id": "ch3",
+                    "maxclass": "comment",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 200.0, 324.0, 280.0, 20.0 ],
+                    "text": "messages on one topic, like [receive]"
+                }
+            },
+            {
+                "box": {
+                    "id": "h4",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 20.0, 352.0, 164, 22.0 ],
+                    "text": "help mqtt.homie.device"
+                }
+            },
+            {
+                "box": {
+                    "id": "ch4",
+                    "maxclass": "comment",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 200.0, 352.0, 280.0, 20.0 ],
+                    "text": "Max as a Homie device"
+                }
+            },
+            {
+                "box": {
+                    "id": "h5",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 20.0, 380.0, 191, 22.0 ],
+                    "text": "help mqtt.homie.controller"
+                }
+            },
+            {
+                "box": {
+                    "id": "ch5",
+                    "maxclass": "comment",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 200.0, 380.0, 280.0, 20.0 ],
+                    "text": "discover and control Homie devices"
+                }
+            },
+            {
+                "box": {
+                    "id": "e0",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 20.0, 448.0, 266, 22.0 ],
+                    "text": "loadunique mqtt-shared-session.maxpat"
+                }
+            },
+            {
+                "box": {
+                    "id": "ce0",
+                    "maxclass": "comment",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 301.0, 448.0, 300.0, 20.0 ],
+                    "text": "patches in different places share one session"
+                }
+            },
+            {
+                "box": {
+                    "id": "e1",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 20.0, 476.0, 252, 22.0 ],
+                    "text": "loadunique mqtt-remote-sound.maxpat"
+                }
+            },
+            {
+                "box": {
+                    "id": "ce1",
+                    "maxclass": "comment",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 287.0, 476.0, 300.0, 20.0 ],
+                    "text": "phones play a synth in Max"
+                }
+            },
+            {
+                "box": {
+                    "id": "e2",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 20.0, 504.0, 245, 22.0 ],
+                    "text": "loadunique mqtt-remote-midi.maxpat"
+                }
+            },
+            {
+                "box": {
+                    "id": "ce2",
+                    "maxclass": "comment",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 280.0, 504.0, 300.0, 20.0 ],
+                    "text": "phones control a DAW"
+                }
+            },
+            {
+                "box": {
+                    "id": "e3",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 20.0, 532.0, 252, 22.0 ],
+                    "text": "loadunique mqtt-synth-device.maxpat"
+                }
+            },
+            {
+                "box": {
+                    "id": "ce3",
+                    "maxclass": "comment",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 287.0, 532.0, 300.0, 20.0 ],
+                    "text": "a Max synth anyone on the network can play"
+                }
+            },
+            {
+                "box": {
+                    "id": "e4",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 20.0, 560.0, 259, 22.0 ],
+                    "text": "loadunique mqtt-local-network.maxpat"
+                }
+            },
+            {
+                "box": {
+                    "id": "ce4",
+                    "maxclass": "comment",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 294.0, 560.0, 300.0, 20.0 ],
+                    "text": "no internet: Max is the broker"
+                }
+            },
+            {
+                "box": {
+                    "id": "e5",
+                    "maxclass": "message",
+                    "numinlets": 2,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 20.0, 588.0, 245, 22.0 ],
+                    "text": "loadunique mqtt-round-trips.maxpat"
+                }
+            },
+            {
+                "box": {
+                    "id": "ce5",
+                    "maxclass": "comment",
+                    "numinlets": 1,
+                    "numoutlets": 0,
+                    "patching_rect": [ 280.0, 588.0, 300.0, 20.0 ],
+                    "text": "how fast is the connection"
                 }
             }
         ],
@@ -339,26 +402,8 @@
             },
             {
                 "patchline": {
-                    "destination": [ "pcontrol", 0 ],
-                    "source": [ "e0", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "pcontrol", 0 ],
-                    "source": [ "e1", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "pcontrol", 0 ],
-                    "source": [ "e2", 0 ]
-                }
-            },
-            {
-                "patchline": {
-                    "destination": [ "pcontrol", 0 ],
-                    "source": [ "e3", 0 ]
+                    "destination": [ "client", 0 ],
+                    "source": [ "npm", 0 ]
                 }
             },
             {
@@ -393,8 +438,44 @@
             },
             {
                 "patchline": {
-                    "destination": [ "client", 0 ],
-                    "source": [ "npm", 0 ]
+                    "destination": [ "pcontrol", 0 ],
+                    "source": [ "h5", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "pcontrol", 0 ],
+                    "source": [ "e0", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "pcontrol", 0 ],
+                    "source": [ "e1", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "pcontrol", 0 ],
+                    "source": [ "e2", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "pcontrol", 0 ],
+                    "source": [ "e3", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "pcontrol", 0 ],
+                    "source": [ "e4", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "pcontrol", 0 ],
+                    "source": [ "e5", 0 ]
                 }
             }
         ],

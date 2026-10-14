@@ -15,10 +15,10 @@ test("one owner leaving does not cut off another", () => {
   const client = fakeClient();
   const subs = new Subscriptions(client);
   subs.add("client", "remote/in/#");
-  subs.add("midi 1", "remote/in/#");
+  subs.add("receiver 1", "remote/in/#");
   subs.remove("client", "remote/in/#");
   assert.deepEqual(client.calls, [["subscribe", "remote/in/#", 0]]);
-  subs.remove("midi 1", "remote/in/#");
+  subs.remove("receiver 1", "remote/in/#");
   assert.deepEqual(client.calls.at(-1), ["unsubscribe", "remote/in/#"]);
 });
 
@@ -36,7 +36,7 @@ test("owns and restore", () => {
   const subs = new Subscriptions(client);
   subs.add("client", "a/#", 1);
   assert.ok(subs.owns("client", "a/b"));
-  assert.ok(!subs.owns("midi 1", "a/b"));
+  assert.ok(!subs.owns("receiver 1", "a/b"));
   client.calls.length = 0;
   subs.restore();
   assert.deepEqual(client.calls, [["subscribe", "a/#", 1]]);

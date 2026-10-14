@@ -1,19 +1,20 @@
-// [mqtt.client]: one MQTT connection, shared by name with [mqtt.midi], [mqtt.homie.device] and [mqtt.homie.controller].
-// Those objects reach this script through [mqtt.client]; their messages start with the role and the object's id:
-//   midi <id> ...   device <id> ...   controller <id> ...
+// [mqtt.client]: one MQTT connection, shared by name with [mqtt.send], [mqtt.receive],
+// [mqtt.homie.device] and [mqtt.homie.controller].
+// Those objects reach this script through [mqtt.client]; their messages start with the role and the object's id
+// ([forward] reads "send" as a destination, hence sender and receiver):
+//   sender <id> ...   receiver <id> ...   device <id> ...   controller <id> ...
 
 const maxApi = require("max-api");
 const { Client } = require("./lib/client");
 const { Subscriptions } = require("./lib/subscriptions");
 const { matches } = require("./lib/topic");
 const { FORMATS, decode, encodeText, encodeBytes, toAtom } = require("./lib/payload");
-const { MidiStream, parseMessages } = require("./lib/midi-stream");
-const { MidiPort } = require("./lib/midi-port");
 const { isId, HomieDevice, HomieController } = require("./lib/homie");
 
 // keepalive 10 s: a dropped connection is detected in about 15 s (1.5 x keepalive), so a Homie last will arrives soon.
 const settings = { url: "", username: "", password: "", clientid: "", keepalive: 10, clean: true, qos: 0, retain: false, format: "text" };
-const midis = new Map();
+const senders = new Map();
+const receivers = new Map();
 let device = null;
 let controller = null;
 
@@ -44,7 +45,7 @@ function onConnect() {
 
 function onMessage(topic, payload) {
   if (subscriptions.owns("client", topic)) maxApi.outlet("message", topic, ...decode(payload, settings.format));
-  for (const [id, role] of midis) receiveMidi(id, role, topic, payload);
+  for (const [id, role] of receivers) receive(id, role, topic, payload);
   if (device?.homie?.handle(topic, payload)) return;
   controller?.homie?.handle(topic, payload);
 }
@@ -72,87 +73,105 @@ async function withNewConnection(change) {
   if (wasActive) connect();
 }
 
-// --- [mqtt.midi] ---
-// MIDI over MQTT: each payload holds complete MIDI messages, as on a MIDI cable.
-// @receive is the topic filter MIDI arrives on, @send the topic MIDI is published to.
-
-const midiOut = (id, ...args) => maxApi.outlet("midi", id, ...args);
-
-function publishMidi(role, bytes) {
-  if (role.send) client.publish(role.send, Buffer.from(bytes), { qos: 0, retain: false });
-}
-
-// A client receives what it publishes itself when it is subscribed to that topic: those messages are skipped.
-function receiveMidi(id, role, topic, payload) {
-  if (!role.receive || topic === role.send || !matches(role.receive, topic)) return;
-  const messages = parseMessages(payload);
-  if (!messages) return;
-  for (const bytes of messages) {
-    role.port?.send(bytes);
-    midiOut(id, "bytes", ...bytes);
-  }
-}
-
-// Settings are stored until "register", which the abstraction sends after all its arguments and attributes,
-// so a role starts once, with its final settings.
-function midiRole(id) {
-  if (!midis.has(id)) {
-    const role = { receive: "", send: "", portName: "", port: null, active: false };
-    role.stream = new MidiStream((bytes) => publishMidi(role, bytes));
-    midis.set(id, role);
-  }
-  return midis.get(id);
-}
-
-// MIDI objects look up their port when created, so the port reports itself once it exists:
-// a patch passes "port <name>" on to [ctlin], [notein], [ctlout] etc.
-function openPort(id, role) {
-  role.port?.close();
-  role.port = null;
-  if (!role.portName) return;
-  try {
-    role.port = new MidiPort(role.portName, (bytes) => publishMidi(role, bytes));
-    midiOut(id, "dumpout", "port", role.portName);
-  } catch (err) {
-    midiOut(id, "dumpout", "error", `port ${role.portName}: ${err.message}`);
-  }
-}
-
 const isTopic = (topic) => topic !== "" && !/[+#]/.test(topic);
+const isQos = (level) => [0, 1, 2].includes(level);
 
-const midiCommands = {
-  register: (id, role) => {
-    if (role.active) return;
-    role.active = true;
-    if (role.receive) subscriptions.add(`midi ${id}`, role.receive);
-    openPort(id, role);
+// Messages and dicts as payloads, as [mqtt.client]'s publish sends them.
+async function payloadOf(atoms) {
+  if (atoms[0] !== "dictionary") return encodeText(atoms);
+  const dict = await maxApi.getDict(atoms[1]).catch(() => null);
+  return dict ? encodeText([dict]) : null;
+}
+
+// --- [mqtt.send] ---
+// Like [send], across the network: every message in is published to one topic,
+// as text (a dict as JSON) or, with @format bytes, as raw bytes: integers 0-255.
+
+const sendOut = (id, ...args) => maxApi.outlet("sender", id, ...args);
+const SEND_FORMATS = ["text", "bytes"];
+
+const sendCommands = {
+  topic: (id, role, topic = "") => {
+    if (String(topic) !== "" && !isTopic(String(topic))) return sendOut(id, "dumpout", "error", "topic without + or #");
+    role.topic = String(topic);
   },
-  receive: (id, role, filter = "") => {
-    if (role.active && role.receive) subscriptions.remove(`midi ${id}`, role.receive);
-    role.receive = String(filter);
-    if (role.active && role.receive) subscriptions.add(`midi ${id}`, role.receive);
+  qos: (id, role, level) => {
+    if (!isQos(level)) return sendOut(id, "dumpout", "error", "qos is 0, 1 or 2");
+    role.qos = level;
   },
-  send: (id, role, topic = "") => {
-    if (String(topic) !== "" && !isTopic(String(topic))) return midiOut(id, "dumpout", "error", "send needs a topic without + or #");
-    role.send = String(topic);
+  retain: (id, role, on) => (role.retain = Boolean(on)),
+  format: (id, role, mode) => {
+    if (!SEND_FORMATS.includes(mode)) return sendOut(id, "dumpout", "error", `format is ${SEND_FORMATS.join(" or ")}`);
+    role.format = mode;
   },
-  port: (id, role, name = "") => {
-    if (String(name) === role.portName) return;
-    role.portName = String(name);
-    if (role.active) openPort(id, role);
-  },
-  bytes: (id, role, ...bytes) => {
-    if (!role.active) return;
-    for (const byte of bytes) role.stream.write(byte);
+  // Topic, QoS, retain and format are read on arrival: a later attribute change does not reach an earlier message.
+  value: async (id, role, ...atoms) => {
+    if (!role.topic) return sendOut(id, "dumpout", "error", "no topic: [mqtt.send <client> <topic>]");
+    if (!client.connected) return sendOut(id, "dumpout", "error", "not connected");
+    const { topic, qos, retain, format } = role;
+    // A bang publishes an empty message: with retain, the broker deletes the retained one.
+    const bang = atoms.length === 0 || (atoms.length === 1 && atoms[0] === "bang");
+    if (!bang && format === "bytes" && !encodeBytes(atoms)) return sendOut(id, "dumpout", "error", "bytes are integers 0-255");
+    const payload = await (bang ? "" : format === "bytes" ? encodeBytes(atoms) : payloadOf(atoms));
+    if (payload === null) return sendOut(id, "dumpout", "error", "unknown dict");
+    client.publish(topic, payload, { qos, retain });
   },
 };
 
-function freeMidi(id) {
-  const role = midis.get(id);
-  if (!role) return;
-  subscriptions.removeOwner(`midi ${id}`);
-  role.port?.close();
-  midis.delete(id);
+function senderRole(id) {
+  if (!senders.has(id)) senders.set(id, { topic: "", qos: 0, retain: false, format: "text" });
+  return senders.get(id);
+}
+
+// --- [mqtt.receive] ---
+// Like [receive], across the network: messages on one topic filter come out.
+// With a wildcard in the filter, the topic comes first, so that [route] can tell senders apart.
+// A client also receives what it publishes itself on a topic it subscribes to (MQTT 3.1.1 has no "no local").
+
+const receiveOut = (id, ...args) => maxApi.outlet("receiver", id, ...args);
+
+function receive(id, role, topic, payload) {
+  if (!role.active || !role.filter || !matches(role.filter, topic)) return;
+  const atoms = decode(payload, role.format);
+  if (isTopic(role.filter)) receiveOut(id, "message", ...atoms);
+  else receiveOut(id, "message", topic, ...atoms);
+}
+
+// A filter that is already subscribed is subscribed again, so that the broker sends its retained messages
+// to the new receiver too (MQTT 3.1.1, 3.8.4). Other owners of the filter receive them once more.
+function resubscribe(id, role, change) {
+  if (role.active && role.filter) subscriptions.remove(`receive ${id}`, role.filter);
+  change();
+  if (!role.active || !role.filter) return;
+  const shared = subscriptions.qos(role.filter) !== -1;
+  subscriptions.add(`receive ${id}`, role.filter, role.qos);
+  if (shared) client.resubscribe(role.filter, { qos: subscriptions.qos(role.filter) });
+}
+
+const receiveCommands = {
+  register: (id, role) => {
+    if (role.active) return;
+    resubscribe(id, role, () => (role.active = true));
+  },
+  topic: (id, role, filter = "") => resubscribe(id, role, () => (role.filter = String(filter))),
+  qos: (id, role, level) => {
+    if (!isQos(level)) return receiveOut(id, "dumpout", "error", "qos is 0, 1 or 2");
+    resubscribe(id, role, () => (role.qos = level));
+  },
+  format: (id, role, mode) => {
+    if (!FORMATS.includes(mode)) return receiveOut(id, "dumpout", "error", `format is ${FORMATS.join(", ")}`);
+    role.format = mode;
+  },
+};
+
+function receiverRole(id) {
+  if (!receivers.has(id)) receivers.set(id, { filter: "", qos: 0, format: "text", active: false });
+  return receivers.get(id);
+}
+
+function freeReceiver(id) {
+  subscriptions.removeOwner(`receive ${id}`);
+  receivers.delete(id);
 }
 
 // --- [mqtt.homie.device] ---
@@ -294,9 +313,9 @@ maxApi.addHandlers({
   unsubscribe: (topic) => subscriptions.remove("client", String(topic)),
   publish: async (topic, ...rest) => {
     if (!client.connected) return error("not connected");
-    const atoms = rest[0] === "dictionary" ? [await maxApi.getDict(rest[1]).catch(() => null)] : rest;
-    if (atoms[0] === null) return error("publish: unknown dict");
-    client.publish(String(topic), encodeText(atoms), { qos: settings.qos, retain: settings.retain });
+    const payload = await payloadOf(rest);
+    if (payload === null) return error("publish: unknown dict");
+    client.publish(String(topic), payload, { qos: settings.qos, retain: settings.retain });
   },
   publishbytes: (topic, ...bytes) => {
     if (!client.connected) return error("not connected");
@@ -319,9 +338,13 @@ maxApi.addHandlers({
     if (!FORMATS.includes(mode)) return error(`format is ${FORMATS.join(", ")}`);
     settings.format = mode;
   },
-  midi: (id, command, ...args) => {
-    if (command === "free") return freeMidi(String(id));
-    if (command in midiCommands) midiCommands[command](String(id), midiRole(String(id)), ...args);
+  sender: (id, command, ...args) => {
+    if (command === "free") return senders.delete(String(id));
+    if (command in sendCommands) sendCommands[command](String(id), senderRole(String(id)), ...args);
+  },
+  receiver: (id, command, ...args) => {
+    if (command === "free") return freeReceiver(String(id));
+    if (command in receiveCommands) receiveCommands[command](String(id), receiverRole(String(id)), ...args);
   },
   device: roleHandler("device", deviceCommands, () => device, (id) => (device = { id, domain: "homie", deviceId: null, homie: null, registered: false, pending: { description: null, values: [] } })),
   controller: roleHandler("controller", controllerCommands, () => controller, (id) => (controller = { id, domain: "+", homie: null })),

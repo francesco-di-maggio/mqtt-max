@@ -129,8 +129,8 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 20.0, 260.0, 198.0, 22.0 ],
-                                    "text": "subscribe mqttjs_54e489a0 test/# 0"
+                                    "patching_rect": [ 20.0, 260.0, 354, 22.0 ],
+                                    "text": "subscribe mqttjs_54e489a0 mqtt-max-help/broker/# 0"
                                 }
                             },
                             {
@@ -292,8 +292,8 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 380.0, 225.0, 93.0, 22.0 ],
-                                    "text": "subscribe test/#"
+                                    "patching_rect": [ 380.0, 225.0, 232, 22.0 ],
+                                    "text": "subscribe mqtt-max-help/broker/#"
                                 }
                             },
                             {
@@ -303,8 +303,8 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 559.0, 225.0, 115.0, 22.0 ],
-                                    "text": "publish test/hello $1"
+                                    "patching_rect": [ 559.0, 225.0, 266, 22.0 ],
+                                    "text": "publish mqtt-max-help/broker/hello $1"
                                 }
                             },
                             {
@@ -326,8 +326,8 @@
                                     "numinlets": 2,
                                     "numoutlets": 1,
                                     "outlettype": [ "" ],
-                                    "patching_rect": [ 380.0, 330.0, 108.0, 22.0 ],
-                                    "text": "test/hello 0.053"
+                                    "patching_rect": [ 380.0, 330.0, 232, 22.0 ],
+                                    "text": "mqtt-max-help/broker/hello 0.053"
                                 }
                             },
                             {
@@ -1291,8 +1291,8 @@
                         "classnamespace": "box",
                         "rect": [ 0.0, 26.0, 827.0, 550.0 ],
                         "showontab": 1,
-                        "boxes": [],
-                        "lines": []
+                        "boxes": [  ],
+                        "lines": [  ]
                     },
                     "patching_rect": [ 10.0, 200.0, 120.0, 22.0 ],
                     "text": "p ?",
@@ -1300,7 +1300,7 @@
                 }
             }
         ],
-        "lines": [],
+        "lines": [  ],
         "autosave": 0
     }
 }

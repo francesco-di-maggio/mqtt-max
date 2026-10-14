@@ -23,8 +23,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
-      # The remote shows the package version from this file.
-      - run: cp package-info.json site/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

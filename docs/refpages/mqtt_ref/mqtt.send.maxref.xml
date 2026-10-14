@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./_c74_ref.xsl" type="text/xsl"?>
+
+<c74object name="mqtt.send" module="max" category="MQTT">
+
+	<digest>
+		Publish to one topic
+	</digest>
+
+	<description>
+		Publishes every message it receives to one topic, like <o>send</o> across the network.
+	</description>
+
+	<discussion>
+		<p>Numbers, symbols and lists are sent as text, a dictionary as JSON. With <at>format</at> <i>bytes</i>, integers 0-255 are sent as raw bytes, for devices and tools that read binary payloads. A bang sends an empty message; with <at>retain</at>, the broker then deletes the retained message.</p>
+		<p>With <at>retain</at> 1, the broker keeps the last message of the topic and sends it to every new subscriber: <o>mqtt.receive</o> gets the current value as soon as it subscribes.</p>
+		<p>The connection is the <o>mqtt.client</o> with the same name. Messages sent while it is not connected are not published.</p>
+	</discussion>
+
+	<metadatalist>
+		<metadata name="author">Francesco Di Maggio</metadata>
+		<metadata name="tag">MQTT</metadata>
+		<metadata name="tag">Network</metadata>
+	</metadatalist>
+
+	<objarglist>
+		<objarg name="client" optional="0" type="symbol">
+			<digest>Name of the mqtt.client to use</digest>
+		</objarg>
+		<objarg name="topic" optional="1" type="symbol">
+			<digest>Topic to publish to</digest>
+		</objarg>
+	</objarglist>
+
+	<methodlist>
+		<method name="anything">
+			<arglist>
+				<arg name="message" optional="0" type="list" />
+			</arglist>
+			<digest>Publish a message</digest>
+			<description>Publishes the message as text. <i>dictionary &lt;name&gt;</i> publishes the dictionary as JSON.</description>
+		</method>
+		<method name="bang">
+			<digest>Publish an empty message</digest>
+			<description>With <at>retain</at> 1, deletes the retained message of the topic.</description>
+		</method>
+	</methodlist>
+
+	<attributelist>
+		<attribute name="topic" get="0" set="1" type="symbol" size="1">
+			<digest>Topic</digest>
+			<description>The topic to publish to, without <i>+</i> or <i>#</i>.</description>
+			<attributelist>
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Topic" />
+			</attributelist>
+		</attribute>
+		<attribute name="qos" get="0" set="1" type="int" size="1">
+			<digest>Quality of service</digest>
+			<description>0, 1 or 2.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="int" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Quality of service" />
+			</attributelist>
+		</attribute>
+		<attribute name="retain" get="0" set="1" type="int" size="1">
+			<digest>Retain</digest>
+			<description>1: the broker keeps the last message for new subscribers.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="int" size="1" value="0" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Retain" />
+			</attributelist>
+		</attribute>
+		<attribute name="format" get="0" set="1" type="symbol" size="1">
+			<digest>Payload format</digest>
+			<description><i>text</i>: atoms as text, a dictionary as JSON. <i>bytes</i>: integers 0-255 as raw bytes.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="symbol" size="1" value="text" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Payload format" />
+			</attributelist>
+		</attribute>
+	</attributelist>
+
+	<misc name="Output">
+		<entry name="outlet">
+			<description>Dumpout: <m>error</m> with a text.</description>
+		</entry>
+	</misc>
+
+	<seealsolist>
+		<seealso name="mqtt.receive" />
+		<seealso name="mqtt.client" />
+		<seealso name="send" />
+	</seealsolist>
+
+</c74object>
