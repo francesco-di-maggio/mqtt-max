@@ -81,6 +81,21 @@ test("a receiver created later gets the retained message, also on a filter alrea
   assert.deepEqual(out("receiver", "r5"), [["message", 7]]);
 });
 
+test("@retained 0 skips the stored message and outputs new ones", async () => {
+  sender("s9", "topic", "k/state");
+  sender("s9", "retain", 1);
+  await wait(200);
+  sender("s9", "value", 3);
+  await wait(300);
+  receiver("r9", "topic", "k/state");
+  receiver("r9", "retained", 0);
+  receiver("r9", "register");
+  await wait(300);
+  sender("s9", "value", 4);
+  await wait(300);
+  assert.deepEqual(out("receiver", "r9"), [["message", 4]]);
+});
+
 test("send reads topic and retain on arrival, not after", async () => {
   receiver("r6", "topic", "o/#");
   receiver("r6", "register");

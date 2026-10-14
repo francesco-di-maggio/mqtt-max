@@ -3,7 +3,7 @@
 const mqtt = require("mqtt");
 
 class Client {
-  // events: { onStatus(state), onError(text), onMessage(topic, payload), onConnect() }
+  // events: { onStatus(state), onError(text), onMessage(topic, payload, retained), onConnect() }
   constructor(events) {
     this.events = events;
     this.mqtt = null;
@@ -43,7 +43,8 @@ class Client {
     connection.on("reconnect", () => this.events.onStatus("reconnecting"));
     connection.on("close", () => this.events.onStatus("disconnected"));
     connection.on("error", (err) => this.events.onError(err.message));
-    connection.on("message", (topic, payload) => this.events.onMessage(topic, payload));
+    // retained: the broker sends a stored message because of a new subscription (MQTT 3.1.1, 3.3.1.3).
+    connection.on("message", (topic, payload, packet) => this.events.onMessage(topic, payload, packet.retain));
   }
 
   // Resolves once delivered for QoS 1 and 2, at once for QoS 0, without waiting while disconnected.

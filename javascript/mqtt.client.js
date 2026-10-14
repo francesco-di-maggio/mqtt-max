@@ -43,9 +43,9 @@ function onConnect() {
   device?.homie?.announce();
 }
 
-function onMessage(topic, payload) {
+function onMessage(topic, payload, retained) {
   if (subscriptions.owns("client", topic)) maxApi.outlet("message", topic, ...decode(payload, settings.format));
-  for (const [id, role] of receivers) receive(id, role, topic, payload);
+  for (const [id, role] of receivers) receive(id, role, topic, payload, retained);
   if (device?.homie?.handle(topic, payload)) return;
   controller?.homie?.handle(topic, payload);
 }
@@ -130,8 +130,10 @@ function senderRole(id) {
 
 const receiveOut = (id, ...args) => maxApi.outlet("receiver", id, ...args);
 
-function receive(id, role, topic, payload) {
+// @retained 0: only new messages; a stored one, sent because of a new subscription, is skipped.
+function receive(id, role, topic, payload, retained) {
   if (!role.active || !role.filter || !matches(role.filter, topic)) return;
+  if (retained && !role.retained) return;
   const atoms = decode(payload, role.format);
   if (isTopic(role.filter)) receiveOut(id, "message", ...atoms);
   else receiveOut(id, "message", topic, ...atoms);
@@ -162,10 +164,11 @@ const receiveCommands = {
     if (!FORMATS.includes(mode)) return receiveOut(id, "dumpout", "error", `format is ${FORMATS.join(", ")}`);
     role.format = mode;
   },
+  retained: (id, role, on) => (role.retained = Boolean(on)),
 };
 
 function receiverRole(id) {
-  if (!receivers.has(id)) receivers.set(id, { filter: "", qos: 0, format: "text", active: false });
+  if (!receivers.has(id)) receivers.set(id, { filter: "", qos: 0, format: "text", retained: true, active: false });
   return receivers.get(id);
 }
 

@@ -9,7 +9,7 @@
             "modernui": 1
         },
         "classnamespace": "box",
-        "rect": [ 134.0, 163.0, 903.0, 586.0 ],
+        "rect": [ 488.0, 259.0, 903.0, 586.0 ],
         "boxes": [
             {
                 "box": {
@@ -95,7 +95,8 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 316.0, 143.0, 100.0, 22.0 ]
+                    "patching_rect": [ 316.0, 143.0, 79.0, 22.0 ],
+                    "text": ""
                 }
             },
             {
@@ -145,7 +146,7 @@
                 "box": {
                     "id": "keys",
                     "maxclass": "kslider",
-                    "mode": 1,
+                    "mode": 2,
                     "numinlets": 2,
                     "numoutlets": 2,
                     "outlettype": [ "int", "int" ],
@@ -235,7 +236,7 @@
                     "maxclass": "comment",
                     "numinlets": 1,
                     "numoutlets": 0,
-                    "patching_rect": [ 300.0, 508.0, 170.0, 20.0 ],
+                    "patching_rect": [ 246.0, 509.0, 170.0, 20.0 ],
                     "text": "the topic first, then the velocity"
                 }
             },
@@ -311,7 +312,8 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 480.0, 338.0, 260.0, 22.0 ]
+                    "patching_rect": [ 480.0, 338.0, 260.0, 22.0 ],
+                    "text": ""
                 }
             },
             {
@@ -342,7 +344,8 @@
                     "numinlets": 2,
                     "numoutlets": 1,
                     "outlettype": [ "" ],
-                    "patching_rect": [ 660.0, 308.0, 80.0, 22.0 ]
+                    "patching_rect": [ 660.0, 308.0, 80.0, 22.0 ],
+                    "text": ""
                 }
             },
             {

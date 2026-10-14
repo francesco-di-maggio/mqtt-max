@@ -534,7 +534,7 @@
                                     "numinlets": 1,
                                     "numoutlets": 0,
                                     "patching_rect": [ 20.0, 115.0, 453.0, 33.0 ],
-                                    "text": "A retained message arrives as soon as the object subscribes, before any new one.\n@qos: the highest QoS the broker uses for this subscription; 1 or 2 confirm delivery."
+                                    "text": "A retained message arrives as soon as the object subscribes, before any new one; @retained 0 skips it.\n@qos: the highest QoS the broker uses for this subscription; 1 or 2 confirm delivery."
                                 }
                             },
                             {

@@ -13,7 +13,7 @@
         "boxes": [
             {
                 "box": {
-                    "comment": "topic, qos, format",
+                    "comment": "topic, qos, format, retained",
                     "id": "in",
                     "index": 0,
                     "maxclass": "inlet",
@@ -28,10 +28,10 @@
                     "id": "rattr",
                     "maxclass": "newobj",
                     "numinlets": 4,
-                    "numoutlets": 4,
-                    "outlettype": [ "", "", "", "" ],
-                    "patching_rect": [ 20.0, 60.0, 125.0, 22.0 ],
-                    "text": "route topic qos format"
+                    "numoutlets": 5,
+                    "outlettype": [ "", "", "", "", "" ],
+                    "patching_rect": [ 20.0, 60.0, 185.0, 22.0 ],
+                    "text": "route topic qos format retained"
                 }
             },
             {
@@ -338,6 +338,17 @@
                     "patching_rect": [ 560.0, 105.0, 95.0, 22.0 ],
                     "text": "route #0-receive"
                 }
+            },
+            {
+                "box": {
+                    "id": "pretained",
+                    "maxclass": "newobj",
+                    "numinlets": 1,
+                    "numoutlets": 1,
+                    "outlettype": [ "" ],
+                    "patching_rect": [ 90.0, 125.0, 100.0, 22.0 ],
+                    "text": "prepend retained"
+                }
             }
         ],
         "lines": [
@@ -543,6 +554,18 @@
                 "patchline": {
                     "destination": [ "tname", 0 ],
                     "source": [ "unpack", 0 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "pretained", 0 ],
+                    "source": [ "rattr", 3 ]
+                }
+            },
+            {
+                "patchline": {
+                    "destination": [ "role", 0 ],
+                    "source": [ "pretained", 0 ]
                 }
             }
         ],

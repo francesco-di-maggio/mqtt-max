@@ -14,7 +14,7 @@
 	<discussion>
 		<p>Text is split into atoms, numbers come out as numbers. An empty message comes out as a bang.</p>
 		<p>With a wildcard in the filter (<i>+</i> one level, <i>#</i> the rest), the topic comes first, so that <o>route</o> can tell the senders apart.</p>
-		<p>A retained message on the topic arrives as soon as the object subscribes. Other receivers of the same filter on the same client get it again then.</p>
+		<p>A retained message on the topic arrives as soon as the object subscribes. Other receivers of the same filter on the same client get it again then. With <at>retained</at> 0, a receiver skips retained messages and outputs only new ones.</p>
 		<p>A client also receives what it publishes itself on a topic it subscribes to: MQTT 3.1.1 has no option to prevent it. A message matching two filters of one client can arrive twice.</p>
 	</discussion>
 
@@ -55,6 +55,14 @@
 			<attributelist>
 				<attribute name="default" get="1" set="1" type="symbol" size="1" value="text" />
 				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Payload format" />
+			</attributelist>
+		</attribute>
+		<attribute name="retained" get="0" set="1" type="int" size="1">
+			<digest>Output retained messages</digest>
+			<description>1: also the stored message a broker sends when the object subscribes. 0: only new messages.</description>
+			<attributelist>
+				<attribute name="default" get="1" set="1" type="int" size="1" value="1" />
+				<attribute name="label" get="1" set="1" type="symbol" size="1" value="Retained messages" />
 			</attributelist>
 		</attribute>
 	</attributelist>
