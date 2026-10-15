@@ -89,7 +89,8 @@
   @keyframes blink { 50% { opacity: 0.2; } }
 
   #connect { height: var(--row); padding-top: 0; padding-bottom: 0; border-radius: var(--radius-control); }
-  body.setup .meters, body.setup #padbox, body:not(.setup) #settings, body:not(.setup) #connect { display: none; }
+  #no-inputs { margin: 0; font-size: 15px; color: var(--dim); }
+  body.setup .meters, body.setup #padbox, body.setup #no-inputs, body:not(.setup) #settings, body:not(.setup) #connect { display: none; }
   .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .fields .wide { grid-column: 1 / -1; }
   .section { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
@@ -120,14 +121,15 @@
            background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%238b8b88' stroke-width='1.5'/%3E%3C/svg%3E") right 12px center no-repeat; }
   input:focus, select:focus { border-color: var(--ink); }
   input:disabled, select:disabled { color: var(--dim); -webkit-text-fill-color: var(--dim); opacity: 1; }
-  #connect { display: flex; align-items: center; width: 100%; text-align: left; cursor: pointer;
+  #connect { display: flex; align-items: center; justify-content: space-between; width: 100%; text-align: left; cursor: pointer;
              background: var(--ink); border-color: var(--ink); color: var(--bg);
              font: 500 11px/20px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; }
+  #connect::after { content: "→"; font: 400 16px/20px var(--mono); }
   #connect.connected { background: var(--accent); border-color: var(--accent); color: #fff; }
   #connect:active { opacity: 0.7; }
 
   .meters { display: grid; gap: 10px; }
-  .meter { display: grid; grid-template-columns: 88px 1fr 88px; align-items: center; gap: 12px; }
+  .meter { display: grid; grid-template-columns: 112px 1fr 88px; align-items: center; gap: 12px; }
   .meter b { font: 500 13px var(--mono); text-align: right; font-variant-numeric: tabular-nums; }
   .bar { height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
   .bar i { display: block; height: 100%; width: 0; background: var(--ink); transition: width 60ms linear; }
@@ -227,6 +229,8 @@
   <div class="meter" data-input="round-trip"><span class="label">Round trip</span><div class="bar"><i id="b-round-trip-time"></i></div><b id="v-round-trip-time">—</b></div>
   <div class="meter" data-input="mic"><span class="label">Mic level</span><div class="bar"><i id="b-mic-level"></i></div><b id="v-mic-level">—</b></div>
 </div>
+
+<p id="no-inputs" hidden>No inputs. Choose them in Setup.</p>
 
 <div id="padbox">
   <div id="pad" data-input="pad" role="application" aria-label="XY pad">
@@ -421,6 +425,7 @@ function checkInputs() {
 // Only the enabled inputs are shown; a panel shows if any of its inputs is enabled.
 function showInputs() {
   for (const el of document.querySelectorAll("[data-input]")) el.hidden = !el.dataset.input.split(" ").some(enabled);
+  $("no-inputs").hidden = [...document.querySelectorAll(".tile input")].some((box) => box.checked);
 }
 
 function setStatus(text, state = "") {
