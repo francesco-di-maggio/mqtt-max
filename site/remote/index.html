@@ -8,7 +8,7 @@
 <script>
   // The chosen theme is set before the first paint.
   try {
-    const theme = localStorage.getItem("remote-theme");
+    const theme = localStorage.getItem("theme");
     if (theme === "light" || theme === "dark") document.documentElement.dataset.theme = theme;
   } catch {}
 </script>
@@ -826,7 +826,7 @@ applyTheme(document.documentElement.dataset.theme ?? "auto");
 $("theme").addEventListener("click", () => {
   const theme = THEMES[(THEMES.indexOf($("theme").dataset.state) + 1) % THEMES.length];
   applyTheme(theme);
-  try { localStorage.setItem("remote-theme", theme); } catch {}
+  try { localStorage.setItem("theme", theme); } catch {}
 });
 $("reveal").addEventListener("click", () => {
   const show = $("password").type === "password";
