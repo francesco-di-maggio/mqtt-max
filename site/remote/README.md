@@ -40,7 +40,7 @@ Switched on and off in Setup. An input that is off is hidden, sends nothing and 
 - Theme: the header button cycles Auto (system), Light, Dark. Saved.
 - Settings are saved in the browser on every change. Tabs in one browser share the ID: connect one at a time.
 - Two tabs: Setup and Inputs. The Remote opens on Setup until the first Connect, then on Inputs.
-- Connect: the button at the bottom of Setup, or the header button. Offline the header button reads Connect; connected it shows `{id} · {n}`, where n is the number of ready Homie devices under the prefix, this one included, and opens Setup.
+- Connect: the button at the bottom of Setup. The header button shows the state and opens Setup: offline it reads Offline; connected it shows `{id} · {n}`, where n is the number of ready Homie devices under the prefix, this one included.
 - While connected: fields and inputs are locked, the screen stays on. Disconnect is at the bottom of Setup.
 
 ### Link parameters
