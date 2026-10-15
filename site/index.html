@@ -132,8 +132,7 @@
 </main>
 
 <footer class="label">
-  <span>© 2026 <a href="https://francesco-di-maggio.github.io/">Francesco Di Maggio</a></span>
-  <a href="https://github.com/francesco-di-maggio/mqtt-max">GitHub</a>
+  <span>© <span id="year">2026</span> <a href="https://francesco-di-maggio.github.io/">Francesco Di Maggio</a></span>
 </footer>
 
 <script>
@@ -141,6 +140,7 @@
 const THEMES = ["auto", "light", "dark"];
 const THEME_COLOR = { light: "#f2f2f0", dark: "#0b0b0c" };
 const themeButton = document.getElementById("theme");
+document.getElementById("year").textContent = new Date().getFullYear();
 
 function applyTheme(theme) {
   if (theme === "auto") delete document.documentElement.dataset.theme;
