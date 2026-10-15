@@ -127,7 +127,7 @@
                     "numoutlets": 1,
                     "outlettype": [ "" ],
                     "patching_rect": [ 20.0, 659.0, 407.0, 35.0 ],
-                    "text": ";\rmax launchbrowser https://francesco-di-maggio.github.io/mqtt-max/remote/"
+                    "text": ";\rmax launchbrowser https://francescodimaggio.nl/mqtt-max/remote/"
                 }
             },
             {

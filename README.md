@@ -36,7 +36,7 @@ Right-click an object → Open Help. Tabs go from basic use to reference.
 
 ## Examples
 
-Starting points for real setups, one per setup. They open from the landing patch. The help file of each object shows the object itself, from basic to advanced use. Several examples use the [Remote](https://francesco-di-maggio.github.io/mqtt-max/remote/), a web app for phones, tablets and computers; its inputs and topics: [site/remote](site/remote/README.md).
+Starting points for real setups, one per setup. They open from the landing patch. The help file of each object shows the object itself, from basic to advanced use. Several examples use the [Remote](https://francescodimaggio.nl/mqtt-max/remote/), a web app for phones, tablets and computers; its inputs and topics: [site/remote](site/remote/README.md).
 
 | Example | Setup |
 |---|---|

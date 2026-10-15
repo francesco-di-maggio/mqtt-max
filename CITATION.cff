@@ -8,7 +8,7 @@ authors:
 version: "0.1.0"
 license: MIT
 repository-code: "https://github.com/francesco-di-maggio/mqtt-max"
-url: "https://francesco-di-maggio.github.io/mqtt-max/"
+url: "https://francescodimaggio.nl/mqtt-max/"
 keywords:
   - MQTT
   - Max

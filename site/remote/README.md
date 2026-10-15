@@ -2,7 +2,7 @@
 
 Web app. Sends pad, sliders, buttons, motion and mic level from any browser over MQTT, as Homie values.
 
-[francesco-di-maggio.github.io/mqtt-max/remote/](https://francesco-di-maggio.github.io/mqtt-max/remote/)
+[francescodimaggio.nl/mqtt-max/remote/](https://francescodimaggio.nl/mqtt-max/remote/)
 
 Motion and Mic level need HTTPS. The browser asks for permission on Connect. A blocked permission is changed in the browser's site settings.
 
