@@ -105,7 +105,6 @@
   #settings { display: flex; flex-direction: column; gap: 10px; }
   #settings h2 { margin: 6px 0 0; }
   #settings h2:first-child { margin-top: 0; }
-  .hint { margin: 0; font-size: 15px; color: var(--dim); }
   .rows { padding: 0 14px; }
   .row { display: grid; grid-template-columns: 112px 1fr; align-items: center; gap: 12px; height: var(--row); }
   .row + .row { border-top: 1px solid var(--line); }
@@ -221,7 +220,6 @@
     <label class="tile"><input id="in-slider" type="checkbox">Sliders</label>
     <label class="tile"><input id="in-button" type="checkbox">Buttons</label>
   </div>
-  <p id="locked" class="hint" hidden>Disconnect to change.</p>
 </div>
 
 
@@ -447,7 +445,6 @@ const name = () => identity?.name ?? $("name").value;
 
 // Connection fields take effect on Connect, so they are read-only while connected.
 function lockFields(locked) {
-  $("locked").hidden = !locked;
   for (const id of FIELDS) $(id).disabled = locked;
   for (const input in INPUTS) $("in-" + input).disabled = locked || input in unavailable;
 }
@@ -839,7 +836,8 @@ $("reveal").addEventListener("click", () => {
 document.addEventListener("touchstart", () => {}, { passive: true });
 renderDevices();
 // The pill shows the state and opens Setup, where Connect and Disconnect are.
-$("status").addEventListener("click", () => showView("setup"));
+// The header button toggles Setup, as the node button on tsost toggles its panel.
+$("status").addEventListener("click", () => showView(document.body.classList.contains("setup") ? "inputs" : "setup"));
 for (const button of document.querySelectorAll("nav button")) button.addEventListener("click", () => showView(button.dataset.view));
 // A tap on a setting selects the whole value, as in the address bar: typing replaces it, a second tap places the cursor.
 for (const input of document.querySelectorAll(".row input")) {
