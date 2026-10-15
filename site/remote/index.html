@@ -215,11 +215,11 @@
   <h2 class="label">Inputs</h2>
   <div class="panel tiles">
     <label class="tile"><input id="in-round-trip" type="checkbox">Round trip</label>
+    <label class="tile"><input id="in-motion" type="checkbox">Motion</label>
+    <label class="tile"><input id="in-mic" type="checkbox">Mic level</label>
     <label class="tile"><input id="in-pad" type="checkbox">XY pad</label>
     <label class="tile"><input id="in-slider" type="checkbox">Sliders</label>
     <label class="tile"><input id="in-button" type="checkbox">Buttons</label>
-    <label class="tile"><input id="in-motion" type="checkbox">Motion</label>
-    <label class="tile"><input id="in-mic" type="checkbox">Mic level</label>
   </div>
 </div>
 
@@ -231,10 +231,10 @@
 
 
 <div class="panel meters" data-input="motion round-trip mic">
+  <div class="meter" data-input="round-trip"><span class="label">Round trip</span><div class="bar"><i id="b-round-trip-time"></i></div><b id="v-round-trip-time">—</b></div>
   <div class="meter" data-input="motion"><span class="label">Pitch</span><div class="bar"><i id="b-motion-pitch"></i></div><b id="v-motion-pitch">—</b></div>
   <div class="meter" data-input="motion"><span class="label">Roll</span><div class="bar"><i id="b-motion-roll"></i></div><b id="v-motion-roll">—</b></div>
   <div class="meter" data-input="motion" id="yaw" title="Tap to center"><span class="label">Yaw</span><div class="bar"><i id="b-motion-yaw"></i></div><b id="v-motion-yaw">—</b></div>
-  <div class="meter" data-input="round-trip"><span class="label">Round trip</span><div class="bar"><i id="b-round-trip-time"></i></div><b id="v-round-trip-time">—</b></div>
   <div class="meter" data-input="mic"><span class="label">Mic level</span><div class="bar"><i id="b-mic-level"></i></div><b id="v-mic-level">—</b></div>
 </div>
 
