@@ -31,8 +31,8 @@
     --mono: ui-monospace, "SF Mono", Menlo, monospace;
     /* Containers (panels, XY pad) and controls (every 44 px row: fields, tiles, sliders, buttons, Setup, Connect). */
     --radius: 16px; --radius-control: 12px;
-    /* One row height for every control, 32-44 px, so that Setup (7 rows) fits the visible height. */
-    --row: clamp(32px, calc((100dvh - 272px) / 7), 44px);
+    /* One row height for every control, 32-44 px, so that Setup (8 rows) fits the visible height. */
+    --row: clamp(32px, calc((100dvh - 282px) / 8), 44px);
     color-scheme: light dark;
   }
   @media (prefers-color-scheme: dark) {
@@ -169,17 +169,7 @@
   .key.on { background: var(--accent); border-color: var(--accent); }
   .key.on .label { color: #fff; }
 
-  /* Online: the list and Connect, as the node panel on tsost. */
-  #devices-view, body.devices #settings, body:not(.devices) #connect { display: none; }
-  body.setup.devices #devices-view { display: flex; flex-direction: column; flex: 0 1 auto; min-height: 0; }
-  #devices { overflow-y: auto; min-height: 0; }
-  .device { display: flex; align-items: center; gap: 8px; height: var(--row); border-top: 1px solid var(--line);
-            font: 500 13px var(--mono); }
-  .device:first-of-type { border-top: 0; }
-  .device::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ok); }
-  .device .label { margin-left: auto; }
-  .device.empty::before { content: none; }
-  .device.empty { color: var(--dim); }
+  body:not(.setup) #connect { display: none; }
 </style>
 </head>
 <body class="setup">
@@ -198,7 +188,6 @@
 <nav class="label">
   <button type="button" data-view="setup">Setup</button>
   <button type="button" data-view="inputs">Inputs</button>
-  <button type="button" data-view="online">Online</button>
 </nav>
 
 <div id="settings">
@@ -225,9 +214,6 @@
   <p id="locked" class="hint" hidden>Disconnect to change.</p>
 </div>
 
-<div id="devices-view" class="panel">
-  <div id="devices"></div>
-</div>
 
 <button id="connect" class="panel">Connect</button>
 
@@ -630,31 +616,14 @@ function showConnected() {
   setStatus(`${name()} · ${online.size}` + (warning ? ` · ${warning}` : ""), warning ? "err" : "ok");
 }
 
-// Online: the count in the pill; the Online view lists the IDs.
+// The count of devices online shows in the pill.
 function renderDevices() {
   if (client?.connected) showConnected();
-  const rows = [...online].sort().map((id) => deviceRow(id, id === name() ? "this device" : ""));
-  if (!rows.length) rows.push(deviceRow(client ? "No devices" : "Not connected", "", "empty"));
-  $("devices").replaceChildren(...rows);
 }
 
-function deviceRow(text, note, kind = "") {
-  const row = document.createElement("div");
-  row.className = ("device " + kind).trim();
-  row.textContent = text;
-  if (note) {
-    const label = document.createElement("span");
-    label.className = "label";
-    label.textContent = note;
-    row.append(label);
-  }
-  return row;
-}
-
-// Three views: Setup; Inputs; Online, which shares Setup's place.
+// Two views: Setup, with Connect at the bottom; Inputs.
 function showView(view) {
-  document.body.classList.toggle("setup", view !== "inputs");
-  document.body.classList.toggle("devices", view === "online");
+  document.body.classList.toggle("setup", view === "setup");
   for (const button of document.querySelectorAll("nav button")) button.toggleAttribute("aria-current", button.dataset.view === view);
 }
 
@@ -857,8 +826,8 @@ $("reveal").addEventListener("click", () => {
 // iOS Safari applies :active only on pages that listen for touchstart.
 document.addEventListener("touchstart", () => {}, { passive: true });
 renderDevices();
-// Offline, the pill connects at once with the settings in Setup; online, it opens Online, as on tsost.
-$("status").addEventListener("click", () => (client ? showView("online") : connect()));
+// Offline, the pill connects at once with the settings in Setup; online, it opens Setup, where Disconnect is.
+$("status").addEventListener("click", () => (client ? showView("setup") : connect()));
 for (const button of document.querySelectorAll("nav button")) button.addEventListener("click", () => showView(button.dataset.view));
 $("connect").addEventListener("click", connect);
 $("pad").addEventListener("pointerdown", padDown);
