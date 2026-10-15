@@ -712,6 +712,7 @@ async function connect() {
   renderDevices();
   $("connect").textContent = "Disconnect";
   $("connect").classList.add("connected");
+  try { localStorage.setItem("remote-connected", "1"); } catch {}
   showView("inputs");
   keepAwake();
 }
@@ -777,10 +778,10 @@ function keyUp(e) {
 loadSettings();
 applyLink();
 showInputs();
-// First visit, nothing saved yet: Setup, to see the prefix and ID before connecting. Afterwards: Inputs.
-let saved = null;
-try { saved = localStorage.getItem("remote-url"); } catch {}
-showView(saved === null ? "setup" : "inputs");
+// Until the first Connect: Setup, to see the prefix and ID before connecting. Afterwards: Inputs.
+let connectedBefore = null;
+try { connectedBefore = localStorage.getItem("remote-connected"); } catch {}
+showView(connectedBefore ? "inputs" : "setup");
 showRest();
 checkInputs();
 for (const input in INPUTS) $("in-" + input).addEventListener("change", showInputs);

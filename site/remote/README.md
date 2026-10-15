@@ -1,6 +1,6 @@
 # Remote
 
-Web app. Sends touch, motion and mic level from a phone, tablet or computer over MQTT, as Homie values.
+Web app. Sends pad, sliders, buttons, motion and mic level from any browser over MQTT, as Homie values.
 
 [francesco-di-maggio.github.io/mqtt-max/remote/](https://francesco-di-maggio.github.io/mqtt-max/remote/)
 
@@ -12,10 +12,10 @@ Switched on and off in Setup. An input that is off is hidden, sends nothing and 
 
 | Input | Default | Property | Value |
 |---|---|---|---|
+| Round trip | on | `round-trip/time` | ms |
 | Motion | off | `motion/pitch` | −180 … 180, ° |
 | | | `motion/roll` | −90 … 90, ° |
 | | | `motion/yaw` | −180 … 180, °; 0 = direction on Connect |
-| Round trip | on | `round-trip/time` | ms |
 | Mic level | off | `mic/level` | −60 … 0, dBFS |
 | XY pad | on | `pad/x`, `pad/y` | 0 … 1, bottom-left = 0 |
 | | | `pad/touch` | `true` while touched |
@@ -31,7 +31,7 @@ Switched on and off in Setup. An input that is off is hidden, sends nothing and 
 
 | Field | Default | |
 |---|---|---|
-| Broker | `wss://public.cloud.shiftr.io` | WebSocket URL |
+| URL | `wss://public.cloud.shiftr.io` | Broker, WebSocket URL |
 | User, Password | `public`, `public` | |
 | Prefix | `remote` | First topic level, Homie domain |
 | ID | `phone-`, `tablet-` or `computer-` + 4 hex digits | Homie device ID |
@@ -39,8 +39,9 @@ Switched on and off in Setup. An input that is off is hidden, sends nothing and 
 - Prefix and ID: a-z, 0-9, `-`. Capitals are lowercased, accents removed, spaces become `-`, other characters are dropped.
 - Theme: the header button cycles Auto (system), Light, Dark. Saved.
 - Settings are saved in the browser on every change. Tabs in one browser share the ID: connect one at a time.
-- While connected: fields and inputs are locked, the screen stays on, the header shows `{prefix}/{id}`.
-- Online: number of ready Homie devices under the prefix, this one included. Tap for the list.
+- Two tabs: Setup and Inputs. The Remote opens on Setup until the first Connect, then on Inputs.
+- Connect: the button at the bottom of Setup, or the header button. Offline the header button reads Connect; connected it shows `{id} · {n}`, where n is the number of ready Homie devices under the prefix, this one included, and opens Setup.
+- While connected: fields and inputs are locked, the screen stays on. Disconnect is at the bottom of Setup.
 
 ### Link parameters
 
