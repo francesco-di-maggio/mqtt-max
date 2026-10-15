@@ -36,6 +36,8 @@ Switched on and off in Setup. An input that is off is hidden, sends nothing and 
 | Prefix | `remote` | First topic level, Homie domain |
 | ID | `phone-`, `tablet-` or `computer-` + 4 hex digits | Homie device ID |
 
+- URL, Prefix and ID always have a value: emptied, a field shows its default in grey, completes it in grey while you type it back, and returns to it when left. User and Password can stay empty: no login.
+- A tap on a field selects its whole value; typing replaces it.
 - Prefix and ID: a-z, 0-9, `-`. Capitals are lowercased, accents removed, spaces become `-`, other characters are dropped.
 - Theme: the header button cycles Auto (system), Light, Dark. Saved.
 - Settings are saved in the browser on every change. Tabs in one browser share the ID: connect one at a time.
