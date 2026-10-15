@@ -32,7 +32,7 @@
     /* Containers (panels, XY pad) and controls (every 44 px row: fields, tiles, sliders, buttons, Setup, Connect). */
     --radius: 16px; --radius-control: 12px;
     /* One row height for every control, 32-44 px, so that Setup (7 rows) fits the visible height. */
-    --row: clamp(32px, calc((100dvh - 330px) / 7), 44px);
+    --row: clamp(32px, calc((100dvh - 341px) / 7), 44px);
     color-scheme: light dark;
   }
   @media (prefers-color-scheme: dark) {
@@ -48,7 +48,7 @@
   body > * { flex-shrink: 0; }
   body {
     height: 100%; height: 100dvh; overflow: hidden;
-    max-width: 592px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px;
+    max-width: 672px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px;
     padding: calc(12px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));
     background: var(--bg); color: var(--ink);
     font: 16px -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
@@ -57,22 +57,31 @@
   .label { font: 500 11px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
   .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; }
 
-  header { display: flex; align-items: center; justify-content: space-between; height: 28px; }
-  .mark { font: 600 13px var(--mono); letter-spacing: 0.04em; color: var(--ink); text-decoration: none; }
-  .mark i { color: var(--accent); font-style: normal; }
+  /* The line under the header, as under the nav on the other sites. */
+  header { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 39px;
+           padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+  .mark { display: flex; align-items: center; gap: 8px; font: 600 13px var(--mono); letter-spacing: 0.04em; color: var(--ink);
+          text-decoration: none; text-transform: uppercase; white-space: nowrap; }
+  .mark svg { width: 18px; height: 18px; overflow: visible; }
+  .mark svg path { stroke: var(--ink); stroke-width: 1.5; }
+  .mark svg .node { fill: var(--ink); }
+  .mark svg .core { fill: var(--accent); }
   .end { display: flex; align-items: center; gap: 4px; min-width: 0; max-width: 75%; }
   #theme { flex: none; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
            padding: 0; border: 0; background: none; color: var(--dim); cursor: pointer; }
   #theme svg { display: none; }
   #theme[data-state="auto"] .auto, #theme[data-state="light"] .light, #theme[data-state="dark"] .dark { display: block; }
-  #status { display: flex; align-items: center; gap: 7px; min-width: 0; }
+  /* The status pill, as the node status on tsost. */
+  #status { display: flex; align-items: center; gap: 7px; min-width: 0; height: 26px; padding: 0 10px;
+            border: 1px solid var(--line); border-radius: 999px; line-height: 20px; color: var(--ink); }
   #status span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  #status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--dim); }
-  #status.ok { color: var(--ink); }
-  #status.ok::before { background: var(--ok); }
-  #status.busy::before { background: var(--accent); animation: blink 0.8s steps(2) infinite; }
+  #status::before { content: ""; flex: none; width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid var(--dim); box-sizing: border-box; }
+  #status.ok { text-transform: none; letter-spacing: 0; font-size: 12px; }
+  #status.ok::before { background: var(--ok); border-color: var(--ok); }
+  #status.busy { color: var(--dim); }
+  #status.busy::before { background: var(--accent); border-color: var(--accent); animation: blink 0.8s steps(2) infinite; }
   #status.err { color: var(--err); }
-  #status.err::before { background: var(--err); }
+  #status.err::before { background: var(--err); border-color: var(--err); }
   @keyframes blink { 50% { opacity: 0.2; } }
 
   #setup-bar, #connect { height: var(--row); padding-top: 0; padding-bottom: 0; border-radius: var(--radius-control); }
@@ -102,7 +111,9 @@
           font: 500 11px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim);
           transition: background-color 150ms, border-color 150ms, color 150ms; }
   .tile input { position: absolute; width: 0; height: 0; margin: 0; opacity: 0; appearance: none; -webkit-appearance: none; pointer-events: none; }
-  .tile:has(input:checked) { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+  /* On: full colour and an accent dot, as current items on the other sites. Connect stays the one filled control. */
+  .tile:has(input:checked) { color: var(--ink); }
+  .tile:has(input:checked)::before { content: ""; flex: none; width: 6px; height: 6px; margin-right: 8px; border-radius: 50%; background: var(--accent); }
   .tile:has(input:disabled) { opacity: 0.5; cursor: default; }
   .tile.unavailable { opacity: 0.3; text-decoration: line-through; }
   .tile:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
@@ -177,7 +188,7 @@
 </head>
 <body class="setup">
 <header>
-  <a class="mark" href="https://francesco-di-maggio.github.io/mqtt-max/" target="_blank" rel="noopener">mqtt<i>·</i>max</a>
+  <a class="mark" href="https://francesco-di-maggio.github.io/mqtt-max/" target="_blank" rel="noopener"><svg viewBox="-9 -9 18 18" aria-hidden="true"><path d="M-6 0H6"/><circle class="node" cx="-6.5" r="2"/><circle class="node" cx="6.5" r="2"/><circle class="core" r="3.2"/></svg>mqtt-max</a>
   <div class="end">
     <span id="status" class="label"><span id="status-text">offline</span></span>
     <button id="theme" type="button" data-state="auto" aria-label="Theme: auto">
