@@ -44,13 +44,19 @@
     font: 17px/1.55 -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
   }
   .label { font: 500 11px/20px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
-  header { display: flex; align-items: center; justify-content: space-between; height: 28px; margin-bottom: min(40px, 5vh); }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 28px; }
   #theme { flex: none; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
            padding: 0; border: 0; background: none; color: var(--dim); cursor: pointer; }
   #theme svg { display: none; }
   #theme[data-state="auto"] .auto, #theme[data-state="light"] .light, #theme[data-state="dark"] .dark { display: block; }
-  .mark { font: 600 13px var(--mono); letter-spacing: 0.04em; color: inherit; text-decoration: none; }
-  .mark i { color: var(--accent); font-style: normal; }
+  .mark { display: flex; align-items: center; gap: 8px; font: 600 13px var(--mono); letter-spacing: 0.04em; color: inherit; text-decoration: none; text-transform: uppercase; white-space: nowrap; }
+  .mark::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .mark i { color: var(--dim); font-style: normal; }
+  nav { display: flex; gap: 18px; overflow-x: auto; scrollbar-width: none; margin-bottom: min(24px, 3vh);
+        padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+  nav::-webkit-scrollbar { display: none; }
+  nav a { flex: none; color: inherit; text-decoration: none; }
+  nav a:hover { color: var(--ink); }
   h1 { margin: 0 0 4px; font-size: clamp(28px, 7vw, 36px); line-height: 1.15; font-weight: 600; letter-spacing: -0.02em; }
   .lead { margin: 0 0 min(28px, 4vh); color: var(--dim); }
   h2 { margin: min(20px, 2.5vh) 0 0; }
@@ -71,7 +77,7 @@
     h2 { display: none; }
     h1 { font-size: 26px; }
     .lead { font-size: 15px; line-height: 1.4; margin-bottom: 14px; }
-    header { margin-bottom: 12px; }
+    nav { margin-bottom: 8px; }
     footer { margin-top: 10px; }
   }
   @media (max-height: 600px) {
@@ -89,6 +95,11 @@
       <svg class="dark" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
     </button>
 </header>
+<nav class="label">
+  <a href="remote/">Remote</a>
+  <a href="https://github.com/francesco-di-maggio/mqtt-max/archive/refs/heads/main.zip">Download</a>
+  <a href="https://github.com/francesco-di-maggio/mqtt-max#readme">Docs</a>
+</nav>
 
 <h1>MQTT for Max.</h1>
 <p class="lead">Connect patches, phones and devices, locally or over the internet.</p>
