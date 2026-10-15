@@ -31,8 +31,8 @@
     --mono: ui-monospace, "SF Mono", Menlo, monospace;
     /* Containers (panels, XY pad) and controls (every 44 px row: fields, tiles, sliders, buttons, Setup, Connect). */
     --radius: 16px; --radius-control: 12px;
-    /* One row height for every control, 32-44 px, so that Setup (7 rows) fits the visible height. */
-    --row: clamp(32px, calc((100dvh - 341px) / 7), 44px);
+    /* One row height for every control, 32-44 px, so that Setup (6 rows) fits the visible height. */
+    --row: clamp(32px, calc((100dvh - 310px) / 6), 44px);
     color-scheme: light dark;
   }
   @media (prefers-color-scheme: dark) {
@@ -57,9 +57,13 @@
   .label { font: 500 11px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
   .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; }
 
-  /* The line under the header, as under the nav on the other sites. */
-  header { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 39px;
-           padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 28px; }
+  /* The views, as the nav on the other sites. */
+  nav { display: flex; gap: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+  nav button { padding: 0; border: 0; background: none; font: inherit; letter-spacing: inherit; text-transform: inherit;
+               color: inherit; cursor: pointer; }
+  nav button:hover, nav button[aria-current] { color: var(--ink); }
+  nav sup { margin-left: 2px; font-size: 8px; line-height: 0; vertical-align: 5px; color: var(--dim); }
   .mark { display: flex; align-items: center; gap: 8px; font: 600 13px var(--mono); letter-spacing: 0.04em; color: var(--ink);
           text-decoration: none; text-transform: uppercase; white-space: nowrap; }
   .mark svg { width: 18px; height: 18px; overflow: visible; }
@@ -84,18 +88,7 @@
   #status.err::before { background: var(--err); border-color: var(--err); }
   @keyframes blink { 50% { opacity: 0.2; } }
 
-  #setup-bar, #connect { height: var(--row); padding-top: 0; padding-bottom: 0; border-radius: var(--radius-control); }
-  #setup-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; color: var(--ink);
-               font: inherit; text-align: left; cursor: pointer; transition: background-color 150ms, border-color 150ms; }
-  #setup-bar span { line-height: 20px; }
-  #setup-bar .label { color: var(--ink); }
-  #setup-bar .icon { font: 400 18px/20px var(--mono); color: var(--ink); transition: transform 150ms; }
-  body.setup #setup-bar .icon { transform: rotate(45deg); }
-  /* Open, the bar is the panel's heading: grey, as the section labels. */
-  body.setup #setup-bar .label, body.setup #setup-bar .icon { color: var(--dim); }
-  /* Not connected and Setup closed: opening Setup is the next action. */
-  body:not(.setup):not(:has(#connect.connected)) #setup-bar { background: var(--ink); border-color: var(--ink); }
-  body:not(.setup):not(:has(#connect.connected)) #setup-bar span { color: var(--bg); }
+  #connect { height: var(--row); padding-top: 0; padding-bottom: 0; border-radius: var(--radius-control); }
   body.setup .meters, body.setup #padbox, body:not(.setup) #settings, body:not(.setup) #connect { display: none; }
   .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .fields .wide { grid-column: 1 / -1; }
@@ -131,7 +124,7 @@
              background: var(--ink); border-color: var(--ink); color: var(--bg);
              font: 500 11px/20px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; }
   #connect.connected { background: var(--accent); border-color: var(--accent); color: #fff; }
-  #connect:active, #setup-bar:active { opacity: 0.7; }
+  #connect:active { opacity: 0.7; }
 
   .meters { display: grid; gap: 10px; }
   .meter { display: grid; grid-template-columns: 88px 1fr 88px; align-items: center; gap: 12px; }
@@ -166,20 +159,12 @@
   .key.on { background: var(--accent); border-color: var(--accent); }
   .key.on .label { color: #fff; }
 
-  .nav { display: flex; justify-content: space-between; align-items: center; width: 100%; min-height: 26px;
-         padding: 0; border-left: 0; border-right: 0; border-bottom: 0; background: none; color: var(--ink); font: inherit; cursor: pointer; }
-  .nav.section { padding-top: 12px; }
-  .nav b { font: 500 13px var(--mono); font-variant-numeric: tabular-nums; }
-  .nav b::after { content: "  ›"; color: var(--dim); }
-  #devices-view .nav { margin: 0; padding: 0; border-top: 0; }
-  #devices-view .nav .label::before { content: "‹  "; }
-  #devices-view .nav b::after { content: none; }
   #devices-view, body.devices #settings, body.devices #connect { display: none; }
   body.setup.devices #devices-view { display: flex; flex-direction: column; flex: 0 1 auto; min-height: 0; }
   #devices { overflow-y: auto; min-height: 0; }
   .device { display: flex; align-items: center; gap: 8px; height: var(--row); border-top: 1px solid var(--line);
             font: 500 13px var(--mono); }
-  .device:first-of-type { margin-top: 12px; }
+  .device:first-of-type { border-top: 0; }
   .device::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ok); }
   .device .label { margin-left: auto; }
   .device.empty::before { content: none; }
@@ -199,9 +184,11 @@
   </div>
 </header>
 
-<button id="setup-bar" class="panel" aria-expanded="true" aria-controls="settings">
-  <span class="label">Setup</span><span class="icon">+</span>
-</button>
+<nav class="label">
+  <button type="button" data-view="controls">Controls</button>
+  <button type="button" data-view="setup">Setup</button>
+  <button type="button" data-view="online">Online<sup id="online-count"></sup></button>
+</nav>
 
 <div id="settings" class="panel">
   <div class="fields">
@@ -224,11 +211,9 @@
       <label class="tile"><input id="in-mic" type="checkbox">Mic level</label>
     </div>
   </div>
-  <button id="online" class="nav section" type="button"><span class="label">Online</span><b id="online-count">—</b></button>
 </div>
 
 <div id="devices-view" class="panel">
-  <button id="back" class="nav" type="button"><span class="label">Online</span><b id="devices-count">—</b></button>
   <div id="devices"></div>
 </div>
 
@@ -624,11 +609,9 @@ function letSleep() {
   wakeLock = null;
 }
 
-// Online: the count in Setup; the Devices view lists the IDs.
+// Online: the count in the nav; the Online view lists the IDs.
 function renderDevices() {
-  const count = client ? String(online.size) : "—";
-  $("online-count").textContent = count;
-  $("devices-count").textContent = count;
+  $("online-count").textContent = client ? String(online.size) : "";
   const rows = [...online].sort().map((id) => deviceRow(id, id === name() ? "this device" : ""));
   if (!rows.length) rows.push(deviceRow(client ? "No devices" : "Not connected", "", "empty"));
   $("devices").replaceChildren(...rows);
@@ -647,8 +630,11 @@ function deviceRow(text, note, kind = "") {
   return row;
 }
 
-function showDevices(open) {
-  document.body.classList.toggle("devices", open);
+// Three views: Controls; Setup; Online, which shares Setup's place.
+function showView(view) {
+  document.body.classList.toggle("setup", view !== "controls");
+  document.body.classList.toggle("devices", view === "online");
+  for (const button of document.querySelectorAll("nav button")) button.toggleAttribute("aria-current", button.dataset.view === view);
 }
 
 // Online lists the Homie devices under the same prefix whose $state is ready.
@@ -733,7 +719,7 @@ async function connect() {
   renderDevices();
   $("connect").textContent = "Disconnect";
   $("connect").classList.add("connected");
-  setSetup(false);
+  showView("controls");
   keepAwake();
 }
 
@@ -794,15 +780,11 @@ function keyUp(e) {
   press(Number(key.dataset.n), false);
 }
 
-function setSetup(open) {
-  document.body.classList.toggle("setup", open);
-  showDevices(false);
-  $("setup-bar").setAttribute("aria-expanded", open);
-}
 
 loadSettings();
 applyLink();
 showInputs();
+showView("setup");
 showRest();
 checkInputs();
 for (const input in INPUTS) $("in-" + input).addEventListener("change", showInputs);
@@ -847,10 +829,8 @@ $("reveal").addEventListener("click", () => {
 });
 // iOS Safari applies :active only on pages that listen for touchstart.
 document.addEventListener("touchstart", () => {}, { passive: true });
-$("online").addEventListener("click", () => showDevices(true));
-$("back").addEventListener("click", () => showDevices(false));
 renderDevices();
-$("setup-bar").addEventListener("click", () => setSetup(!document.body.classList.contains("setup")));
+for (const button of document.querySelectorAll("nav button")) button.addEventListener("click", () => showView(button.dataset.view));
 $("connect").addEventListener("click", connect);
 $("pad").addEventListener("pointerdown", padDown);
 $("pad").addEventListener("pointermove", padMove);
