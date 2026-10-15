@@ -36,13 +36,15 @@
   :root[data-theme="light"] { color-scheme: light; }
   :root[data-theme="dark"] { color-scheme: dark; --bg: #0b0b0c; --surface: #161618; --ink: #f2f2f2; --dim: #7c7c82; --line: #26262a; }
   * { box-sizing: border-box; }
-  html { background: var(--bg); }
+  html { background: var(--bg); -webkit-text-size-adjust: 100%; }
   body {
     max-width: 672px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; min-height: 100dvh;
     padding: calc(12px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));
     background: var(--bg); color: var(--ink);
-    font: 17px/1.55 -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
+    font: 17px/1.55 -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif; -webkit-tap-highlight-color: transparent;
   }
+  h1, .lead, .caption { text-wrap: balance; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   main { flex: 1; display: flex; flex-direction: column; gap: 10px; }
   .label { font: 500 11px/20px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
   header { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 28px; }
@@ -67,6 +69,9 @@
   .row { display: grid; grid-template-columns: 112px 1fr; gap: 12px; font-size: 15px; line-height: 20px; }
   .panel { padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
   a.panel { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: inherit; text-decoration: none; }
+  a.panel { transition: border-color 150ms, background-color 150ms; }
+  a.panel:hover { border-color: var(--ink); }
+  a.panel:not(.primary):hover .arrow { color: var(--ink); }
   a.panel:active { opacity: 0.8; }
   a.panel .label { display: block; color: var(--ink); }
   .caption { display: block; font-size: 15px; line-height: 20px; color: var(--dim); }
@@ -76,6 +81,7 @@
   a.primary .caption { color: var(--bg); opacity: 0.7; }
   footer { display: flex; justify-content: space-between; gap: 12px; margin-top: min(20px, 3vh); padding-top: 10px; border-top: 1px solid var(--line); }
   footer a { color: inherit; text-decoration: none; }
+  footer a:hover { color: var(--ink); }
   @media (max-height: 700px) {
     h2 { display: none; }
     h1 { font-size: 26px; }
