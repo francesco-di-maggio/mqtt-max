@@ -32,7 +32,7 @@
     /* Containers (panels, XY pad) and controls (every 44 px row: fields, tiles, sliders, buttons, Setup, Connect). */
     --radius: 16px; --radius-control: 12px;
     /* One row height for every control, 32-44 px, so that Setup (7 rows) fits the visible height. */
-    --row: clamp(32px, calc((100dvh - 240px) / 7), 44px);
+    --row: clamp(32px, calc((100dvh - 272px) / 7), 44px);
     color-scheme: light dark;
   }
   @media (prefers-color-scheme: dark) {
@@ -63,7 +63,6 @@
   nav button { padding: 0; border: 0; background: none; font: inherit; letter-spacing: inherit; text-transform: inherit;
                color: inherit; cursor: pointer; }
   nav button:hover, nav button[aria-current] { color: var(--ink); }
-  nav sup { margin-left: 2px; font-size: 8px; line-height: 0; vertical-align: 5px; color: var(--dim); }
   .mark { display: flex; align-items: center; gap: 8px; font: 600 13px var(--mono); letter-spacing: 0.04em; color: var(--ink);
           text-decoration: none; text-transform: uppercase; white-space: nowrap; }
   .mark svg { width: 18px; height: 18px; overflow: visible; }
@@ -97,6 +96,7 @@
   #settings { display: flex; flex-direction: column; gap: 10px; }
   #settings h2 { margin: 6px 0 0; }
   #settings h2:first-child { margin-top: 0; }
+  .hint { margin: 0; font-size: 15px; color: var(--dim); }
   .rows { padding: 0 14px; }
   .row { display: grid; grid-template-columns: 112px 1fr; align-items: center; gap: 12px; height: var(--row); }
   .row + .row { border-top: 1px solid var(--line); }
@@ -197,7 +197,7 @@
 <nav class="label">
   <button type="button" data-view="setup">Setup</button>
   <button type="button" data-view="inputs">Inputs</button>
-  <button type="button" data-view="online">Online<sup id="online-count"></sup></button>
+  <button type="button" data-view="online">Online</button>
 </nav>
 
 <div id="settings">
@@ -221,6 +221,7 @@
     <label class="tile"><input id="in-slider" type="checkbox">Sliders</label>
     <label class="tile"><input id="in-button" type="checkbox">Buttons</label>
   </div>
+  <p id="locked" class="hint" hidden>Disconnect to change.</p>
 </div>
 
 <div id="devices-view" class="panel">
@@ -448,6 +449,7 @@ const name = () => identity?.name ?? $("name").value;
 
 // Connection fields take effect on Connect, so they are read-only while connected.
 function lockFields(locked) {
+  $("locked").hidden = !locked;
   for (const id of FIELDS) $(id).disabled = locked;
   for (const input in INPUTS) $("in-" + input).disabled = locked || input in unavailable;
 }
@@ -570,7 +572,7 @@ async function requestMotion() {
   setTimeout(() => {
     if (data["motion/pitch"] !== undefined || !identity || !enabled("motion")) return;
     noMotion("no motion sensor");
-    if (connected()) setStatus(`${prefix()}/${name()} · ${warning}`, "err");
+    if (connected()) showConnected();
   }, 1000);
 }
 
@@ -622,9 +624,14 @@ function letSleep() {
   wakeLock = null;
 }
 
-// Online: the count in the nav; the Online view lists the IDs.
+// Connected, the pill shows the ID and how many devices are online, as on tsost.
+function showConnected() {
+  setStatus(`${name()} · ${online.size}` + (warning ? ` · ${warning}` : ""), warning ? "err" : "ok");
+}
+
+// Online: the count in the pill; the Online view lists the IDs.
 function renderDevices() {
-  $("online-count").textContent = client ? String(online.size) : "";
+  if (client?.connected) showConnected();
   const rows = [...online].sort().map((id) => deviceRow(id, id === name() ? "this device" : ""));
   if (!rows.length) rows.push(deviceRow(client ? "No devices" : "Not connected", "", "empty"));
   $("devices").replaceChildren(...rows);
@@ -664,7 +671,7 @@ function wireClient(c) {
   c.on("connect", () => {
     c.subscribe([`${prefix()}/5/+/$state`, pingTopic()]);
     announce(c);
-    setStatus(`${prefix()}/${name()}` + (warning ? ` · ${warning}` : ""), warning ? "err" : "ok");
+    showConnected();
   });
   c.on("reconnect", () => {
     ready = false;
@@ -800,7 +807,10 @@ function keyUp(e) {
 loadSettings();
 applyLink();
 showInputs();
-showView("inputs");
+// First visit, nothing saved yet: Setup, to see the prefix and ID before connecting. Afterwards: Inputs.
+let saved = null;
+try { saved = localStorage.getItem("remote-url"); } catch {}
+showView(saved === null ? "setup" : "inputs");
 showRest();
 checkInputs();
 for (const input in INPUTS) $("in-" + input).addEventListener("change", showInputs);
