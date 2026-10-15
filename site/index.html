@@ -38,11 +38,12 @@
   * { box-sizing: border-box; }
   html { background: var(--bg); }
   body {
-    max-width: 672px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px;
+    max-width: 672px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; min-height: 100dvh;
     padding: calc(12px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));
     background: var(--bg); color: var(--ink);
     font: 17px/1.55 -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
   }
+  main { flex: 1; display: flex; flex-direction: column; gap: 10px; }
   .label { font: 500 11px/20px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
   header { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 28px; }
   #theme { flex: none; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
@@ -57,9 +58,9 @@
   nav a { flex: none; color: inherit; text-decoration: none; }
   nav a:hover { color: var(--ink); }
   h1 { margin: 0 0 4px; font-size: clamp(28px, 7vw, 36px); line-height: 1.15; font-weight: 600; letter-spacing: -0.02em; }
-  .lead { margin: 0 0 min(28px, 4vh); color: var(--dim); }
-  h2 { margin: min(20px, 2.5vh) 0 0; }
-  ol { display: grid; gap: 10px; margin: 0; list-style: none; }
+  .lead { margin: 0 0 min(28px, 4vh); font-size: 16px; color: var(--dim); }
+  h2 { margin: min(16px, 2vh) 0 0; }
+  ol { display: grid; gap: 6px; margin: 0; list-style: none; }
   .row { display: grid; grid-template-columns: 112px 1fr; gap: 12px; font-size: 15px; line-height: 20px; }
   .panel { padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
   a.panel { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: inherit; text-decoration: none; }
@@ -80,7 +81,7 @@
     footer { margin-top: 10px; }
   }
   @media (max-height: 600px) {
-    body { gap: 8px; }
+    body, main { gap: 8px; }
     .panel { padding-block: 12px; }
   }
 </style>
@@ -99,6 +100,7 @@
   <a href="https://github.com/francesco-di-maggio/mqtt-max/archive/refs/heads/main.zip">Download</a>
   <a href="https://github.com/francesco-di-maggio/mqtt-max#readme">Docs</a>
 </nav>
+<main>
 
 <h1>MQTT for Max.</h1>
 <p class="lead">Connect patches, phones and devices, locally or over the internet.</p>
@@ -124,6 +126,7 @@
   <span><span class="label">Documentation</span><span class="caption">Setup, reference, examples</span></span>
   <span class="arrow">→</span>
 </a>
+</main>
 
 <footer class="label">
   <span>MIT License</span>
