@@ -13,13 +13,13 @@
   } catch {}
 </script>
 <title>Remote · mqtt-max</title>
-<meta name="description" content="Control Max from a phone, tablet or computer: touch, motion and mic level as Homie values over MQTT.">
+<meta name="description" content="Control Max from any browser: pad, sliders, buttons, motion and mic level, as Homie values over MQTT.">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../assets/favicon.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Remote · mqtt-max">
-<meta property="og:description" content="Control Max from a phone, tablet or computer: touch, motion and mic level as Homie values over MQTT.">
+<meta property="og:description" content="Control Max from any browser: pad, sliders, buttons, motion and mic level, as Homie values over MQTT.">
 <meta property="og:url" content="https://francesco-di-maggio.github.io/mqtt-max/remote/">
 <meta property="og:image" content="https://francesco-di-maggio.github.io/mqtt-max/assets/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -54,6 +54,7 @@
     font: 16px -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
     -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent;
   }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .label { font: 500 11px/20px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
   .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; }
 
@@ -69,7 +70,7 @@
   .mark svg path { stroke: var(--ink); stroke-width: 1.5; }
   .mark svg .node { fill: var(--ink); }
   .mark svg .core { fill: var(--accent); }
-  .end { display: flex; align-items: center; gap: 4px; min-width: 0; max-width: 75%; }
+  .end { display: flex; align-items: center; gap: 6px; min-width: 0; max-width: 75%; }
   #theme { flex: none; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
            padding: 0; border: 0; background: none; color: var(--dim); cursor: pointer; }
   #theme svg { display: none; }
