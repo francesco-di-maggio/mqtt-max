@@ -63,7 +63,7 @@
   nav a { flex: none; color: inherit; text-decoration: none; }
   nav a:hover { color: var(--ink); }
   h1 { margin: 0 0 4px; font-size: clamp(28px, 7vw, 36px); line-height: 1.15; font-weight: 600; letter-spacing: -0.02em; }
-  .lead { margin: 0 0 min(28px, 4vh); font-size: 16px; color: var(--dim); }
+  .lead { margin: 0 0 min(8px, 1vh); font-size: 16px; color: var(--dim); }
   h2 { margin: min(16px, 2vh) 0 0; }
   ol { display: grid; gap: 6px; margin: 0; list-style: none; }
   .row { display: grid; grid-template-columns: 112px 1fr; gap: 12px; font-size: 15px; line-height: 20px; }
@@ -74,10 +74,11 @@
   a.panel:not(.primary):hover .arrow { color: var(--ink); }
   a.panel:active { opacity: 0.8; }
   a.panel .label { display: block; color: var(--ink); }
+  a.panel .title { display: block; margin: 2px 0; font-size: 16px; line-height: 22px; font-weight: 600; }
   .caption { display: block; font-size: 15px; line-height: 20px; color: var(--dim); }
   .arrow { font: 400 18px/20px var(--mono); color: var(--dim); }
   .primary { background: var(--ink); border-color: var(--ink); }
-  a.primary .label, a.primary .arrow { color: var(--bg); }
+  a.primary .label, a.primary .title, a.primary .arrow { color: var(--bg); }
   a.primary .caption { color: var(--bg); opacity: 0.7; }
   footer { display: flex; justify-content: space-between; gap: 12px; margin-top: min(20px, 3vh); padding-top: 10px; border-top: 1px solid var(--line); }
   footer a { color: inherit; text-decoration: none; }
@@ -114,8 +115,9 @@
 <h1>MQTT for Max.</h1>
 <p class="lead">Connect patches, phones and devices, locally or over the internet.</p>
 
+<h2 class="label">Try it</h2>
 <a class="panel primary" href="remote/">
-  <span><span class="label">Open the Remote</span><span class="caption">A browser as a Homie device</span></span>
+  <span><span class="label">Browser · Homie device</span><span class="title">Remote</span><span class="caption">Control Max from a phone: touch, motion and mic level.</span></span>
   <span class="arrow">→</span>
 </a>
 
