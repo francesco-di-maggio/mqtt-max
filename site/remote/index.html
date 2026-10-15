@@ -31,8 +31,8 @@
     --mono: ui-monospace, "SF Mono", Menlo, monospace;
     /* Containers (panels, XY pad) and controls (every 44 px row: fields, tiles, sliders, buttons, Setup, Connect). */
     --radius: 16px; --radius-control: 12px;
-    /* One row height for every control, 32-44 px, so that Setup (8 rows) fits the visible height. */
-    --row: clamp(32px, calc((100dvh - 250px) / 8), 44px);
+    /* One row height for every control, 32-44 px, so that Setup (7 rows) fits the visible height. */
+    --row: clamp(32px, calc((100dvh - 240px) / 7), 44px);
     color-scheme: light dark;
   }
   @media (prefers-color-scheme: dark) {
@@ -92,7 +92,7 @@
 
   #connect { height: var(--row); padding-top: 0; padding-bottom: 0; border-radius: var(--radius-control); }
   #no-inputs { margin: 0; font-size: 15px; color: var(--dim); }
-  body.setup .meters, body.setup #padbox, body.setup #no-inputs, body:not(.setup) #settings, body:not(.setup) #connect { display: none; }
+  body.setup .meters, body.setup #padbox, body.setup #no-inputs, body:not(.setup) #settings { display: none; }
   /* Setup: a section label over each panel; one row per setting, key column as on the landing page. */
   #settings { display: flex; flex-direction: column; gap: 10px; }
   #settings h2 { margin: 6px 0 0; }
@@ -168,7 +168,8 @@
   .key.on { background: var(--accent); border-color: var(--accent); }
   .key.on .label { color: #fff; }
 
-  #devices-view, body.devices #settings, body.devices #connect { display: none; }
+  /* Online: the list and Connect, as the node panel on tsost. */
+  #devices-view, body.devices #settings, body:not(.devices) #connect { display: none; }
   body.setup.devices #devices-view { display: flex; flex-direction: column; flex: 0 1 auto; min-height: 0; }
   #devices { overflow-y: auto; min-height: 0; }
   .device { display: flex; align-items: center; gap: 8px; height: var(--row); border-top: 1px solid var(--line);
@@ -703,7 +704,10 @@ async function disconnect() {
 async function connect() {
   if (client) return disconnect();
   if (identity) return;
-  if (!ID.test(prefix()) || !ID.test(name())) return setStatus("prefix, id: a-z 0-9 -", "err");
+  if (!ID.test(prefix()) || !ID.test(name())) {
+    showView("setup");
+    return setStatus("prefix, id: a-z 0-9 -", "err");
+  }
   saveSettings();
   // iOS only grants motion permission, and starts audio, when asked directly inside the tap handler, before any other await.
   warning = null;
@@ -796,7 +800,7 @@ function keyUp(e) {
 loadSettings();
 applyLink();
 showInputs();
-showView("setup");
+showView("inputs");
 showRest();
 checkInputs();
 for (const input in INPUTS) $("in-" + input).addEventListener("change", showInputs);
@@ -842,7 +846,8 @@ $("reveal").addEventListener("click", () => {
 // iOS Safari applies :active only on pages that listen for touchstart.
 document.addEventListener("touchstart", () => {}, { passive: true });
 renderDevices();
-$("status").addEventListener("click", () => showView("setup"));
+// Offline, the pill connects at once with the settings in Setup; online, it opens Online, as on tsost.
+$("status").addEventListener("click", () => (client ? showView("online") : connect()));
 for (const button of document.querySelectorAll("nav button")) button.addEventListener("click", () => showView(button.dataset.view));
 $("connect").addEventListener("click", connect);
 $("pad").addEventListener("pointerdown", padDown);
