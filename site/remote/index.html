@@ -666,19 +666,15 @@ function wireClient(c) {
   });
 }
 
-async function disconnect() {
+function disconnect() {
   if (!client) return;
   const closing = client;
   client = null;
   ready = false;
   closing.removeAllListeners();
-  // The goodbye goes out in the background: the screen goes offline at once, not after the broker answers.
-  // A QoS 2 publish completes in a handshake, then the client closes; a slow broker gets 3 s, then the connection is closed anyway.
-  (async () => {
-    if (closing.connected) await closing.publishAsync(stateTopic(), "disconnected", ATTRIBUTE).catch(() => {});
-    await closing.endAsync().catch(() => {});
-  })();
-  setTimeout(() => closing.end(true), 3000);
+  // Not awaited, so the screen goes offline at once: end() closes once the goodbye is acknowledged.
+  if (closing.connected) closing.publish(stateTopic(), "disconnected", ATTRIBUTE);
+  closing.end();
   window.removeEventListener("deviceorientation", onOrientation);
   stopMic();
   letSleep();
