@@ -71,6 +71,10 @@
   nav button:hover, nav button[aria-current] { color: var(--ink); }
   .mark { display: flex; align-items: center; gap: 8px; font: 600 13px var(--mono); letter-spacing: 0.04em; color: var(--ink);
           text-decoration: none; text-transform: uppercase; white-space: nowrap; }
+  /* A part of the site keeps its mark and adds its name: MQTT-MAX / REMOTE, as TSOST / COURSE. Where the header is too narrow, the glyph alone leads back. */
+  .mark a { display: flex; align-items: center; gap: 8px; color: inherit; text-decoration: none; }
+  .mark .slash { color: var(--dim); font-weight: 400; }
+  @media (max-width: 360px) { .mark .wide { display: none; } }
   .mark svg { width: 18px; height: 18px; overflow: visible; }
   .mark svg path { stroke: var(--ink); stroke-width: 1.5; }
   .mark svg .node { fill: var(--ink); }
@@ -183,7 +187,7 @@
 </head>
 <body class="setup">
 <header>
-  <a class="mark" href="../"><svg viewBox="-9 -9 18 18" aria-hidden="true"><path d="M-6 0H6"/><circle class="node" cx="-6.5" r="2"/><circle class="node" cx="6.5" r="2"/><circle class="core" r="3.2"/></svg>mqtt-max</a>
+  <span class="mark"><a href="../"><svg viewBox="-9 -9 18 18" aria-hidden="true"><path d="M-6 0H6"/><circle class="node" cx="-6.5" r="2"/><circle class="node" cx="6.5" r="2"/><circle class="core" r="3.2"/></svg><span class="wide">mqtt-max</span></a><span class="slash wide" aria-hidden="true">/</span><a href="./">Remote</a></span>
   <div class="end">
     <button id="status" class="label" type="button"><span id="status-text">Offline</span></button>
     <button id="theme" type="button" data-state="auto" aria-label="Theme: auto">
