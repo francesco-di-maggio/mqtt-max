@@ -670,11 +670,15 @@ async function disconnect() {
   if (!client) return;
   const closing = client;
   client = null;
-  // A QoS 2 publish completes in a handshake, so the client closes once "disconnected" is delivered.
   ready = false;
-  if (closing.connected) await closing.publishAsync(stateTopic(), "disconnected", ATTRIBUTE).catch(() => {});
   closing.removeAllListeners();
-  await closing.endAsync();
+  // The goodbye goes out in the background: the screen goes offline at once, not after the broker answers.
+  // A QoS 2 publish completes in a handshake, then the client closes; a slow broker gets 3 s, then the connection is closed anyway.
+  (async () => {
+    if (closing.connected) await closing.publishAsync(stateTopic(), "disconnected", ATTRIBUTE).catch(() => {});
+    await closing.endAsync().catch(() => {});
+  })();
+  setTimeout(() => closing.end(true), 3000);
   window.removeEventListener("deviceorientation", onOrientation);
   stopMic();
   letSleep();
