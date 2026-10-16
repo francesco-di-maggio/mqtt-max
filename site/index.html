@@ -25,23 +25,19 @@
 <meta name="twitter:card" content="summary_large_image">
 <!-- Cloudflare Web Analytics: no cookies; one count per page, client-side navigation included. -->
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "6e2758b8af12449988c12df6253593af"}'></script>
+<link rel="stylesheet" href="https://francescodimaggio.nl/style/v1/tokens.css">
+<link rel="stylesheet" href="https://francescodimaggio.nl/style/v1/base.css">
 <style>
+  /* mqtt-max: the page's own parts. The family's shared base comes from francescodimaggio.nl/style/v1/. */
   :root {
     --bg: #f2f2f0; --surface: #ffffff; --ink: #111111; --dim: #6d6d6a; --line: #e3e3df; --accent: #ff5a1f;
     --mono: ui-monospace, "SF Mono", Menlo, monospace;
     --radius: 16px;
     color-scheme: light dark;
   }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) { --bg: #0b0b0c; --surface: #161618; --ink: #f2f2f2; --dim: #828288; --line: #26262a; }
-  }
-  :root[data-theme="light"] { color-scheme: light; }
-  :root[data-theme="dark"] { color-scheme: dark; --bg: #0b0b0c; --surface: #161618; --ink: #f2f2f2; --dim: #828288; --line: #26262a; }
   /* Page changes fade, as on the personal site and tsost; none with reduced motion. */
   @view-transition { navigation: auto; }
   @media (prefers-reduced-motion: reduce) { @view-transition { navigation: none; } }
-  * { box-sizing: border-box; }
-  html { background: var(--bg); -webkit-text-size-adjust: 100%; }
   body {
     max-width: 672px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; min-height: 100dvh;
     padding: calc(12px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));
@@ -49,51 +45,24 @@
     font: 17px/1.55 -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif; -webkit-tap-highlight-color: transparent;
   }
   h1, .lead, .caption { text-wrap: balance; }
-  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  main { flex: 1; display: flex; flex-direction: column; gap: 10px; }
-  .label { font: 500 11px/20px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
-  header { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 28px; }
   #theme { flex: none; width: 32px; height: 36px; margin: -4px 0; display: flex; align-items: center; justify-content: center;
            padding: 0; border: 0; background: none; color: var(--dim); cursor: pointer; }
-  #theme svg { display: none; }
-  #theme[data-state="auto"] .auto, #theme[data-state="light"] .light, #theme[data-state="dark"] .dark { display: block; }
   .mark { display: flex; align-items: center; gap: 8px; font: 600 13px var(--mono); letter-spacing: 0.04em; color: inherit; text-decoration: none; text-transform: uppercase; white-space: nowrap; }
-  .mark svg { width: 18px; height: 18px; overflow: visible; }
   .mark svg path { stroke: var(--ink); stroke-width: 1.5; }
   .mark svg .node { fill: var(--ink); }
   .mark svg .core { fill: var(--accent); transform-box: fill-box; transform-origin: center; animation: breathe 3s ease-in-out infinite; }
-  /* The dot breathes like the TSOST ripple; still when the visitor asks for less motion. */
-  @keyframes breathe { 50% { transform: scale(1.2); opacity: 0.4; } }
   @media (prefers-reduced-motion: reduce) { .mark svg .core { animation: none; } }
-  nav { display: flex; gap: 18px; overflow-x: auto; scrollbar-width: none; margin-bottom: min(24px, 3vh);
-        padding-bottom: 10px; border-bottom: 1px solid var(--line); }
-  nav::-webkit-scrollbar { display: none; }
   nav a { flex: none; color: inherit; text-decoration: none; }
   nav a:hover { color: var(--ink); }
-  h1 { margin: 0 0 4px; font-size: clamp(28px, 7vw, 36px); line-height: 1.15; font-weight: 600; letter-spacing: -0.02em; }
-  .lead { margin: 0 0 min(8px, 1vh); font-size: 16px; color: var(--dim); }
   h2 { margin: min(16px, 2vh) 0 0; }
   ol { display: grid; gap: 6px; margin: 0; list-style: none; }
   .row { display: grid; grid-template-columns: 112px 1fr; gap: 12px; font-size: 15px; line-height: 20px; }
-  .panel { padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
   a.panel { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: inherit; text-decoration: none; }
-  a.panel { transition: border-color 150ms, background-color 150ms; }
-  a.panel:hover { border-color: var(--ink); }
   a.panel:not(.primary):hover .arrow { color: var(--ink); }
-  a.panel:active { opacity: 0.8; }
-  a.panel .label { display: block; color: var(--ink); }
-  a.panel .title { display: block; margin: 4px 0; font-size: 16px; line-height: 22px; font-weight: 600; }
   .primary { background: var(--ink); border-color: var(--ink); }
   a.primary .label, a.primary .title, a.primary .arrow { color: var(--bg); }
   a.primary .caption { color: var(--bg); opacity: 0.7; }
-  .caption { display: block; font-size: 15px; line-height: 20px; color: var(--dim); }
-  .arrow { font: 400 18px/20px var(--mono); color: var(--dim); }
-  footer { display: flex; justify-content: space-between; gap: 12px; margin-top: min(20px, 3vh); padding-top: 10px; border-top: 1px solid var(--line); }
   footer a { color: inherit; text-decoration: none; }
-  footer a:hover { color: var(--ink); }
-  footer .links { display: flex; align-items: center; gap: 14px; }
-  footer .links a { display: flex; padding: 7px; margin: -7px; color: var(--dim); }
-  footer .links svg { width: 14px; height: 14px; }
   @media (max-height: 700px) {
     h2 { display: none; }
     h1 { font-size: 26px; }
